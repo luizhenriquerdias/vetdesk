@@ -6,6 +6,6 @@
     "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .oxlint*, oxlint*, .editorconfig"
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
+    "source.fixAll": "explicit"
+  }
 }
