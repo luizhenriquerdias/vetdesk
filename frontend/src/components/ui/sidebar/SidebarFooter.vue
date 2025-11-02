@@ -1,7 +1,8 @@
 <template>
   <div
-    data-slot="card-content"
-    :class="cn('px-6', props.class)"
+    data-slot="sidebar-footer"
+    data-sidebar="footer"
+    :class="cn('flex flex-col gap-2 p-2', props.class)"
   >
     <slot />
   </div>

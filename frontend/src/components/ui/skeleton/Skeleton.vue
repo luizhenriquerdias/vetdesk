@@ -1,17 +1,17 @@
 <template>
   <div
-    data-slot="card-content"
-    :class="cn('px-6', props.class)"
-  >
-    <slot />
-  </div>
+    data-slot="skeleton"
+    :class="cn('animate-pulse rounded-md bg-primary/10', props.class)"
+  />
 </template>
 
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
 
-const props = defineProps<{
+interface SkeletonProps {
   class?: HTMLAttributes['class']
-}>();
+}
+
+const props = defineProps<SkeletonProps>();
 </script>

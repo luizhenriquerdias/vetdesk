@@ -1,7 +1,8 @@
 <template>
   <div
-    data-slot="card-content"
-    :class="cn('px-6', props.class)"
+    data-slot="sidebar-group"
+    data-sidebar="group"
+    :class="cn('relative flex w-full min-w-0 flex-col p-2', props.class)"
   >
     <slot />
   </div>

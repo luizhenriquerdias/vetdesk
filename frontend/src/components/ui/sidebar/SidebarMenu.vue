@@ -1,10 +1,11 @@
 <template>
-  <div
-    data-slot="card-content"
-    :class="cn('px-6', props.class)"
+  <ul
+    data-slot="sidebar-menu"
+    data-sidebar="menu"
+    :class="cn('flex w-full min-w-0 flex-col gap-1', props.class)"
   >
     <slot />
-  </div>
+  </ul>
 </template>
 
 <script setup lang="ts">

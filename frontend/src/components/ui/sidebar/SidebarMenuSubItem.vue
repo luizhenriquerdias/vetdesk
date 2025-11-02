@@ -1,10 +1,11 @@
 <template>
-  <div
-    data-slot="card-content"
-    :class="cn('px-6', props.class)"
+  <li
+    data-slot="sidebar-menu-sub-item"
+    data-sidebar="menu-sub-item"
+    :class="cn('group/menu-sub-item relative', props.class)"
   >
     <slot />
-  </div>
+  </li>
 </template>
 
 <script setup lang="ts">
