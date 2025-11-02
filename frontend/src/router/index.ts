@@ -10,23 +10,23 @@ export const router = createRouter({
   routes: [
     {
       path: '/',
-      component: ExternalLayout,
-      children: [
-        {
-          name: ROUTE_LOGIN,
-          path: 'login',
-          component: LoginPage,
-        },
-      ],
-    },
-    {
-      path: '/',
       component: InternalLayout,
       children: [
         {
           name: ROUTE_HOME,
           path: '',
           component: HomePage,
+        },
+      ],
+    },
+    {
+      path: '/',
+      component: ExternalLayout,
+      children: [
+        {
+          name: ROUTE_LOGIN,
+          path: 'login',
+          component: LoginPage,
         },
       ],
     },
