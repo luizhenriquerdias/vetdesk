@@ -159,6 +159,7 @@ export default defineConfig([
           order: ['template', 'style', 'script'],
         },
       ],
+      'vue/require-default-prop': 'off',
     },
   },
 ]);
