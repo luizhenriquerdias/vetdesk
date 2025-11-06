@@ -3,12 +3,16 @@ import { computed, reactive, toRefs } from 'vue';
 import { login as loginApi } from '@/api/auth/login';
 import { init as initApi } from '@/api/app';
 import type { AuthResponse } from '@shared/types/auth';
+import { useRouter } from 'vue-router';
+import { ROUTE_LOGIN } from '@/router/routes';
 
 export const useAuthStore = defineStore('auth', () => {
   const state = reactive({
     loading: false,
     authResponse: null as AuthResponse | null,
   });
+
+  const router = useRouter();
 
   const user = computed(() => state.authResponse?.user);
 
@@ -30,6 +34,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const logout = () => {
     state.authResponse = null;
+    router.push({ name: ROUTE_LOGIN });
   };
 
   return {
