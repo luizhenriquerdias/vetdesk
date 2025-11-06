@@ -1,6 +1,7 @@
 import { Body, Controller, Post, Req, Res, HttpException } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
+import { AuthResponse } from '../types/user';
 
 interface LoginDto {
   email: string;
@@ -25,7 +26,8 @@ export class AuthController {
         if (err) {
           return res.status(500).json({ message: 'Failed to create session' });
         }
-        return res.json({ user });
+        const response: AuthResponse = { user };
+        return res.json(response);
       });
     } catch (error) {
       if (error instanceof HttpException) {
