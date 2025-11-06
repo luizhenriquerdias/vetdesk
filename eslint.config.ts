@@ -55,6 +55,15 @@ export default defineConfig([
   },
 
   {
+    files: ['.server/**/*.{js,ts}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+    },
+  },
+
+  {
     files: ['**/*.{js,ts,vue}'],
     rules: {
       '@typescript-eslint/no-shadow': 'error',

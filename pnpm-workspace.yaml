@@ -1,6 +1,9 @@
 packages:
   - app
+  - server
 
 onlyBuiltDependencies:
+  - '@nestjs/core'
   - esbuild
+  - unrs-resolver
   - vue-demi
