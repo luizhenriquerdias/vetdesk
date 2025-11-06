@@ -56,6 +56,7 @@
                 <Label for="email">Email</Label>
                 <Input
                   id="email"
+                  v-model="email"
                   type="email"
                   placeholder="m@example.com"
                   required
@@ -73,6 +74,7 @@
                 </div>
                 <Input
                   id="password"
+                  v-model="password"
                   type="password"
                   required
                 />
@@ -80,10 +82,17 @@
               <Button
                 type="submit"
                 class="w-full"
-                @click="login"
+                :disabled="loading"
+                @click.prevent="login"
               >
-                Login
+                {{ loading ? 'Logging in...' : 'Login' }}
               </Button>
+              <div
+                v-if="error"
+                class="text-sm text-red-500"
+              >
+                {{ error }}
+              </div>
             </div>
             <div class="text-center text-sm">
               Don't have an account?
@@ -107,6 +116,7 @@
 
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
+import { ref } from 'vue';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -126,8 +136,41 @@ const props = defineProps<{
 }>();
 
 const router = useRouter();
+const email = ref('');
+const password = ref('');
+const loading = ref(false);
+const error = ref('');
 
-const login = () => {
-  router.push({ name: ROUTE_HOME });
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+const login = async () => {
+  error.value = '';
+  loading.value = true;
+
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+      }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || 'Login failed');
+    }
+
+    const data = await response.json();
+    router.push({ name: ROUTE_HOME });
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'An error occurred';
+  } finally {
+    loading.value = false;
+  }
 };
 </script>

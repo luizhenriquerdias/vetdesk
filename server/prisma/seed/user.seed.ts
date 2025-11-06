@@ -6,7 +6,9 @@ export async function seedUser(prisma: PrismaClient) {
 
   const user = await prisma.user.upsert({
     where: { email: 'luizhenriquerdias@gmail.com' },
-    update: {},
+    update: {
+      password: hashedPassword,
+    },
     create: {
       firstName: 'Luiz',
       lastName: 'Dias',
