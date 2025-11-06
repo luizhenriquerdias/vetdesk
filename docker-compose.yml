@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: vetdesk-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vetdesk
+      POSTGRES_PASSWORD: vetdesk
+      POSTGRES_DB: vetdesk
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
+
