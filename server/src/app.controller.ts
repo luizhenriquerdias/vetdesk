@@ -2,7 +2,7 @@ import { Controller, Get, Req, Res, HttpException, UnauthorizedException } from 
 import type { Request, Response } from 'express';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
-import { AuthResponse } from './types/user';
+import { AuthResponse } from '@shared/types/auth';
 
 @Controller()
 export class AppController {

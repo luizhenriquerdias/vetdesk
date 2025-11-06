@@ -4,13 +4,19 @@ import ExternalLayout from '@/layouts/external/index.vue';
 import HomePage from '@/pages/home/index.vue';
 import LoginPage from '@/pages/login/index.vue';
 import { ROUTE_LOGIN, ROUTE_HOME } from './routes';
+import { useAuthStore } from '@/stores/auth';
 
-export const router = createRouter({
+const authStore = useAuthStore();
+
+const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
       component: InternalLayout,
+      meta: {
+        requiresAuth: true,
+      },
       children: [
         {
           name: ROUTE_HOME,
@@ -32,3 +38,15 @@ export const router = createRouter({
     },
   ],
 });
+
+router.beforeEach((to, _, next) => {
+  if (to.meta.requiresAuth) {
+    if (!authStore.isAuthenticated) {
+      return next({ name: ROUTE_LOGIN });
+    }
+  }
+
+  return next();
+});
+
+export { router };
