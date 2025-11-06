@@ -6,8 +6,6 @@ import LoginPage from '@/pages/login/index.vue';
 import { ROUTE_LOGIN, ROUTE_HOME } from './routes';
 import { useAuthStore } from '@/stores/auth';
 
-const authStore = useAuthStore();
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -41,6 +39,7 @@ const router = createRouter({
 
 router.beforeEach((to, _, next) => {
   if (to.meta.requiresAuth) {
+    const authStore = useAuthStore();
     if (!authStore.isAuthenticated) {
       return next({ name: ROUTE_LOGIN });
     }
