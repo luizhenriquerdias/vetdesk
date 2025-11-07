@@ -37,7 +37,10 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = async () => {
     await logoutApi();
     state.authResponse = null;
-    router.push({ name: ROUTE_LOGIN });
+
+    if (router.currentRoute.value.name !== ROUTE_LOGIN) {
+      router.push({ name: ROUTE_LOGIN });
+    }
   };
 
   return {

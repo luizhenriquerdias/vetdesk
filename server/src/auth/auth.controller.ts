@@ -38,7 +38,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Req() req: Request, @Res() res: Response) {
+  logout(@Req() req: Request, @Res() res: Response) {
     req.session.destroy((err) => {
       if (err) {
         return res.status(500).json({ message: 'Failed to destroy session' });
