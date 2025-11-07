@@ -7,14 +7,14 @@
     :class="cn('h-7 w-7', props.class)"
     @click="toggleSidebar"
   >
-    <PanelLeft />
+    <Icon name="panelLeft" />
     <span class="sr-only">Toggle Sidebar</span>
   </Button>
 </template>
 
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
-import { PanelLeft } from 'lucide-vue-next';
+import { Icon } from '@/components/ui/icon';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useSidebar } from './utils';

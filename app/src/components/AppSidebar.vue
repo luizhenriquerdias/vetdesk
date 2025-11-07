@@ -9,14 +9,14 @@
             <SidebarMenuItem>
               <SidebarMenuButton as-child>
                 <RouterLink :to="{ name: ROUTE_HOME }">
-                  <Home />
+                  <Icon name="home" />
                   <span>Home</span>
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton @click="handleLogout">
-                <LogOut />
+                <Icon name="logout" />
                 <span>Logout</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { Home, LogOut } from 'lucide-vue-next';
+import { Icon } from '@/components/ui/icon';
 import {
   Sidebar,
   SidebarContent,

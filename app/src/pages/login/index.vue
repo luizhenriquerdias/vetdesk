@@ -3,7 +3,10 @@
     <div class="flex w-full max-w-sm flex-col gap-6">
       <div class="flex items-center gap-2 self-center font-medium">
         <div class="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          <GalleryVerticalEnd class="size-4" />
+          <Icon
+            name="galleryVerticalEnd"
+            size="4"
+          />
         </div>
         Acme Inc.
       </div>
@@ -54,7 +57,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { GalleryVerticalEnd } from 'lucide-vue-next';
+import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import {
   Card,
