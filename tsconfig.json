@@ -3,6 +3,12 @@
     "references": [
       {
         "path": "./app"
+      },
+      {
+        "path": "./server"
+      },
+      {
+        "path": "./shared"
       }
     ]
   }

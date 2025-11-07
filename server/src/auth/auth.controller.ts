@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Req, Res, HttpException } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
-import { AuthResponse } from '@shared/types/auth';
+import { AuthResponse } from '@vetdesk/shared/types/auth';
 
 interface LoginDto {
   email: string;

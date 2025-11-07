@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "concurrently \"cd app && pnpm run dev\" \"cd server && pnpm run dev\"",
-    "lint": "concurrently \"cd app && pnpm run lint\" \"cd server && pnpm run lint\""
+    "lint": "concurrently \"cd shared && pnpm run lint\" \"cd app && pnpm run lint\" \"cd server && pnpm run lint\""
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",
