@@ -14,6 +14,12 @@
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton @click="handleLogout">
+                <LogOut />
+                <span>Logout</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -23,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { Home } from 'lucide-vue-next';
+import { Home, LogOut } from 'lucide-vue-next';
 import {
   Sidebar,
   SidebarContent,
@@ -37,5 +43,12 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { ROUTE_HOME } from '@/router/routes';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
+
+const handleLogout = async () => {
+  await authStore.logout();
+};
 </script>
 

@@ -38,14 +38,16 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, _, next) => {
-  if (to.meta.requiresAuth) {
-    const authStore = useAuthStore();
-    while (authStore.loading) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
+  const authStore = useAuthStore();
 
+  while (authStore.initializing) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
+  if (to.meta.requiresAuth) {
     if (!authStore.isAuthenticated) {
-      return next({ name: ROUTE_LOGIN });
+      next({ name: ROUTE_LOGIN });
+      return;
     }
   }
 

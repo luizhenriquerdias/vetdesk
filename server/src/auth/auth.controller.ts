@@ -36,5 +36,15 @@ export class AuthController {
       return res.status(500).json({ message: 'Internal server error' });
     }
   }
+
+  @Post('logout')
+  async logout(@Req() req: Request, @Res() res: Response) {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: 'Failed to destroy session' });
+      }
+      return res.json({ message: 'Logged out successfully' });
+    });
+  }
 }
 

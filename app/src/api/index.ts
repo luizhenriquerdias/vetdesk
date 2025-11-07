@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { useAuthStore } from '@/stores/auth';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-export const api = axios.create({
+const api = axios.create({
   baseURL: API_URL,
   withCredentials: true,
   headers: {
@@ -10,15 +11,15 @@ export const api = axios.create({
   },
 });
 
-export function setupApiInterceptors(onUnauthorized: () => void) {
-  api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (error.response?.status === 401) {
-        onUnauthorized();
-      }
-      return Promise.reject(error);
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      const authStore = useAuthStore();
+      authStore.logout();
     }
-  );
-}
+    return Promise.reject(error);
+  }
+);
 
+export { api };
