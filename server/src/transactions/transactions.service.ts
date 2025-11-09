@@ -43,7 +43,7 @@ export class TransactionsService {
     const transactions = await this.prisma.transaction.findMany({
       where: whereClause,
       orderBy: {
-        createdAt: 'desc',
+        datetime: 'desc',
       },
     });
 
