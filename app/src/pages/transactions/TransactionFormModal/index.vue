@@ -28,19 +28,23 @@
 
         <div class="space-y-2">
           <Label for="type">Type</Label>
-          <select
+          <Select
             id="type"
             v-model="formData.type"
             required
-            class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
           >
-            <option value="INCOME">
-              Income
-            </option>
-            <option value="EXPENSE">
-              Expense
-            </option>
-          </select>
+            <SelectTrigger class="w-full">
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="INCOME">
+                Income
+              </SelectItem>
+              <SelectItem value="EXPENSE">
+                Expense
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
@@ -107,6 +111,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useTransactionsStore } from '@/stores/transactions';
 import { TRANSACTION_TYPE_INCOME, TRANSACTION_TYPE_EXPENSE, type CreateTransactionDto, type UpdateTransactionDto, type TransactionResponse } from '@shared/types/transaction';
 
@@ -148,8 +159,10 @@ const formData = ref({
   amount: 0,
 });
 
-const combineDateTime = (date: string, time: string): string => {
-  return new Date(`${date}T${time}`).toISOString();
+const combineDateTime = (date: string | undefined, time: string | undefined): string => {
+  const dateValue = date || getDefaultDate();
+  const timeValue = time || getDefaultTime();
+  return new Date(`${dateValue}T${timeValue}`).toISOString();
 };
 
 watch(() => props.transaction, (transaction) => {

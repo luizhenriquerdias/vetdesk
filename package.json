@@ -7,7 +7,7 @@
     "node": ">=24.11.0"
   },
   "scripts": {
-    "dev": "concurrently \"cd app && pnpm run dev\" \"cd server && pnpm run dev\"",
+    "dev": "concurrently \"cd app && sleep 5 && pnpm run dev\" \"cd server && pnpm run dev\"",
     "lint": "concurrently \"cd shared && pnpm run lint\" \"cd app && pnpm run lint\" \"cd server && pnpm run lint\""
   },
   "devDependencies": {
