@@ -6,3 +6,21 @@ export type User = {
   avatarUrl: string | null;
 };
 
+export type CreateUserDto = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  avatarUrl?: string | null;
+};
+
+export type UpdateUserDto = {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  avatarUrl?: string | null;
+};
+
+export type UserResponse = User;
+
