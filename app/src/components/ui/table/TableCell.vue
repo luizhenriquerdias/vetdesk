@@ -1,7 +1,7 @@
 <template>
   <td
     data-slot="table-cell"
-    :class="cn('p-2 align-middle [&:has([role=checkbox])]:pr-0', props.class)"
+    :class="cn('p-2 first:pl-4 align-middle [&:has([role=checkbox])]:pr-0', props.class)"
   >
     <slot />
   </td>
