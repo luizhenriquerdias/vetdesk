@@ -27,7 +27,8 @@ export class TransactionsController {
       }
 
       const includeDeleted = req.query.includeDeleted === 'true';
-      const transactions = await this.transactionsService.findAll(includeDeleted);
+      const month = req.query.month as string | undefined;
+      const transactions = await this.transactionsService.findAll(includeDeleted, month);
       return res.json(transactions);
     } catch (error) {
       if (error instanceof HttpException) {

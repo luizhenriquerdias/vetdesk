@@ -3,20 +3,35 @@ import { reactive, toRefs } from 'vue';
 import * as transactionsApi from '@/api/transactions';
 import type { CreateTransactionDto, UpdateTransactionDto, TransactionResponse } from '@shared/types/transaction';
 
+const getCurrentMonth = (): string => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}`;
+};
+
 export const useTransactionsStore = defineStore('transactions', () => {
   const state = reactive({
     transactions: [] as TransactionResponse[],
     loading: false,
     showDeleted: false,
+    selectedMonth: getCurrentMonth(),
   });
 
   const fetchTransactions = async () => {
     state.loading = true;
     try {
-      state.transactions = await transactionsApi.list(state.showDeleted);
+      state.transactions = await transactionsApi.list({
+        includeDeleted: state.showDeleted,
+        month: state.selectedMonth,
+      });
     } finally {
       state.loading = false;
     }
+  };
+
+  const setSelectedMonth = (month: string) => {
+    state.selectedMonth = month;
   };
 
   const createTransaction = async (data: CreateTransactionDto) => {
@@ -51,6 +66,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
     updateTransaction,
     deleteTransaction,
     restoreTransaction,
+    setSelectedMonth,
   };
 });
 

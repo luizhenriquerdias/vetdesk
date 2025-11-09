@@ -70,42 +70,43 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Icon } from '@/components/ui/icon';
-import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES } from '@/router/routes';
+import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS } from '@/router/routes';
 import { useUsersStore } from '@/stores/users';
 import { useDoctorsStore } from '@/stores/doctors';
 import { useSpecialtiesStore } from '@/stores/specialties';
+import { useTransactionsStore } from '@/stores/transactions';
 import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
 const usersStore = useUsersStore();
 const doctorsStore = useDoctorsStore();
 const specialtiesStore = useSpecialtiesStore();
+const transactionsStore = useTransactionsStore();
 const authStore = useAuthStore();
 
 const pageTitle = computed(() => {
   const routeName = route.name;
-  
-  if (routeName === ROUTE_HOME) {
-    return 'Home';
+
+  switch (routeName) {
+    case ROUTE_HOME:
+      return 'Home';
+    case ROUTE_USERS:
+      return usersStore.showDeleted ? 'Deleted Users' : 'Users';
+    case ROUTE_DOCTORS:
+      return doctorsStore.showDeleted ? 'Deleted Doctors' : 'Doctors';
+    case ROUTE_SPECIALTIES:
+      return specialtiesStore.showDeleted ? 'Deleted Specialties' : 'Specialties';
+    case ROUTE_TRANSACTIONS:
+      return transactionsStore.showDeleted ? 'Deleted Transactions' : 'Transactions';
+    default:
+      return '';
   }
-  
-  if (routeName === ROUTE_USERS) {
-    return usersStore.showDeleted ? 'Deleted Users' : 'Users';
-  }
-  
-  if (routeName === ROUTE_DOCTORS) {
-    return doctorsStore.showDeleted ? 'Deleted Doctors' : 'Doctors';
-  }
-  
-  if (routeName === ROUTE_SPECIALTIES) {
-    return specialtiesStore.showDeleted ? 'Deleted Specialties' : 'Specialties';
-  }
-  
-  return '';
 });
 
 const userInitials = computed(() => {
-  if (!authStore.user) return '';
+  if (!authStore.user) {
+    return '';
+  }
   const first = authStore.user.firstName.charAt(0).toUpperCase();
   const last = authStore.user.lastName.charAt(0).toUpperCase();
   return `${first}${last}`;

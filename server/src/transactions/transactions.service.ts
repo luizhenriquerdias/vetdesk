@@ -10,11 +10,38 @@ import { CreateTransactionDto, UpdateTransactionDto, TransactionResponse, TRANSA
 export class TransactionsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(includeDeleted?: boolean): Promise<TransactionResponse[]> {
+  async findAll(includeDeleted?: boolean, month?: string): Promise<TransactionResponse[]> {
+    const whereClause: {
+      deletedAt?: { not: null } | null;
+      datetime?: {
+        gte: Date;
+        lte: Date;
+      };
+    } = {};
+
+    if (includeDeleted) {
+      whereClause.deletedAt = { not: null };
+    } else {
+      whereClause.deletedAt = null;
+    }
+
+    if (month) {
+      const [year, monthNum] = month.split('-').map(Number);
+      if (isNaN(year) || isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+        throw new BadRequestException('Invalid month format. Expected YYYY-MM');
+      }
+
+      const startOfMonth = new Date(year, monthNum - 1, 1, 0, 0, 0, 0);
+      const endOfMonth = new Date(year, monthNum, 0, 23, 59, 59, 999);
+
+      whereClause.datetime = {
+        gte: startOfMonth,
+        lte: endOfMonth,
+      };
+    }
+
     const transactions = await this.prisma.transaction.findMany({
-      where: includeDeleted
-        ? { deletedAt: { not: null } }
-        : { deletedAt: null },
+      where: whereClause,
       orderBy: {
         createdAt: 'desc',
       },

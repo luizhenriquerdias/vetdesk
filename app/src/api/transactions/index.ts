@@ -1,8 +1,14 @@
 import { api } from '@/api';
 import type { CreateTransactionDto, UpdateTransactionDto, TransactionResponse } from '@shared/types/transaction';
 
-export const list = async (includeDeleted?: boolean): Promise<TransactionResponse[]> => {
-  const params = includeDeleted ? { includeDeleted: 'true' } : {};
+export const list = async (options?: { includeDeleted?: boolean; month?: string }): Promise<TransactionResponse[]> => {
+  const params: Record<string, string> = {};
+  if (options?.includeDeleted) {
+    params.includeDeleted = 'true';
+  }
+  if (options?.month) {
+    params.month = options.month;
+  }
   const response = await api.get<TransactionResponse[]>('/transactions', { params });
   return response.data;
 };
