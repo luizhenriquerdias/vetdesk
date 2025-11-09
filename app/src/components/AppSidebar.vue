@@ -38,6 +38,14 @@
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton as-child>
+                <RouterLink :to="{ name: ROUTE_TRANSACTIONS }">
+                  <Icon name="receipt" />
+                  <span>Transactions</span>
+                </RouterLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -60,6 +68,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES } from '@/router/routes';
+import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS } from '@/router/routes';
 </script>
 
