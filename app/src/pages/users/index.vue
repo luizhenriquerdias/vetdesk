@@ -3,16 +3,32 @@
     <div class="flex items-center justify-between">
       <div>
         <h1 class="text-3xl font-bold">
-          Users
+          {{ usersStore.showDeleted ? 'Deleted Users' : 'Users' }}
         </h1>
         <p class="text-muted-foreground">
-          Manage users
+          {{ usersStore.showDeleted ? 'View and restore deleted users' : 'Manage users' }}
         </p>
       </div>
-      <Button @click="handleAddUser">
-        <Icon name="plus" />
-        <span>Add User</span>
-      </Button>
+      <div class="flex items-center gap-4">
+        <ToggleGroup
+          :model-value="usersStore.showDeleted ? 'deleted' : 'active'"
+          @update:model-value="handleToggleViewValue"
+        >
+          <ToggleGroupItem value="active">
+            Active
+          </ToggleGroupItem>
+          <ToggleGroupItem value="deleted">
+            Deleted
+          </ToggleGroupItem>
+        </ToggleGroup>
+        <Button
+          :disabled="usersStore.showDeleted"
+          @click="handleAddUser"
+        >
+          <Icon name="plus" />
+          <span>Add User</span>
+        </Button>
+      </div>
     </div>
 
     <Card class="p-0">
@@ -29,14 +45,20 @@
             <TableRow
               v-for="user in usersStore.users"
               :key="user.id"
-              class="cursor-pointer"
-              @click="handleEditUser(user)"
+              :class="[
+                usersStore.showDeleted ? 'opacity-60' : 'cursor-pointer',
+              ]"
+              @click="!usersStore.showDeleted && handleEditUser(user)"
             >
               <TableCell>
-                {{ user.firstName }} {{ user.lastName }}
+                <span :class="usersStore.showDeleted ? 'line-through' : ''">
+                  {{ user.firstName }} {{ user.lastName }}
+                </span>
               </TableCell>
               <TableCell>
-                {{ user.email }}
+                <span :class="usersStore.showDeleted ? 'line-through' : ''">
+                  {{ user.email }}
+                </span>
               </TableCell>
               <TableCell @click.stop>
                 <DropdownMenu>
@@ -48,22 +70,53 @@
                       <Icon name="more-vertical" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem
-                      class="flex items-center gap-2"
-                      @click="handleEditUser(user)"
-                    >
-                      <Icon name="edit" />
-                      <span>Edit</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      class="flex items-center gap-2"
-                      @click="handleDeleteUser(user)"
-                    >
-                      <Icon name="trash" />
-                      <span>Delete</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
+                  <TooltipProvider>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        v-if="!usersStore.showDeleted"
+                        class="flex items-center gap-2"
+                        @click="handleEditUser(user)"
+                      >
+                        <Icon name="edit" />
+                        <span>Edit</span>
+                      </DropdownMenuItem>
+                      <Tooltip
+                        v-if="!usersStore.showDeleted && user.id === authStore.user?.id"
+                      >
+                        <TooltipTrigger as-child>
+                          <div class="w-full">
+                            <DropdownMenuItem
+                              class="flex items-center gap-2 w-full"
+                              :disabled="true"
+                              @click.stop
+                            >
+                              <Icon name="trash" />
+                              <span>Delete</span>
+                            </DropdownMenuItem>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Cannot delete your own account</p>
+                        </TooltipContent>
+                      </Tooltip>
+                      <DropdownMenuItem
+                        v-if="!usersStore.showDeleted && user.id !== authStore.user?.id"
+                        class="flex items-center gap-2"
+                        @click="handleDeleteUser(user)"
+                      >
+                        <Icon name="trash" />
+                        <span>Delete</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        v-if="usersStore.showDeleted"
+                        class="flex items-center gap-2"
+                        @click="handleRestoreUser(user)"
+                      >
+                        <Icon name="rotate-ccw" />
+                        <span>Restore</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </TooltipProvider>
                 </DropdownMenu>
               </TableCell>
             </TableRow>
@@ -113,12 +166,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useUsersStore } from '@/stores/users';
+import { useAuthStore } from '@/stores/auth';
 import type { UserResponse } from '@shared/types/user';
 import UserFormModal from './UserFormModal/index.vue';
 import DeleteUserDialog from './DeleteUserDialog/index.vue';
 
 const usersStore = useUsersStore();
+const authStore = useAuthStore();
 
 const isFormModalOpen = ref(false);
 const isDeleteDialogOpen = ref(false);
@@ -147,6 +209,19 @@ const handleDeleteUser = (user: UserResponse) => {
 const handleSaveUser = () => {
   isFormModalOpen.value = false;
   selectedUser.value = null;
+};
+
+const handleToggleView = async (showDeleted: boolean) => {
+  usersStore.showDeleted = showDeleted;
+  await usersStore.fetchUsers();
+};
+
+const handleToggleViewValue = async (value: string) => {
+  await handleToggleView(value === 'deleted');
+};
+
+const handleRestoreUser = async (user: UserResponse) => {
+  await usersStore.restoreUser(user.id);
 };
 
 const handleConfirmDelete = async () => {

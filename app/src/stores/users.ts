@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { computed, reactive, toRefs } from 'vue';
+import { reactive, toRefs } from 'vue';
 import * as usersApi from '@/api/users';
 import type { CreateUserDto, UpdateUserDto, UserResponse } from '@shared/types/user';
 
@@ -7,12 +7,13 @@ export const useUsersStore = defineStore('users', () => {
   const state = reactive({
     users: [] as UserResponse[],
     loading: false,
+    showDeleted: false,
   });
 
   const fetchUsers = async () => {
     state.loading = true;
     try {
-      state.users = await usersApi.list();
+      state.users = await usersApi.list(state.showDeleted);
     } finally {
       state.loading = false;
     }
@@ -35,7 +36,12 @@ export const useUsersStore = defineStore('users', () => {
 
   const deleteUser = async (id: string) => {
     await usersApi.remove(id);
-    state.users = state.users.filter((u) => u.id !== id);
+    await fetchUsers();
+  };
+
+  const restoreUser = async (id: string) => {
+    await usersApi.restore(id);
+    await fetchUsers();
   };
 
   return {
@@ -44,6 +50,7 @@ export const useUsersStore = defineStore('users', () => {
     createUser,
     updateUser,
     deleteUser,
+    restoreUser,
   };
 });
 

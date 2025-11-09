@@ -12,8 +12,11 @@ import { CreateUserDto, UpdateUserDto, UserResponse } from '@vetdesk/shared/type
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<UserResponse[]> {
+  async findAll(includeDeleted?: boolean): Promise<UserResponse[]> {
     const users = await this.prisma.user.findMany({
+      where: includeDeleted
+        ? { deletedAt: { not: null } }
+        : { deletedAt: null },
       orderBy: {
         createdAt: 'desc',
       },
@@ -79,8 +82,11 @@ export class UsersService {
     this.validateStringLength(createUserDto.lastName.trim(), 1, 100, 'lastName');
     this.validateStringLength(createUserDto.password, 8, 100, 'password');
 
-    const existingUser = await this.prisma.user.findUnique({
-      where: { email: createUserDto.email.trim().toLowerCase() },
+    const existingUser = await this.prisma.user.findFirst({
+      where: {
+        email: createUserDto.email.trim().toLowerCase(),
+        deletedAt: null,
+      },
     });
 
     if (existingUser) {
@@ -113,12 +119,16 @@ export class UsersService {
       throw new BadRequestException('User id is required');
     }
 
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findFirst({
       where: { id },
     });
 
     if (!user) {
       throw new NotFoundException('User not found');
+    }
+
+    if (user.deletedAt) {
+      throw new BadRequestException('Cannot update a deleted user');
     }
 
     const updateData: {
@@ -160,8 +170,11 @@ export class UsersService {
         throw new BadRequestException('Invalid email format');
       }
 
-      const existingUser = await this.prisma.user.findUnique({
-        where: { email },
+      const existingUser = await this.prisma.user.findFirst({
+        where: {
+          email,
+          deletedAt: null,
+        },
       });
 
       if (existingUser && existingUser.id !== id) {
@@ -216,12 +229,16 @@ export class UsersService {
     };
   }
 
-  async delete(id: string): Promise<{ message: string }> {
+  async delete(id: string, currentUserId: string): Promise<{ message: string }> {
     if (!id || !id.trim()) {
       throw new BadRequestException('User id is required');
     }
 
-    const user = await this.prisma.user.findUnique({
+    if (id === currentUserId) {
+      throw new BadRequestException('Cannot delete your own account');
+    }
+
+    const user = await this.prisma.user.findFirst({
       where: { id },
     });
 
@@ -229,11 +246,47 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    await this.prisma.user.delete({
+    if (user.deletedAt) {
+      throw new BadRequestException('User is already deleted');
+    }
+
+    await this.prisma.user.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
 
     return { message: 'User deleted successfully' };
+  }
+
+  async restore(id: string): Promise<UserResponse> {
+    if (!id || !id.trim()) {
+      throw new BadRequestException('User id is required');
+    }
+
+    const user = await this.prisma.user.findFirst({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.deletedAt) {
+      throw new BadRequestException('User is not deleted');
+    }
+
+    const restoredUser = await this.prisma.user.update({
+      where: { id },
+      data: { deletedAt: null },
+    });
+
+    return {
+      id: restoredUser.id,
+      email: restoredUser.email,
+      firstName: restoredUser.firstName,
+      lastName: restoredUser.lastName,
+      avatarUrl: restoredUser.avatarUrl,
+    };
   }
 }
 

@@ -26,7 +26,8 @@ export class UsersController {
         throw new UnauthorizedException('Not authenticated');
       }
 
-      const users = await this.usersService.findAll();
+      const includeDeleted = req.query.includeDeleted === 'true';
+      const users = await this.usersService.findAll(includeDeleted);
       return res.json(users);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -86,8 +87,25 @@ export class UsersController {
         throw new UnauthorizedException('Not authenticated');
       }
 
-      const result = await this.usersService.delete(id);
+      const result = await this.usersService.delete(id, req.session.userId);
       return res.json(result);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        return res.status(error.getStatus()).json({ message: error.message });
+      }
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+
+  @Patch(':id/restore')
+  async restore(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
+    try {
+      if (!req.session.userId) {
+        throw new UnauthorizedException('Not authenticated');
+      }
+
+      const user = await this.usersService.restore(id);
+      return res.json(user);
     } catch (error) {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });

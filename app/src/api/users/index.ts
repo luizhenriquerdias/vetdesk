@@ -1,8 +1,9 @@
 import { api } from '@/api';
 import type { CreateUserDto, UpdateUserDto, UserResponse } from '@shared/types/user';
 
-export const list = async (): Promise<UserResponse[]> => {
-  const response = await api.get<UserResponse[]>('/users');
+export const list = async (includeDeleted?: boolean): Promise<UserResponse[]> => {
+  const params = includeDeleted ? { includeDeleted: 'true' } : {};
+  const response = await api.get<UserResponse[]>('/users', { params });
   return response.data;
 };
 
@@ -18,5 +19,10 @@ export const update = async (id: string, data: UpdateUserDto): Promise<UserRespo
 
 export const remove = async (id: string): Promise<void> => {
   await api.delete(`/users/${id}`);
+};
+
+export const restore = async (id: string): Promise<UserResponse> => {
+  const response = await api.patch<UserResponse>(`/users/${id}/restore`);
+  return response.data;
 };
 

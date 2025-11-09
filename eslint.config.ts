@@ -118,7 +118,7 @@ export default defineConfig([
       'no-array-constructor': 'error',
       'no-cond-assign': 'error',
       'no-confusing-arrow': ['error', { 'allowParens': true }],
-      'no-console': 'warn',
+      'no-console': ['warn', { 'allow': ['error'] }],
       'no-const-assign': 'error',
       'no-debugger': 'error',
       'no-delete-var': 'error',

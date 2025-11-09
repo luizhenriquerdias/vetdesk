@@ -4,7 +4,7 @@
       <DialogHeader>
         <DialogTitle>Delete User</DialogTitle>
         <DialogDescription>
-          Are you sure you want to delete {{ user?.firstName }} {{ user?.lastName }}? This action cannot be undone.
+          Are you sure you want to delete {{ user?.firstName }} {{ user?.lastName }}? The user will be soft deleted and can be restored later.
         </DialogDescription>
       </DialogHeader>
 
