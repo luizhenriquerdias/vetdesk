@@ -4,7 +4,8 @@ import ExternalLayout from '@/layouts/external/index.vue';
 import HomePage from '@/pages/home/index.vue';
 import LoginPage from '@/pages/login/index.vue';
 import UsersPage from '@/pages/users/index.vue';
-import { ROUTE_LOGIN, ROUTE_HOME, ROUTE_USERS } from './routes';
+import DoctorsPage from '@/pages/doctors/index.vue';
+import { ROUTE_LOGIN, ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS } from './routes';
 import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
@@ -26,6 +27,11 @@ const router = createRouter({
           name: ROUTE_USERS,
           path: 'users',
           component: UsersPage,
+        },
+        {
+          name: ROUTE_DOCTORS,
+          path: 'doctors',
+          component: DoctorsPage,
         },
       ],
     },

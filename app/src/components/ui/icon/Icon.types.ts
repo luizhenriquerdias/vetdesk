@@ -10,6 +10,7 @@ import {
   Trash,
   Users,
   RotateCcw,
+  Stethoscope,
 } from 'lucide-vue-next';
 
 export const ICON_MAP = {
@@ -24,6 +25,7 @@ export const ICON_MAP = {
   trash: Trash,
   users: Users,
   'rotate-ccw': RotateCcw,
+  stethoscope: Stethoscope,
 } as const;
 
 export type IconName = keyof typeof ICON_MAP;

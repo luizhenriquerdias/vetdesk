@@ -1,0 +1,14 @@
+-- CreateTable
+CREATE TABLE "Doctor" (
+    "id" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "specialty" TEXT NOT NULL,
+    "crm" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "Doctor_pkey" PRIMARY KEY ("id")
+);
+
