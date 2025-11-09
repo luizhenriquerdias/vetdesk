@@ -25,9 +25,10 @@ export class TransactionsService {
       description: transaction.description,
       type: transaction.type,
       datetime: transaction.datetime.toISOString(),
+      amount: transaction.amount.toNumber(),
       createdAt: transaction.createdAt.toISOString(),
-      updatedAt: transaction.updatedAt.toISOString(),
       createdBy: transaction.createdBy,
+      updatedAt: transaction.updatedAt.toISOString(),
       updatedBy: transaction.updatedBy,
       deletedAt: transaction.deletedAt?.toISOString() || null,
       deletedBy: transaction.deletedBy,
@@ -67,6 +68,18 @@ export class TransactionsService {
       throw new BadRequestException('Invalid datetime format');
     }
 
+    if (createTransactionDto.amount === undefined || createTransactionDto.amount === null) {
+      throw new BadRequestException('amount is required');
+    }
+
+    if (typeof createTransactionDto.amount !== 'number' || isNaN(createTransactionDto.amount)) {
+      throw new BadRequestException('amount must be a valid number');
+    }
+
+    if (createTransactionDto.amount < 0) {
+      throw new BadRequestException('amount must be greater than or equal to 0');
+    }
+
     this.validateStringLength(description, 1, 500, 'description');
 
     const transaction = await this.prisma.transaction.create({
@@ -74,6 +87,7 @@ export class TransactionsService {
         description,
         type,
         datetime,
+        amount: createTransactionDto.amount,
         createdBy: userId,
       },
     });
@@ -83,9 +97,10 @@ export class TransactionsService {
       description: transaction.description,
       type: transaction.type,
       datetime: transaction.datetime.toISOString(),
+      amount: transaction.amount.toNumber(),
       createdAt: transaction.createdAt.toISOString(),
-      updatedAt: transaction.updatedAt.toISOString(),
       createdBy: transaction.createdBy,
+      updatedAt: transaction.updatedAt.toISOString(),
       updatedBy: transaction.updatedBy,
       deletedAt: transaction.deletedAt?.toISOString() || null,
       deletedBy: transaction.deletedBy,
@@ -113,6 +128,7 @@ export class TransactionsService {
       description?: string;
       type?: TransactionType;
       datetime?: Date;
+      amount?: number;
       updatedBy?: string;
     } = {};
 
@@ -144,6 +160,16 @@ export class TransactionsService {
       updateData.datetime = datetime;
     }
 
+    if (updateTransactionDto.amount !== undefined) {
+      if (typeof updateTransactionDto.amount !== 'number' || isNaN(updateTransactionDto.amount)) {
+        throw new BadRequestException('amount must be a valid number');
+      }
+      if (updateTransactionDto.amount < 0) {
+        throw new BadRequestException('amount must be greater than or equal to 0');
+      }
+      updateData.amount = updateTransactionDto.amount;
+    }
+
     updateData.updatedBy = userId;
 
     const updatedTransaction = await this.prisma.transaction.update({
@@ -156,9 +182,10 @@ export class TransactionsService {
       description: updatedTransaction.description,
       type: updatedTransaction.type,
       datetime: updatedTransaction.datetime.toISOString(),
+      amount: updatedTransaction.amount.toNumber(),
       createdAt: updatedTransaction.createdAt.toISOString(),
-      updatedAt: updatedTransaction.updatedAt.toISOString(),
       createdBy: updatedTransaction.createdBy,
+      updatedAt: updatedTransaction.updatedAt.toISOString(),
       updatedBy: updatedTransaction.updatedBy,
       deletedAt: updatedTransaction.deletedAt?.toISOString() || null,
       deletedBy: updatedTransaction.deletedBy,
@@ -223,9 +250,10 @@ export class TransactionsService {
       description: restoredTransaction.description,
       type: restoredTransaction.type,
       datetime: restoredTransaction.datetime.toISOString(),
+      amount: restoredTransaction.amount.toNumber(),
       createdAt: restoredTransaction.createdAt.toISOString(),
-      updatedAt: restoredTransaction.updatedAt.toISOString(),
       createdBy: restoredTransaction.createdBy,
+      updatedAt: restoredTransaction.updatedAt.toISOString(),
       updatedBy: restoredTransaction.updatedBy,
       deletedAt: restoredTransaction.deletedAt?.toISOString() || null,
       deletedBy: restoredTransaction.deletedBy,

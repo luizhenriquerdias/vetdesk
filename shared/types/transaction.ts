@@ -8,9 +8,10 @@ export type Transaction = {
   description: string;
   type: TransactionType;
   datetime: string;
+  amount: number;
   createdAt: string;
-  updatedAt: string;
   createdBy: string;
+  updatedAt: string;
   updatedBy: string | null;
   deletedAt: string | null;
   deletedBy: string | null;
@@ -20,12 +21,14 @@ export type CreateTransactionDto = {
   description: string;
   type: TransactionType;
   datetime: string;
+  amount: number;
 };
 
 export type UpdateTransactionDto = {
   description?: string;
   type?: TransactionType;
   datetime?: string;
+  amount?: number;
 };
 
 export type TransactionResponse = Transaction;
