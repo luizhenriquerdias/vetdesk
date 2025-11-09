@@ -23,7 +23,7 @@
       >
         <Icon
           name="x"
-          size="4"
+          :size="4"
         />
         <span class="sr-only">Close</span>
       </DialogClose>

@@ -15,6 +15,14 @@
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
+              <SidebarMenuButton as-child>
+                <RouterLink :to="{ name: ROUTE_USERS }">
+                  <Icon name="users" />
+                  <span>Users</span>
+                </RouterLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
               <SidebarMenuButton @click="handleLogout">
                 <Icon name="logout" />
                 <span>Logout</span>
@@ -42,7 +50,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { ROUTE_HOME } from '@/router/routes';
+import { ROUTE_HOME, ROUTE_USERS } from '@/router/routes';
 import { useAuthStore } from '@/stores/auth';
 
 const authStore = useAuthStore();

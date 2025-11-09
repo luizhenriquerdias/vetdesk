@@ -3,7 +3,8 @@ import InternalLayout from '@/layouts/internal/index.vue';
 import ExternalLayout from '@/layouts/external/index.vue';
 import HomePage from '@/pages/home/index.vue';
 import LoginPage from '@/pages/login/index.vue';
-import { ROUTE_LOGIN, ROUTE_HOME } from './routes';
+import UsersPage from '@/pages/users/index.vue';
+import { ROUTE_LOGIN, ROUTE_HOME, ROUTE_USERS } from './routes';
 import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
@@ -20,6 +21,11 @@ const router = createRouter({
           name: ROUTE_HOME,
           path: '',
           component: HomePage,
+        },
+        {
+          name: ROUTE_USERS,
+          path: 'users',
+          component: UsersPage,
         },
       ],
     },

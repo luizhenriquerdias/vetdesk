@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpException,
   Param,
   Patch,
@@ -17,6 +18,23 @@ import type { CreateUserDto, UpdateUserDto, UserResponse } from '@vetdesk/shared
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
+
+  @Get()
+  async findAll(@Req() req: Request, @Res() res: Response) {
+    try {
+      if (!req.session.userId) {
+        throw new UnauthorizedException('Not authenticated');
+      }
+
+      const users = await this.usersService.findAll();
+      return res.json(users);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        return res.status(error.getStatus()).json({ message: error.message });
+      }
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
 
   @Post()
   async create(

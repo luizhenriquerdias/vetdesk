@@ -12,6 +12,22 @@ import { CreateUserDto, UpdateUserDto, UserResponse } from '@vetdesk/shared/type
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
+  async findAll(): Promise<UserResponse[]> {
+    const users = await this.prisma.user.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return users.map((user) => ({
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      avatarUrl: user.avatarUrl,
+    }));
+  }
+
   private validateEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
