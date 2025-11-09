@@ -2,9 +2,6 @@
   <div class="flex flex-col gap-6">
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-bold">
-          {{ usersStore.showDeleted ? 'Deleted Users' : 'Users' }}
-        </h1>
         <p class="text-muted-foreground">
           {{ usersStore.showDeleted ? 'View and restore deleted users' : 'Manage users' }}
         </p>

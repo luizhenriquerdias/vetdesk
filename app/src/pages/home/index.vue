@@ -1,9 +1,6 @@
 <template>
   <div class="flex flex-col gap-6">
     <div>
-      <h1 class="text-3xl font-bold">
-        Home
-      </h1>
       <p class="text-muted-foreground">
         Welcome to VetDesk
       </p>

@@ -2,9 +2,6 @@
   <div class="flex flex-col gap-6">
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-bold">
-          {{ doctorsStore.showDeleted ? 'Deleted Doctors' : 'Doctors' }}
-        </h1>
         <p class="text-muted-foreground">
           {{ doctorsStore.showDeleted ? 'View and restore deleted doctors' : 'Manage doctors' }}
         </p>

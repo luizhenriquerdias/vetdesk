@@ -30,12 +30,6 @@
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton @click="handleLogout">
-                <Icon name="logout" />
-                <span>Logout</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -59,12 +53,5 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS } from '@/router/routes';
-import { useAuthStore } from '@/stores/auth';
-
-const authStore = useAuthStore();
-
-const handleLogout = async () => {
-  await authStore.logout();
-};
 </script>
 

@@ -64,6 +64,7 @@
         variant === 'floating' || variant === 'inset'
           ? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]'
           : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l',
+        variant === 'inset' ? 'group-data-[side=left]:border-r-0 group-data-[side=right]:border-l-0' : '',
         props.class,
       )"
       v-bind="$attrs"
