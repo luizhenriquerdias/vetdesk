@@ -12,9 +12,9 @@
               label="Home"
             />
             <SidebarItem
-              :to="ROUTE_USERS"
-              icon="users"
-              label="Users"
+              :to="ROUTE_TRANSACTIONS"
+              icon="receipt"
+              label="Transactions"
             />
             <SidebarItem
               :to="ROUTE_DOCTORS"
@@ -26,10 +26,20 @@
               icon="tag"
               label="Specialties"
             />
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <div class="flex-1" />
+
+      <SidebarGroup>
+        <SidebarGroupLabel>Administration</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
             <SidebarItem
-              :to="ROUTE_TRANSACTIONS"
-              icon="receipt"
-              label="Transactions"
+              :to="ROUTE_USERS"
+              icon="users"
+              label="Users"
             />
           </SidebarMenu>
         </SidebarGroupContent>
