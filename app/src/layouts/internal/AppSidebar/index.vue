@@ -16,6 +16,14 @@
               icon="receipt"
               label="Transactions"
             />
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <SidebarGroup>
+        <SidebarGroupLabel>Records</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
             <SidebarItem
               :to="ROUTE_DOCTORS"
               icon="stethoscope"
