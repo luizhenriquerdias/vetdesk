@@ -5,7 +5,7 @@
     :placeholder="placeholder"
     :required="required"
     :disabled="disabled"
-    :class="class"
+    :class="props.class"
     type="text"
     @input="handleInput"
     @blur="handleBlur"
@@ -13,8 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import type { HTMLAttributes } from 'vue';
+import { ref, watch, type HTMLAttributes } from 'vue';
 import { Input } from '@/components/ui/input';
 
 interface Props {

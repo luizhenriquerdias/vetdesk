@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { TransactionsService } from '@/transactions/transactions.service';
-import type { CreateTransactionDto, UpdateTransactionDto, TransactionResponse } from '@vetdesk/shared/types/transaction';
+import type { CreateTransactionDto, UpdateTransactionDto } from '@vetdesk/shared/types/transaction';
 
 @Controller('transactions')
 export class TransactionsController {

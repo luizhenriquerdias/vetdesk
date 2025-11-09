@@ -57,7 +57,7 @@ export class SpecialtiesService {
 
     const existingSpecialty = await this.prisma.specialty.findFirst({
       where: {
-        name: name,
+        name,
         deletedAt: null,
       },
     });

@@ -134,7 +134,7 @@ watch(() => props.doctor, (doctor) => {
       const specialty = specialtiesStore.specialties.find((s) => s.name === name);
       return specialty?.id || '';
     }).filter(Boolean);
-    
+
     formData.value = {
       firstName: doctor.firstName,
       lastName: doctor.lastName,

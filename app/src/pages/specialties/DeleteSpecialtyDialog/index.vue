@@ -1,5 +1,8 @@
 <template>
-  <Dialog :open="open" @update:open="$emit('update:open', $event)">
+  <Dialog
+    :open="open"
+    @update:open="$emit('update:open', $event)"
+  >
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Delete Specialty</DialogTitle>
@@ -9,10 +12,19 @@
       </DialogHeader>
 
       <DialogFooter>
-        <Button type="button" variant="outline" @click="handleCancel">
+        <Button
+          type="button"
+          variant="outline"
+          @click="handleCancel"
+        >
           Cancel
         </Button>
-        <Button type="button" variant="destructive" @click="handleConfirm" :disabled="loading">
+        <Button
+          type="button"
+          variant="destructive"
+          :disabled="loading"
+          @click="handleConfirm"
+        >
           {{ loading ? 'Deleting...' : 'Delete' }}
         </Button>
       </DialogFooter>
@@ -38,7 +50,7 @@ interface Props {
   specialty?: SpecialtyResponse | null
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   specialty: null,
 });
 
@@ -53,7 +65,7 @@ const handleCancel = () => {
   emits('update:open', false);
 };
 
-const handleConfirm = async () => {
+const handleConfirm = () => {
   loading.value = true;
   try {
     emits('confirm');

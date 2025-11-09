@@ -11,8 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue';
-import { computed, provide } from 'vue';
+import { computed, provide, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
 
 const props = defineProps<{

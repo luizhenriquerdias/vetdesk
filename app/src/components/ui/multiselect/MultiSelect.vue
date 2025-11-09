@@ -51,8 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { HTMLAttributes } from 'vue';
+import { computed, type HTMLAttributes } from 'vue';
 import { useVModel } from '@vueuse/core';
 import { Button } from '@/components/ui/button';
 import {

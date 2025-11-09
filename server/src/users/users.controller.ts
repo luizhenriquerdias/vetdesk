@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { UsersService } from '@/users/users.service';
-import type { CreateUserDto, UpdateUserDto, UserResponse } from '@vetdesk/shared/types/user';
+import type { CreateUserDto, UpdateUserDto } from '@vetdesk/shared/types/user';
 
 @Controller('users')
 export class UsersController {

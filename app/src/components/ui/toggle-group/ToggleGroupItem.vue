@@ -15,8 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue';
-import { computed, inject } from 'vue';
+import { computed, inject, type HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -29,7 +28,7 @@ const props = defineProps<Props>();
 const toggleGroup = inject<{
   selectedValue: { value: string | undefined }
   selectValue: (value: string) => void
-}>('toggleGroup');
+    }>('toggleGroup');
 
 const isPressed = computed(() => {
   if (toggleGroup) {

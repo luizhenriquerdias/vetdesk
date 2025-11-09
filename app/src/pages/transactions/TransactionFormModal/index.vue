@@ -34,8 +34,12 @@
             required
             class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
           >
-            <option value="INCOME">Income</option>
-            <option value="EXPENSE">Expense</option>
+            <option value="INCOME">
+              Income
+            </option>
+            <option value="EXPENSE">
+              Expense
+            </option>
           </select>
         </div>
 
@@ -104,8 +108,7 @@ import { Input } from '@/components/ui/input';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { Label } from '@/components/ui/label';
 import { useTransactionsStore } from '@/stores/transactions';
-import type { CreateTransactionDto, UpdateTransactionDto, TransactionResponse } from '@shared/types/transaction';
-import { TRANSACTION_TYPE_INCOME, TRANSACTION_TYPE_EXPENSE } from '@shared/types/transaction';
+import { TRANSACTION_TYPE_INCOME, TRANSACTION_TYPE_EXPENSE, type CreateTransactionDto, type UpdateTransactionDto, type TransactionResponse } from '@shared/types/transaction';
 
 interface Props {
   open: boolean
@@ -156,7 +159,7 @@ watch(() => props.transaction, (transaction) => {
     const hours = String(dt.getHours()).padStart(2, '0');
     const minutes = String(dt.getMinutes()).padStart(2, '0');
     const time = `${hours}:${minutes}`;
-    
+
     formData.value = {
       description: transaction.description,
       type: transaction.type,
@@ -191,7 +194,7 @@ const handleSubmit = async () => {
   saving.value = true;
   try {
     const datetime = combineDateTime(formData.value.date, formData.value.time);
-    
+
     if (!props.transaction) {
       const data: CreateTransactionDto = {
         description: formData.value.description,
