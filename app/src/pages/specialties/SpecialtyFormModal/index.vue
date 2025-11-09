@@ -29,14 +29,10 @@
 
         <div class="space-y-2">
           <Label for="appointmentFee">Appointment Fee</Label>
-          <Input
+          <CurrencyInput
             id="appointmentFee"
-            :model-value="formattedFee"
-            type="text"
-            placeholder="R$ 0,00"
+            v-model="formData.appointmentFee"
             required
-            @input="handleFeeInput"
-            @blur="handleFeeBlur"
           />
         </div>
 
@@ -72,6 +68,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { CurrencyInput } from '@/components/ui/currency-input';
 import { Label } from '@/components/ui/label';
 import { useSpecialtiesStore } from '@/stores/specialties';
 import type { CreateSpecialtyDto, UpdateSpecialtyDto, SpecialtyResponse } from '@shared/types/specialty';
@@ -99,59 +96,17 @@ const formData = ref({
   appointmentFee: 0,
 });
 
-const formattedFee = ref('');
-
-const formatCurrency = (value: number): string => {
-  if (isNaN(value) || value === null || value === undefined || value === 0) {
-    return '';
-  }
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-};
-
-const handleFeeInput = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const value = target.value;
-
-  const cleaned = value.replace(/\D/g, '');
-
-  if (cleaned === '') {
-    formattedFee.value = '';
-    formData.value.appointmentFee = 0;
-    return;
-  }
-
-  const numericValue = parseInt(cleaned, 10) / 100;
-  formData.value.appointmentFee = numericValue;
-  formattedFee.value = formatCurrency(numericValue);
-};
-
-const handleFeeBlur = () => {
-  if (formData.value.appointmentFee > 0) {
-    formattedFee.value = formatCurrency(formData.value.appointmentFee);
-  } else {
-    formattedFee.value = '';
-    formData.value.appointmentFee = 0;
-  }
-};
-
 watch(() => props.specialty, (specialty) => {
   if (specialty) {
     formData.value = {
       name: specialty.name,
       appointmentFee: specialty.appointmentFee,
     };
-    formattedFee.value = formatCurrency(specialty.appointmentFee);
   } else {
     formData.value = {
       name: '',
       appointmentFee: 0,
     };
-    formattedFee.value = '';
   }
 }, { immediate: true });
 
@@ -161,7 +116,6 @@ watch(() => props.open, (open) => {
       name: '',
       appointmentFee: 0,
     };
-    formattedFee.value = '';
   }
 });
 
