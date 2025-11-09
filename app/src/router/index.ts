@@ -5,7 +5,8 @@ import HomePage from '@/pages/home/index.vue';
 import LoginPage from '@/pages/login/index.vue';
 import UsersPage from '@/pages/users/index.vue';
 import DoctorsPage from '@/pages/doctors/index.vue';
-import { ROUTE_LOGIN, ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS } from './routes';
+import SpecialtiesPage from '@/pages/specialties/index.vue';
+import { ROUTE_LOGIN, ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES } from './routes';
 import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
@@ -32,6 +33,11 @@ const router = createRouter({
           name: ROUTE_DOCTORS,
           path: 'doctors',
           component: DoctorsPage,
+        },
+        {
+          name: ROUTE_SPECIALTIES,
+          path: 'specialties',
+          component: SpecialtiesPage,
         },
       ],
     },

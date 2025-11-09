@@ -70,14 +70,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Icon } from '@/components/ui/icon';
-import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS } from '@/router/routes';
+import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES } from '@/router/routes';
 import { useUsersStore } from '@/stores/users';
 import { useDoctorsStore } from '@/stores/doctors';
+import { useSpecialtiesStore } from '@/stores/specialties';
 import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
 const usersStore = useUsersStore();
 const doctorsStore = useDoctorsStore();
+const specialtiesStore = useSpecialtiesStore();
 const authStore = useAuthStore();
 
 const pageTitle = computed(() => {
@@ -93,6 +95,10 @@ const pageTitle = computed(() => {
   
   if (routeName === ROUTE_DOCTORS) {
     return doctorsStore.showDeleted ? 'Deleted Doctors' : 'Doctors';
+  }
+  
+  if (routeName === ROUTE_SPECIALTIES) {
+    return specialtiesStore.showDeleted ? 'Deleted Specialties' : 'Specialties';
   }
   
   return '';
