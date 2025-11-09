@@ -3,6 +3,7 @@ CREATE TABLE "Specialty" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "appointmentFee" DECIMAL(10,2) NOT NULL,
+    "percProfessional" DECIMAL(4,1) NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),

@@ -26,6 +26,7 @@ export class SpecialtiesService {
       id: specialty.id,
       name: specialty.name,
       appointmentFee: Number(specialty.appointmentFee),
+      percProfessional: Number(specialty.percProfessional),
     }));
   }
 
@@ -40,6 +41,7 @@ export class SpecialtiesService {
   async create(createSpecialtyDto: CreateSpecialtyDto): Promise<SpecialtyResponse> {
     const name = createSpecialtyDto.name.trim();
     const appointmentFee = createSpecialtyDto.appointmentFee;
+    const percProfessional = createSpecialtyDto.percProfessional;
 
     if (!name) {
       throw new BadRequestException('name is required');
@@ -51,6 +53,14 @@ export class SpecialtiesService {
 
     if (appointmentFee < 0) {
       throw new BadRequestException('appointmentFee cannot be negative');
+    }
+
+    if (percProfessional === undefined || percProfessional === null) {
+      throw new BadRequestException('percProfessional is required');
+    }
+
+    if (percProfessional < 0 || percProfessional > 100) {
+      throw new BadRequestException('percProfessional must be between 0.0 and 100.0');
     }
 
     this.validateStringLength(name, 1, 100, 'name');
@@ -70,6 +80,7 @@ export class SpecialtiesService {
       data: {
         name,
         appointmentFee: new Decimal(appointmentFee),
+        percProfessional: new Decimal(percProfessional),
       },
     });
 
@@ -77,6 +88,7 @@ export class SpecialtiesService {
       id: specialty.id,
       name: specialty.name,
       appointmentFee: Number(specialty.appointmentFee),
+      percProfessional: Number(specialty.percProfessional),
     };
   }
 
@@ -99,6 +111,7 @@ export class SpecialtiesService {
 
     const updateData: {
       appointmentFee?: Decimal;
+      percProfessional?: Decimal;
     } = {};
 
     if (Object.keys(updateSpecialtyDto).length === 0) {
@@ -112,6 +125,13 @@ export class SpecialtiesService {
       updateData.appointmentFee = new Decimal(updateSpecialtyDto.appointmentFee);
     }
 
+    if (updateSpecialtyDto.percProfessional !== undefined) {
+      if (updateSpecialtyDto.percProfessional < 0 || updateSpecialtyDto.percProfessional > 100) {
+        throw new BadRequestException('percProfessional must be between 0.0 and 100.0');
+      }
+      updateData.percProfessional = new Decimal(updateSpecialtyDto.percProfessional);
+    }
+
     const updatedSpecialty = await this.prisma.specialty.update({
       where: { id },
       data: updateData,
@@ -121,6 +141,7 @@ export class SpecialtiesService {
       id: updatedSpecialty.id,
       name: updatedSpecialty.name,
       appointmentFee: Number(updatedSpecialty.appointmentFee),
+      percProfessional: Number(updatedSpecialty.percProfessional),
     };
   }
 
@@ -175,6 +196,7 @@ export class SpecialtiesService {
       id: restoredSpecialty.id,
       name: restoredSpecialty.name,
       appointmentFee: Number(restoredSpecialty.appointmentFee),
+      percProfessional: Number(restoredSpecialty.percProfessional),
     };
   }
 }
