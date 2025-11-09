@@ -78,11 +78,12 @@ import { useTransactionsStore } from '@/stores/transactions';
 import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
+
+const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const doctorsStore = useDoctorsStore();
 const specialtiesStore = useSpecialtiesStore();
 const transactionsStore = useTransactionsStore();
-const authStore = useAuthStore();
 
 const pageTitle = computed(() => {
   const routeName = route.name;

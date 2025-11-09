@@ -357,17 +357,63 @@ const consolidatedData = computed(() => {
     }
   });
 
-  return Array.from(grouped.entries())
-    .map(([date, data]) => ({
-      date,
-      incomes: data.incomes,
-      expenses: data.expenses,
-      total: data.incomes - data.expenses,
-      incomeDescriptions: data.incomeDescriptions,
-      expenseDescriptions: data.expenseDescriptions,
-      allDescriptions: data.allDescriptions,
-      dateSortKey: date.split('/').reverse().join('-'),
-    }))
+  const monthParts = transactionsStore.selectedMonth.split('-').map(Number);
+  const year = monthParts[0];
+  const month = monthParts[1];
+
+  if (!year || !month) {
+    return Array.from(grouped.entries())
+      .map(([date, data]) => ({
+        date,
+        incomes: data.incomes,
+        expenses: data.expenses,
+        total: data.incomes - data.expenses,
+        incomeDescriptions: data.incomeDescriptions,
+        expenseDescriptions: data.expenseDescriptions,
+        allDescriptions: data.allDescriptions,
+        dateSortKey: date.split('/').reverse().join('-'),
+      }))
+      .sort((a, b) => {
+        const dateA = new Date(a.dateSortKey);
+        const dateB = new Date(b.dateSortKey);
+        return dateA.getTime() - dateB.getTime();
+      })
+      .map(({ dateSortKey: _dateSortKey, ...rest }) => rest);
+  }
+
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const allDates: string[] = [];
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month - 1, day);
+    const dateKey = formatDate(date.toISOString());
+    allDates.push(dateKey);
+
+    if (!grouped.has(dateKey)) {
+      grouped.set(dateKey, {
+        incomes: 0,
+        expenses: 0,
+        incomeDescriptions: [],
+        expenseDescriptions: [],
+        allDescriptions: [],
+      });
+    }
+  }
+
+  return allDates
+    .map((date) => {
+      const data = grouped.get(date)!;
+      return {
+        date,
+        incomes: data.incomes,
+        expenses: data.expenses,
+        total: data.incomes - data.expenses,
+        incomeDescriptions: data.incomeDescriptions,
+        expenseDescriptions: data.expenseDescriptions,
+        allDescriptions: data.allDescriptions,
+        dateSortKey: date.split('/').reverse().join('-'),
+      };
+    })
     .sort((a, b) => {
       const dateA = new Date(a.dateSortKey);
       const dateB = new Date(b.dateSortKey);
