@@ -28,10 +28,9 @@
 </template>
 
 <script setup lang="ts">
-import type { SliderRootEmits, SliderRootProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
-import { SliderRange, SliderRoot, SliderThumb, SliderTrack, useForwardPropsEmits } from 'reka-ui';
+import { type SliderRootEmits, type SliderRootProps, SliderRange, SliderRoot, SliderThumb, SliderTrack, useForwardPropsEmits } from 'reka-ui';
 import { cn } from '@/lib/utils';
 
 const props = defineProps<SliderRootProps & { class?: HTMLAttributes['class'] }>();
