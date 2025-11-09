@@ -16,7 +16,7 @@
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        class="w-[var(--radix-dropdown-menu-trigger-width)] p-0"
+        class="w-(--radix-dropdown-menu-trigger-width) p-0"
         align="start"
       >
         <div class="max-h-[300px] overflow-auto p-1">
@@ -29,13 +29,7 @@
             <div
               class="flex h-4 w-4 items-center justify-center rounded-sm border border-primary"
               :class="isSelected(option.value) ? 'bg-primary text-primary-foreground' : ''"
-            >
-              <Icon
-                v-if="isSelected(option.value)"
-                name="check"
-                class="h-3 w-3"
-              />
-            </div>
+            />
             <span>{{ option.label }}</span>
           </div>
           <div
