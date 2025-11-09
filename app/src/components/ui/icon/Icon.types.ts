@@ -13,6 +13,8 @@ import {
   Stethoscope,
   Tag,
   Receipt,
+  Table,
+  BarChart,
 } from 'lucide-vue-next';
 
 export const ICON_MAP = {
@@ -30,6 +32,8 @@ export const ICON_MAP = {
   stethoscope: Stethoscope,
   tag: Tag,
   receipt: Receipt,
+  table: Table,
+  'bar-chart': BarChart,
 } as const;
 
 export type IconName = keyof typeof ICON_MAP;
