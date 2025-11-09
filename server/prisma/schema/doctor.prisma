@@ -1,11 +1,10 @@
 model Doctor {
-  id         String      @id @default(uuid())
-  firstName  String
-  lastName   String
-  crm        String?
+  id          String      @id @default(uuid())
+  firstName   String
+  lastName    String
+  crm         String?
   specialties Specialty[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  deletedAt  DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
 }
-

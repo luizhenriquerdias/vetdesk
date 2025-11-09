@@ -8,4 +8,8 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+
+  transactionsCreated Transaction[] @relation("TransactionCreatedBy")
+  transactionsUpdated Transaction[] @relation("TransactionUpdatedBy")
+  transactionsDeleted Transaction[] @relation("TransactionDeletedBy")
 }

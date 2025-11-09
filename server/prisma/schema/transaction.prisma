@@ -1,0 +1,23 @@
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  description String
+  type        TransactionType
+  datetime    DateTime
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  createdBy   String
+  updatedBy   String?
+  deletedAt   DateTime?
+  deletedBy   String?
+
+  createdByUser User  @relation("TransactionCreatedBy", fields: [createdBy], references: [id])
+  updatedByUser User? @relation("TransactionUpdatedBy", fields: [updatedBy], references: [id])
+  deletedByUser User? @relation("TransactionDeletedBy", fields: [deletedBy], references: [id])
+
+  @@index([deletedAt])
+}
