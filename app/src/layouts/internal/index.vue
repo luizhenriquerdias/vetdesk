@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import AppSidebar from '@/components/AppSidebar/index.vue';
+import AppSidebar from './AppSidebar/index.vue';
 import {
   SidebarInset,
   SidebarProvider,
