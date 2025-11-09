@@ -12,7 +12,7 @@
         <DropdownMenu v-if="authStore.user">
           <DropdownMenuTrigger as-child>
             <button class="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-sidebar-accent transition-colors">
-              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-sidebar-accent">
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-sidebar-accent border">
                 <img
                   v-if="authStore.user.avatarUrl"
                   :src="authStore.user.avatarUrl"

@@ -2,6 +2,7 @@
   <DropdownMenuTrigger
     data-slot="dropdown-menu-trigger"
     v-bind="props"
+    class="cursor-pointer"
   >
     <slot />
   </DropdownMenuTrigger>
