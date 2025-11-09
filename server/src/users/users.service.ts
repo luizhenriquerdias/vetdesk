@@ -5,7 +5,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { hashPassword } from '@/utils/password';
+import { hashPassword, verifyPassword } from '@/utils/password';
 import { CreateUserDto, UpdateUserDto, UserResponse } from '@vetdesk/shared/types/user';
 
 @Injectable()
@@ -63,6 +63,14 @@ export class UsersService {
       throw new BadRequestException('password is required');
     }
 
+    if (!createUserDto.passwordConfirmation) {
+      throw new BadRequestException('passwordConfirmation is required');
+    }
+
+    if (password !== createUserDto.passwordConfirmation.trim()) {
+      throw new BadRequestException('Password and confirmation do not match');
+    }
+
     if (!this.validateEmail(createUserDto.email)) {
       throw new BadRequestException('Invalid email format');
     }
@@ -103,6 +111,14 @@ export class UsersService {
   async update(id: string, updateUserDto: UpdateUserDto): Promise<UserResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('User id is required');
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
 
     const updateData: {
@@ -160,20 +176,30 @@ export class UsersService {
       if (!password) {
         throw new BadRequestException('password cannot be empty');
       }
+
+      if (!updateUserDto.oldPassword) {
+        throw new BadRequestException('oldPassword is required when updating password');
+      }
+
+      if (!updateUserDto.passwordConfirmation) {
+        throw new BadRequestException('passwordConfirmation is required when updating password');
+      }
+
+      if (password !== updateUserDto.passwordConfirmation.trim()) {
+        throw new BadRequestException('Password and confirmation do not match');
+      }
+
+      const isOldPasswordValid = await verifyPassword(updateUserDto.oldPassword.trim(), user.password);
+      if (!isOldPasswordValid) {
+        throw new BadRequestException('Old password is incorrect');
+      }
+
       this.validateStringLength(password, 8, 100, 'password');
       updateData.password = await hashPassword(password);
     }
 
     if (updateUserDto.avatarUrl !== undefined) {
       updateData.avatarUrl = updateUserDto.avatarUrl || null;
-    }
-
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-    });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
     }
 
     const updatedUser = await this.prisma.user.update({

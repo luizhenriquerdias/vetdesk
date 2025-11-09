@@ -11,6 +11,7 @@ export type CreateUserDto = {
   lastName: string;
   email: string;
   password: string;
+  passwordConfirmation?: string;
   avatarUrl?: string | null;
 };
 
@@ -19,6 +20,8 @@ export type UpdateUserDto = {
   lastName?: string;
   email?: string;
   password?: string;
+  oldPassword?: string;
+  passwordConfirmation?: string;
   avatarUrl?: string | null;
 };
 

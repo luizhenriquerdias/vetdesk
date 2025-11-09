@@ -115,8 +115,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useUsersStore } from '@/stores/users';
 import type { UserResponse } from '@shared/types/user';
-import UserFormModal from '@/components/UserFormModal.vue';
-import DeleteUserDialog from '@/components/DeleteUserDialog.vue';
+import UserFormModal from './UserFormModal/index.vue';
+import DeleteUserDialog from './DeleteUserDialog/index.vue';
 
 const usersStore = useUsersStore();
 
