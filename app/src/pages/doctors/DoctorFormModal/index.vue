@@ -36,11 +36,12 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="specialty">Specialty</Label>
-          <Input
-            id="specialty"
-            v-model="formData.specialty"
-            required
+          <Label for="specialties">Specialties</Label>
+          <MultiSelect
+            id="specialties"
+            v-model="formData.specialtyIds"
+            :options="specialtyOptions"
+            placeholder="Select specialties..."
           />
         </div>
 
@@ -73,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -85,7 +86,9 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { MultiSelect } from '@/components/ui/multiselect';
 import { useDoctorsStore } from '@/stores/doctors';
+import { useSpecialtiesStore } from '@/stores/specialties';
 import type { CreateDoctorDto, UpdateDoctorDto, DoctorResponse } from '@shared/types/doctor';
 
 interface Props {
@@ -103,29 +106,46 @@ const emits = defineEmits<{
 }>();
 
 const doctorsStore = useDoctorsStore();
+const specialtiesStore = useSpecialtiesStore();
 
 const saving = ref(false);
 
 const formData = ref({
   firstName: '',
   lastName: '',
-  specialty: '',
+  specialtyIds: [] as string[],
   crm: '',
+});
+
+const specialtyOptions = computed(() => {
+  return specialtiesStore.specialties.map((s) => ({
+    label: s.name,
+    value: s.id,
+  }));
+});
+
+onMounted(async () => {
+  await specialtiesStore.fetchSpecialties();
 });
 
 watch(() => props.doctor, (doctor) => {
   if (doctor) {
+    const specialtyIds = (doctor.specialties || []).map((name: string) => {
+      const specialty = specialtiesStore.specialties.find((s) => s.name === name);
+      return specialty?.id || '';
+    }).filter(Boolean);
+    
     formData.value = {
       firstName: doctor.firstName,
       lastName: doctor.lastName,
-      specialty: doctor.specialty,
+      specialtyIds,
       crm: doctor.crm || '',
     };
   } else {
     formData.value = {
       firstName: '',
       lastName: '',
-      specialty: '',
+      specialtyIds: [],
       crm: '',
     };
   }
@@ -136,7 +156,7 @@ watch(() => props.open, (open) => {
     formData.value = {
       firstName: '',
       lastName: '',
-      specialty: '',
+      specialtyIds: [],
       crm: '',
     };
   }
@@ -149,7 +169,7 @@ const handleSubmit = async () => {
       const data: CreateDoctorDto = {
         firstName: formData.value.firstName,
         lastName: formData.value.lastName,
-        specialty: formData.value.specialty,
+        specialtyIds: formData.value.specialtyIds,
         crm: formData.value.crm || null,
       };
       await doctorsStore.createDoctor(data);
@@ -160,7 +180,7 @@ const handleSubmit = async () => {
     const data: UpdateDoctorDto = {
       firstName: formData.value.firstName,
       lastName: formData.value.lastName,
-      specialty: formData.value.specialty,
+      specialtyIds: formData.value.specialtyIds,
       crm: formData.value.crm || null,
     };
     await doctorsStore.updateDoctor(props.doctor.id, data);

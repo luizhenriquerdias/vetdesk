@@ -15,6 +15,9 @@ export class DoctorsService {
       where: includeDeleted
         ? { deletedAt: { not: null } }
         : { deletedAt: null },
+      include: {
+        specialties: true,
+      },
       orderBy: {
         createdAt: 'desc',
       },
@@ -24,7 +27,7 @@ export class DoctorsService {
       id: doctor.id,
       firstName: doctor.firstName,
       lastName: doctor.lastName,
-      specialty: doctor.specialty,
+      specialties: doctor.specialties.map((s) => s.name),
       crm: doctor.crm,
     }));
   }
@@ -40,7 +43,7 @@ export class DoctorsService {
   async create(createDoctorDto: CreateDoctorDto): Promise<DoctorResponse> {
     const firstName = createDoctorDto.firstName.trim();
     const lastName = createDoctorDto.lastName.trim();
-    const specialty = createDoctorDto.specialty.trim();
+    const specialtyIds = createDoctorDto.specialtyIds || [];
     const crm = createDoctorDto.crm?.trim() || null;
 
     if (!firstName) {
@@ -51,24 +54,45 @@ export class DoctorsService {
       throw new BadRequestException('lastName is required');
     }
 
-    if (!specialty) {
-      throw new BadRequestException('specialty is required');
-    }
-
     this.validateStringLength(firstName, 1, 100, 'firstName');
     this.validateStringLength(lastName, 1, 100, 'lastName');
-    this.validateStringLength(specialty, 1, 100, 'specialty');
 
     if (crm) {
       this.validateStringLength(crm, 1, 50, 'crm');
     }
 
+    const createData: {
+      firstName: string;
+      lastName: string;
+      crm: string | null;
+      specialties?: { connect: { id: string }[] };
+    } = {
+      firstName,
+      lastName,
+      crm,
+    };
+
+    if (Array.isArray(specialtyIds) && specialtyIds.length > 0) {
+      const existingSpecialties = await this.prisma.specialty.findMany({
+        where: {
+          id: { in: specialtyIds },
+          deletedAt: null,
+        },
+      });
+
+      if (existingSpecialties.length !== specialtyIds.length) {
+        throw new BadRequestException('One or more specialties not found');
+      }
+
+      createData.specialties = {
+        connect: specialtyIds.map((id) => ({ id })),
+      };
+    }
+
     const doctor = await this.prisma.doctor.create({
-      data: {
-        firstName,
-        lastName,
-        specialty,
-        crm,
+      data: createData,
+      include: {
+        specialties: true,
       },
     });
 
@@ -76,7 +100,7 @@ export class DoctorsService {
       id: doctor.id,
       firstName: doctor.firstName,
       lastName: doctor.lastName,
-      specialty: doctor.specialty,
+      specialties: doctor.specialties.map((s) => s.name),
       crm: doctor.crm,
     };
   }
@@ -101,8 +125,8 @@ export class DoctorsService {
     const updateData: {
       firstName?: string;
       lastName?: string;
-      specialty?: string;
       crm?: string | null;
+      specialties?: { set: { id: string }[] };
     } = {};
 
     if (Object.keys(updateDoctorDto).length === 0) {
@@ -127,13 +151,31 @@ export class DoctorsService {
       updateData.lastName = lastName;
     }
 
-    if (updateDoctorDto.specialty !== undefined) {
-      const specialty = updateDoctorDto.specialty.trim();
-      if (!specialty) {
-        throw new BadRequestException('specialty cannot be empty');
+    if (updateDoctorDto.specialtyIds !== undefined) {
+      if (!Array.isArray(updateDoctorDto.specialtyIds)) {
+        throw new BadRequestException('specialtyIds must be an array');
       }
-      this.validateStringLength(specialty, 1, 100, 'specialty');
-      updateData.specialty = specialty;
+
+      if (updateDoctorDto.specialtyIds.length > 0) {
+        const existingSpecialties = await this.prisma.specialty.findMany({
+          where: {
+            id: { in: updateDoctorDto.specialtyIds },
+            deletedAt: null,
+          },
+        });
+
+        if (existingSpecialties.length !== updateDoctorDto.specialtyIds.length) {
+          throw new BadRequestException('One or more specialties not found');
+        }
+
+        updateData.specialties = {
+          set: updateDoctorDto.specialtyIds.map((specialtyId) => ({ id: specialtyId })),
+        };
+      } else {
+        updateData.specialties = {
+          set: [],
+        };
+      }
     }
 
     if (updateDoctorDto.crm !== undefined) {
@@ -147,13 +189,16 @@ export class DoctorsService {
     const updatedDoctor = await this.prisma.doctor.update({
       where: { id },
       data: updateData,
+      include: {
+        specialties: true,
+      },
     });
 
     return {
       id: updatedDoctor.id,
       firstName: updatedDoctor.firstName,
       lastName: updatedDoctor.lastName,
-      specialty: updatedDoctor.specialty,
+      specialties: updatedDoctor.specialties.map((s) => s.name),
       crm: updatedDoctor.crm,
     };
   }
@@ -203,13 +248,16 @@ export class DoctorsService {
     const restoredDoctor = await this.prisma.doctor.update({
       where: { id },
       data: { deletedAt: null },
+      include: {
+        specialties: true,
+      },
     });
 
     return {
       id: restoredDoctor.id,
       firstName: restoredDoctor.firstName,
       lastName: restoredDoctor.lastName,
-      specialty: restoredDoctor.specialty,
+      specialties: restoredDoctor.specialties.map((s) => s.name),
       crm: restoredDoctor.crm,
     };
   }

@@ -34,7 +34,7 @@
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Specialty</TableHead>
+              <TableHead>Specialties</TableHead>
               <TableHead>CRM</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -55,7 +55,7 @@
               </TableCell>
               <TableCell>
                 <span :class="doctorsStore.showDeleted ? 'line-through' : ''">
-                  {{ doctor.specialty }}
+                  {{ doctor.specialties?.length ? doctor.specialties.join(', ') : '-' }}
                 </span>
               </TableCell>
               <TableCell>
