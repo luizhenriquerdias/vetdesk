@@ -20,7 +20,7 @@ export class AppController {
   async init(@Req() req: Request, @Res() res: Response) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const user = await this.authService.getCurrentUser(req.session.userId);
@@ -30,7 +30,7 @@ export class AppController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 }

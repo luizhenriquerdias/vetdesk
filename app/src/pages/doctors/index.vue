@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between">
       <div>
         <p class="text-muted-foreground">
-          {{ doctorsStore.showDeleted ? 'View and restore deleted doctors' : 'Manage doctors' }}
+          {{ doctorsStore.showDeleted ? 'Visualizar e restaurar médicos excluídos' : 'Gerenciar médicos' }}
         </p>
       </div>
       <div class="flex items-center gap-4">
@@ -12,10 +12,10 @@
           @update:model-value="handleToggleViewValue"
         >
           <ToggleGroupItem value="active">
-            Active
+            Ativo
           </ToggleGroupItem>
           <ToggleGroupItem value="deleted">
-            Deleted
+            Excluído
           </ToggleGroupItem>
         </ToggleGroup>
         <Button
@@ -23,7 +23,7 @@
           @click="handleAddDoctor"
         >
           <Icon name="plus" />
-          <span>Add Doctor</span>
+          <span>Adicionar Médico</span>
         </Button>
       </div>
     </div>
@@ -33,11 +33,11 @@
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Specialties</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>Especialidades</TableHead>
               <TableHead>CRM</TableHead>
-              <TableHead>Appointment Fee</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Preço da Consulta</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -86,7 +86,7 @@
                       @click="handleEditDoctor(doctor)"
                     >
                       <Icon name="edit" />
-                      <span>Edit</span>
+                      <span>Editar</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       v-if="!doctorsStore.showDeleted"
@@ -94,7 +94,7 @@
                       @click="handleDeleteDoctor(doctor)"
                     >
                       <Icon name="trash" />
-                      <span>Delete</span>
+                      <span>Excluir</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       v-if="doctorsStore.showDeleted"
@@ -102,7 +102,7 @@
                       @click="handleRestoreDoctor(doctor)"
                     >
                       <Icon name="rotate-ccw" />
-                      <span>Restore</span>
+                      <span>Restaurar</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -113,7 +113,7 @@
                 colspan="5"
                 class="text-center text-muted-foreground"
               >
-                No doctors found
+                Nenhum médico encontrado
               </TableCell>
             </TableRow>
           </TableBody>

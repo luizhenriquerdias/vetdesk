@@ -6,10 +6,10 @@
     <DialogContent>
       <DialogHeader>
         <DialogTitle>
-          {{ appointment ? 'Edit Appointment' : 'Create Appointment' }}
+          {{ appointment ? 'Editar Consulta' : 'Criar Consulta' }}
         </DialogTitle>
         <DialogDescription>
-          {{ appointment ? 'Update appointment information' : 'Add a new appointment to the system' }}
+          {{ appointment ? 'Atualizar informações da consulta' : 'Adicionar uma nova consulta ao sistema' }}
         </DialogDescription>
       </DialogHeader>
 
@@ -18,14 +18,14 @@
         @submit.prevent="handleSubmit"
       >
         <div class="space-y-2">
-          <Label for="doctor">Doctor</Label>
+          <Label for="doctor">Médico</Label>
           <Select
             id="doctor"
             v-model="formData.doctorId"
             required
           >
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="Select doctor..." />
+              <SelectValue placeholder="Selecione o médico..." />
             </SelectTrigger>
             <SelectContent>
               <SelectItem
@@ -33,7 +33,7 @@
                 value="__empty__"
                 disabled
               >
-                No doctors available
+                Nenhum médico disponível
               </SelectItem>
               <SelectItem
                 v-for="option in doctorOptions"
@@ -47,7 +47,7 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="fee">Fee</Label>
+          <Label for="fee">Preço</Label>
           <CurrencyInput
             id="fee"
             v-model="formData.fee"
@@ -56,7 +56,7 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="percProfessional">Payment Percentage</Label>
+          <Label for="percProfessional">Percentual de Pagamento</Label>
           <div class="space-y-2">
             <Slider
               id="percProfessional"
@@ -67,16 +67,16 @@
               required
             />
             <div class="flex justify-between text-sm text-muted-foreground">
-              <span>Professional ({{ (percProfessionalValue[0] ?? 0).toFixed(0) }}%)</span>
+              <span>Médico ({{ (percProfessionalValue[0] ?? 0).toFixed(0) }}%)</span>
               <span class="flex-1" />
-              <span>Clinic ({{ (100 - (percProfessionalValue[0] ?? 0)).toFixed(0) }}%)</span>
+              <span>Clínica ({{ (100 - (percProfessionalValue[0] ?? 0)).toFixed(0) }}%)</span>
             </div>
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-2">
-            <Label for="date">Date</Label>
+            <Label for="date">Data</Label>
             <Input
               id="date"
               v-model="formData.date"
@@ -85,7 +85,7 @@
             />
           </div>
           <div class="space-y-2">
-            <Label for="time">Time</Label>
+            <Label for="time">Hora</Label>
             <Input
               id="time"
               v-model="formData.time"
@@ -101,13 +101,13 @@
             variant="outline"
             @click="handleCancel"
           >
-            Cancel
+            Cancelar
           </Button>
           <Button
             type="submit"
             :disabled="saving"
           >
-            {{ saving ? 'Saving...' : 'Save' }}
+            {{ saving ? 'Salvando...' : 'Salvar' }}
           </Button>
         </DialogFooter>
       </form>

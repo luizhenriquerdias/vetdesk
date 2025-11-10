@@ -5,9 +5,9 @@
   >
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Delete Doctor</DialogTitle>
+        <DialogTitle>Excluir Médico</DialogTitle>
         <DialogDescription>
-          Are you sure you want to delete {{ doctor?.firstName }} {{ doctor?.lastName }}? The doctor will be soft deleted and can be restored later.
+          Tem certeza que deseja excluir {{ doctor?.firstName }} {{ doctor?.lastName }}? O médico será excluído de forma suave e poderá ser restaurado posteriormente.
         </DialogDescription>
       </DialogHeader>
 
@@ -17,7 +17,7 @@
           variant="outline"
           @click="handleCancel"
         >
-          Cancel
+          Cancelar
         </Button>
         <Button
           type="button"
@@ -25,7 +25,7 @@
           :disabled="loading"
           @click="handleConfirm"
         >
-          {{ loading ? 'Deleting...' : 'Delete' }}
+          {{ loading ? 'Excluindo...' : 'Excluir' }}
         </Button>
       </DialogFooter>
     </DialogContent>

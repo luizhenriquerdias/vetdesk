@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between">
       <div>
         <p class="text-muted-foreground">
-          {{ usersStore.showDeleted ? 'View and restore deleted users' : 'Manage users' }}
+          {{ usersStore.showDeleted ? 'Visualizar e restaurar usuários excluídos' : 'Gerenciar usuários' }}
         </p>
       </div>
       <div class="flex items-center gap-4">
@@ -12,10 +12,10 @@
           @update:model-value="handleToggleViewValue"
         >
           <ToggleGroupItem value="active">
-            Active
+            Ativo
           </ToggleGroupItem>
           <ToggleGroupItem value="deleted">
-            Deleted
+            Excluído
           </ToggleGroupItem>
         </ToggleGroup>
         <Button
@@ -23,7 +23,7 @@
           @click="handleAddUser"
         >
           <Icon name="plus" />
-          <span>Add User</span>
+          <span>Adicionar Usuário</span>
         </Button>
       </div>
     </div>
@@ -33,9 +33,9 @@
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>E-mail</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -75,7 +75,7 @@
                         @click="handleEditUser(user)"
                       >
                         <Icon name="edit" />
-                        <span>Edit</span>
+                        <span>Editar</span>
                       </DropdownMenuItem>
                       <Tooltip
                         v-if="!usersStore.showDeleted && user.id === authStore.user?.id"
@@ -88,12 +88,12 @@
                               @click.stop
                             >
                               <Icon name="trash" />
-                              <span>Delete</span>
+                              <span>Excluir</span>
                             </DropdownMenuItem>
                           </div>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Cannot delete your own account</p>
+                          <p>Você não pode excluir sua própria conta</p>
                         </TooltipContent>
                       </Tooltip>
                       <DropdownMenuItem
@@ -110,7 +110,7 @@
                         @click="handleRestoreUser(user)"
                       >
                         <Icon name="rotate-ccw" />
-                        <span>Restore</span>
+                        <span>Restaurar</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </TooltipProvider>
@@ -122,7 +122,7 @@
                 colspan="3"
                 class="text-center text-muted-foreground"
               >
-                No users found
+                Nenhum usuário encontrado
               </TableCell>
             </TableRow>
           </TableBody>

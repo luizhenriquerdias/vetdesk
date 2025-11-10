@@ -6,10 +6,10 @@
     <DialogContent>
       <DialogHeader>
         <DialogTitle>
-          {{ transaction ? 'Edit Transaction' : 'Create Transaction' }}
+          {{ transaction ? 'Editar Transação' : 'Criar Transação' }}
         </DialogTitle>
         <DialogDescription>
-          {{ transaction ? 'Update transaction information' : 'Add a new transaction to the system' }}
+          {{ transaction ? 'Atualizar informações da transação' : 'Adicionar uma nova transação ao sistema' }}
         </DialogDescription>
       </DialogHeader>
 
@@ -18,7 +18,7 @@
         @submit.prevent="handleSubmit"
       >
         <div class="space-y-2">
-          <Label for="description">Description</Label>
+          <Label for="description">Descrição</Label>
           <Input
             id="description"
             v-model="formData.description"
@@ -27,21 +27,21 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="type">Type</Label>
+          <Label for="type">Tipo</Label>
           <Select
             id="type"
             v-model="formData.type"
             required
           >
             <SelectTrigger class="w-full">
-              <SelectValue placeholder="Select type" />
+              <SelectValue placeholder="Selecione o tipo" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="INCOME">
-                Income
+                Receita
               </SelectItem>
               <SelectItem value="EXPENSE">
-                Expense
+                Despesa
               </SelectItem>
             </SelectContent>
           </Select>
@@ -49,7 +49,7 @@
 
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-2">
-            <Label for="date">Date</Label>
+            <Label for="date">Data</Label>
             <Input
               id="date"
               v-model="formData.date"
@@ -58,7 +58,7 @@
             />
           </div>
           <div class="space-y-2">
-            <Label for="time">Time</Label>
+            <Label for="time">Hora</Label>
             <Input
               id="time"
               v-model="formData.time"
@@ -69,7 +69,7 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="amount">Amount</Label>
+          <Label for="amount">Valor</Label>
           <CurrencyInput
             id="amount"
             v-model="formData.amount"
@@ -83,13 +83,13 @@
             variant="outline"
             @click="handleCancel"
           >
-            Cancel
+            Cancelar
           </Button>
           <Button
             type="submit"
             :disabled="saving"
           >
-            {{ saving ? 'Saving...' : 'Save' }}
+            {{ saving ? 'Salvando...' : 'Salvar' }}
           </Button>
         </DialogFooter>
       </form>

@@ -5,9 +5,9 @@
   >
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Delete User</DialogTitle>
+        <DialogTitle>Excluir Usuário</DialogTitle>
         <DialogDescription>
-          Are you sure you want to delete {{ user?.firstName }} {{ user?.lastName }}? The user will be soft deleted and can be restored later.
+          Tem certeza que deseja excluir {{ user?.firstName }} {{ user?.lastName }}? O usuário será excluído de forma suave e poderá ser restaurado posteriormente.
         </DialogDescription>
       </DialogHeader>
 
@@ -17,7 +17,7 @@
           variant="outline"
           @click="handleCancel"
         >
-          Cancel
+          Cancelar
         </Button>
         <Button
           type="button"
@@ -25,7 +25,7 @@
           :disabled="loading"
           @click="handleConfirm"
         >
-          {{ loading ? 'Deleting...' : 'Delete' }}
+          {{ loading ? 'Excluindo...' : 'Excluir' }}
         </Button>
       </DialogFooter>
     </DialogContent>

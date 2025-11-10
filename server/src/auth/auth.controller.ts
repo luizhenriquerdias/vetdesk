@@ -24,7 +24,7 @@ export class AuthController {
       req.session.userId = user.id;
       req.session.save((err) => {
         if (err) {
-          return res.status(500).json({ message: 'Failed to create session' });
+          return res.status(500).json({ message: 'Falha ao criar sessão' });
         }
         const response: AuthResponse = { user };
         return res.json(response);
@@ -33,7 +33,7 @@ export class AuthController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 
@@ -41,9 +41,9 @@ export class AuthController {
   logout(@Req() req: Request, @Res() res: Response) {
     req.session.destroy((err) => {
       if (err) {
-        return res.status(500).json({ message: 'Failed to destroy session' });
+        return res.status(500).json({ message: 'Falha ao destruir sessão' });
       }
-      return res.json({ message: 'Logged out successfully' });
+      return res.json({ message: 'Logout realizado com sucesso' });
     });
   }
 }

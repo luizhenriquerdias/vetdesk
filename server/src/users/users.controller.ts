@@ -23,7 +23,7 @@ export class UsersController {
   async findAll(@Req() req: Request, @Res() res: Response) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const includeDeleted = req.query.includeDeleted === 'true';
@@ -33,7 +33,7 @@ export class UsersController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 
@@ -45,7 +45,7 @@ export class UsersController {
   ) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const user = await this.usersService.create(createUserDto);
@@ -54,7 +54,7 @@ export class UsersController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 
@@ -67,7 +67,7 @@ export class UsersController {
   ) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const user = await this.usersService.update(id, updateUserDto);
@@ -76,7 +76,7 @@ export class UsersController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 
@@ -84,7 +84,7 @@ export class UsersController {
   async delete(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const result = await this.usersService.delete(id, req.session.userId);
@@ -93,7 +93,7 @@ export class UsersController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 
@@ -101,7 +101,7 @@ export class UsersController {
   async restore(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const user = await this.usersService.restore(id);
@@ -110,7 +110,7 @@ export class UsersController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 }

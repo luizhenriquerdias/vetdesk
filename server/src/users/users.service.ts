@@ -39,7 +39,7 @@ export class UsersService {
   private validateStringLength(value: string, min: number, max: number, fieldName: string): void {
     if (value.length < min || value.length > max) {
       throw new BadRequestException(
-        `${fieldName} must be between ${min} and ${max} characters`,
+        `${fieldName} deve ter entre ${min} e ${max} caracteres`,
       );
     }
   }
@@ -51,36 +51,36 @@ export class UsersService {
     const password = createUserDto.password.trim();
 
     if (!firstName) {
-      throw new BadRequestException('firstName is required');
+      throw new BadRequestException('Nome é obrigatório');
     }
 
     if (!lastName) {
-      throw new BadRequestException('lastName is required');
+      throw new BadRequestException('Sobrenome é obrigatório');
     }
 
     if (!email) {
-      throw new BadRequestException('email is required');
+      throw new BadRequestException('E-mail é obrigatório');
     }
 
     if (!password) {
-      throw new BadRequestException('password is required');
+      throw new BadRequestException('Senha é obrigatória');
     }
 
     if (!createUserDto.passwordConfirmation) {
-      throw new BadRequestException('passwordConfirmation is required');
+      throw new BadRequestException('Confirmação de senha é obrigatória');
     }
 
     if (password !== createUserDto.passwordConfirmation.trim()) {
-      throw new BadRequestException('Password and confirmation do not match');
+      throw new BadRequestException('A senha e a confirmação não coincidem');
     }
 
     if (!this.validateEmail(createUserDto.email)) {
-      throw new BadRequestException('Invalid email format');
+      throw new BadRequestException('Formato de e-mail inválido');
     }
 
-    this.validateStringLength(createUserDto.firstName.trim(), 1, 100, 'firstName');
-    this.validateStringLength(createUserDto.lastName.trim(), 1, 100, 'lastName');
-    this.validateStringLength(createUserDto.password, 8, 100, 'password');
+    this.validateStringLength(createUserDto.firstName.trim(), 1, 100, 'Nome');
+    this.validateStringLength(createUserDto.lastName.trim(), 1, 100, 'Sobrenome');
+    this.validateStringLength(createUserDto.password, 8, 100, 'Senha');
 
     const existingUser = await this.prisma.user.findFirst({
       where: {
@@ -90,7 +90,7 @@ export class UsersService {
     });
 
     if (existingUser) {
-      throw new ConflictException('Email already exists');
+      throw new ConflictException('E-mail já existe');
     }
 
     const hashedPassword = await hashPassword(createUserDto.password);
@@ -116,7 +116,7 @@ export class UsersService {
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<UserResponse> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('User id is required');
+      throw new BadRequestException('ID do usuário é obrigatório');
     }
 
     const user = await this.prisma.user.findFirst({
@@ -124,11 +124,11 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuário não encontrado');
     }
 
     if (user.deletedAt) {
-      throw new BadRequestException('Cannot update a deleted user');
+      throw new BadRequestException('Não é possível atualizar um usuário excluído');
     }
 
     const updateData: {
@@ -140,34 +140,34 @@ export class UsersService {
     } = {};
 
     if (Object.keys(updateUserDto).length === 0) {
-      throw new BadRequestException('At least one field must be provided for update');
+      throw new BadRequestException('Pelo menos um campo deve ser fornecido para atualização');
     }
 
     if (updateUserDto.firstName !== undefined) {
       const firstName = updateUserDto.firstName.trim();
       if (!firstName) {
-        throw new BadRequestException('firstName cannot be empty');
+        throw new BadRequestException('Nome não pode estar vazio');
       }
-      this.validateStringLength(firstName, 1, 100, 'firstName');
+      this.validateStringLength(firstName, 1, 100, 'Nome');
       updateData.firstName = firstName;
     }
 
     if (updateUserDto.lastName !== undefined) {
       const lastName = updateUserDto.lastName.trim();
       if (!lastName) {
-        throw new BadRequestException('lastName cannot be empty');
+        throw new BadRequestException('Sobrenome não pode estar vazio');
       }
-      this.validateStringLength(lastName, 1, 100, 'lastName');
+      this.validateStringLength(lastName, 1, 100, 'Sobrenome');
       updateData.lastName = lastName;
     }
 
     if (updateUserDto.email !== undefined) {
       const email = updateUserDto.email.trim().toLowerCase();
       if (!email) {
-        throw new BadRequestException('email cannot be empty');
+        throw new BadRequestException('E-mail não pode estar vazio');
       }
       if (!this.validateEmail(email)) {
-        throw new BadRequestException('Invalid email format');
+        throw new BadRequestException('Formato de e-mail inválido');
       }
 
       const existingUser = await this.prisma.user.findFirst({
@@ -178,7 +178,7 @@ export class UsersService {
       });
 
       if (existingUser && existingUser.id !== id) {
-        throw new ConflictException('Email already exists');
+        throw new ConflictException('E-mail já existe');
       }
 
       updateData.email = email;
@@ -187,27 +187,27 @@ export class UsersService {
     if (updateUserDto.password !== undefined) {
       const password = updateUserDto.password.trim();
       if (!password) {
-        throw new BadRequestException('password cannot be empty');
+        throw new BadRequestException('Senha não pode estar vazia');
       }
 
       if (!updateUserDto.oldPassword) {
-        throw new BadRequestException('oldPassword is required when updating password');
+        throw new BadRequestException('Senha antiga é obrigatória ao atualizar a senha');
       }
 
       if (!updateUserDto.passwordConfirmation) {
-        throw new BadRequestException('passwordConfirmation is required when updating password');
+        throw new BadRequestException('Confirmação de senha é obrigatória ao atualizar a senha');
       }
 
       if (password !== updateUserDto.passwordConfirmation.trim()) {
-        throw new BadRequestException('Password and confirmation do not match');
+        throw new BadRequestException('A senha e a confirmação não coincidem');
       }
 
       const isOldPasswordValid = await verifyPassword(updateUserDto.oldPassword.trim(), user.password);
       if (!isOldPasswordValid) {
-        throw new BadRequestException('Old password is incorrect');
+        throw new BadRequestException('Senha antiga está incorreta');
       }
 
-      this.validateStringLength(password, 8, 100, 'password');
+      this.validateStringLength(password, 8, 100, 'Senha');
       updateData.password = await hashPassword(password);
     }
 
@@ -231,11 +231,11 @@ export class UsersService {
 
   async delete(id: string, currentUserId: string): Promise<{ message: string }> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('User id is required');
+      throw new BadRequestException('ID do usuário é obrigatório');
     }
 
     if (id === currentUserId) {
-      throw new BadRequestException('Cannot delete your own account');
+      throw new BadRequestException('Não é possível excluir sua própria conta');
     }
 
     const user = await this.prisma.user.findFirst({
@@ -243,11 +243,11 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuário não encontrado');
     }
 
     if (user.deletedAt) {
-      throw new BadRequestException('User is already deleted');
+      throw new BadRequestException('Usuário já está excluído');
     }
 
     await this.prisma.user.update({
@@ -255,12 +255,12 @@ export class UsersService {
       data: { deletedAt: new Date() },
     });
 
-    return { message: 'User deleted successfully' };
+    return { message: 'Usuário excluído com sucesso' };
   }
 
   async restore(id: string): Promise<UserResponse> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('User id is required');
+      throw new BadRequestException('ID do usuário é obrigatório');
     }
 
     const user = await this.prisma.user.findFirst({
@@ -268,11 +268,11 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuário não encontrado');
     }
 
     if (!user.deletedAt) {
-      throw new BadRequestException('User is not deleted');
+      throw new BadRequestException('Usuário não está excluído');
     }
 
     const restoredUser = await this.prisma.user.update({

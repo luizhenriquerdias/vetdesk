@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-6">
     <div>
       <p class="text-muted-foreground">
-        Welcome to VetDesk
+        Bem-vindo ao VetDesk
       </p>
     </div>
     <div class="grid gap-4 md:grid-cols-3">
@@ -12,10 +12,10 @@
     </div>
     <div class="rounded-xl bg-muted/50 p-6">
       <h2 class="text-xl font-semibold mb-2">
-        Dashboard
+        Painel
       </h2>
       <p class="text-muted-foreground">
-        Your dashboard content goes here.
+        O conteúdo do seu painel aparecerá aqui.
       </p>
     </div>
   </div>

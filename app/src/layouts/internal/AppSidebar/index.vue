@@ -3,41 +3,41 @@
     <SidebarHeader />
     <SidebarContent>
       <SidebarGroup>
-        <SidebarGroupLabel>Application</SidebarGroupLabel>
+        <SidebarGroupLabel>Aplicação</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarItem
               :to="ROUTE_HOME"
               icon="home"
-              label="Home"
+              label="Início"
             />
             <SidebarItem
               :to="ROUTE_TRANSACTIONS"
               icon="receipt"
-              label="Transactions"
+              label="Transações"
             />
             <SidebarItem
               :to="ROUTE_APPOINTMENTS"
               icon="calendar"
-              label="Appointments"
+              label="Consultas"
             />
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
 
       <SidebarGroup>
-        <SidebarGroupLabel>Records</SidebarGroupLabel>
+        <SidebarGroupLabel>Cadastros</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarItem
               :to="ROUTE_DOCTORS"
               icon="stethoscope"
-              label="Doctors"
+              label="Médicos"
             />
             <SidebarItem
               :to="ROUTE_SPECIALTIES"
               icon="tag"
-              label="Specialties"
+              label="Especialidades"
             />
           </SidebarMenu>
         </SidebarGroupContent>
@@ -46,13 +46,13 @@
       <div class="flex-1" />
 
       <SidebarGroup>
-        <SidebarGroupLabel>Administration</SidebarGroupLabel>
+        <SidebarGroupLabel>Administração</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarItem
               :to="ROUTE_USERS"
               icon="users"
-              label="Users"
+              label="Usuários"
             />
           </SidebarMenu>
         </SidebarGroupContent>

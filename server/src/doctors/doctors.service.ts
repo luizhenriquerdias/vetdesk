@@ -38,7 +38,7 @@ export class DoctorsService {
   private validateStringLength(value: string, min: number, max: number, fieldName: string): void {
     if (value.length < min || value.length > max) {
       throw new BadRequestException(
-        `${fieldName} must be between ${min} and ${max} characters`,
+        `${fieldName} deve ter entre ${min} e ${max} caracteres`,
       );
     }
   }
@@ -52,22 +52,22 @@ export class DoctorsService {
     const appointmentFee = createDoctorDto.appointmentFee ?? 0;
 
     if (!firstName) {
-      throw new BadRequestException('firstName is required');
+      throw new BadRequestException('Nome é obrigatório');
     }
 
     if (!lastName) {
-      throw new BadRequestException('lastName is required');
+      throw new BadRequestException('Sobrenome é obrigatório');
     }
 
-    this.validateStringLength(firstName, 1, 100, 'firstName');
-    this.validateStringLength(lastName, 1, 100, 'lastName');
+    this.validateStringLength(firstName, 1, 100, 'Nome');
+    this.validateStringLength(lastName, 1, 100, 'Sobrenome');
 
     if (crm) {
-      this.validateStringLength(crm, 1, 50, 'crm');
+      this.validateStringLength(crm, 1, 50, 'CRM');
     }
 
     if (percProfessional < 0 || percProfessional > 100) {
-      throw new BadRequestException('percProfessional must be between 0.0 and 100.0');
+      throw new BadRequestException('Percentual profissional deve estar entre 0,0 e 100,0');
     }
 
     const createData: {
@@ -94,7 +94,7 @@ export class DoctorsService {
       });
 
       if (!existingSpecialty) {
-        throw new BadRequestException('Specialty not found');
+        throw new BadRequestException('Especialidade não encontrada');
       }
 
       createData.specialty = {
@@ -122,7 +122,7 @@ export class DoctorsService {
 
   async update(id: string, updateDoctorDto: UpdateDoctorDto): Promise<DoctorResponse> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('Doctor id is required');
+      throw new BadRequestException('ID do médico é obrigatório');
     }
 
     const doctor = await this.prisma.doctor.findFirst({
@@ -130,11 +130,11 @@ export class DoctorsService {
     });
 
     if (!doctor) {
-      throw new NotFoundException('Doctor not found');
+      throw new NotFoundException('Médico não encontrado');
     }
 
     if (doctor.deletedAt) {
-      throw new BadRequestException('Cannot update a deleted doctor');
+      throw new BadRequestException('Não é possível atualizar um médico excluído');
     }
 
     const updateData: {
@@ -147,24 +147,24 @@ export class DoctorsService {
     } = {};
 
     if (Object.keys(updateDoctorDto).length === 0) {
-      throw new BadRequestException('At least one field must be provided for update');
+      throw new BadRequestException('Pelo menos um campo deve ser fornecido para atualização');
     }
 
     if (updateDoctorDto.firstName !== undefined) {
       const firstName = updateDoctorDto.firstName.trim();
       if (!firstName) {
-        throw new BadRequestException('firstName cannot be empty');
+        throw new BadRequestException('Nome não pode estar vazio');
       }
-      this.validateStringLength(firstName, 1, 100, 'firstName');
+      this.validateStringLength(firstName, 1, 100, 'Nome');
       updateData.firstName = firstName;
     }
 
     if (updateDoctorDto.lastName !== undefined) {
       const lastName = updateDoctorDto.lastName.trim();
       if (!lastName) {
-        throw new BadRequestException('lastName cannot be empty');
+        throw new BadRequestException('Sobrenome não pode estar vazio');
       }
-      this.validateStringLength(lastName, 1, 100, 'lastName');
+      this.validateStringLength(lastName, 1, 100, 'Sobrenome');
       updateData.lastName = lastName;
     }
 
@@ -178,7 +178,7 @@ export class DoctorsService {
         });
 
         if (!existingSpecialty) {
-          throw new BadRequestException('Specialty not found');
+          throw new BadRequestException('Especialidade não encontrada');
         }
 
         updateData.specialty = {
@@ -194,21 +194,21 @@ export class DoctorsService {
     if (updateDoctorDto.crm !== undefined) {
       const crm = updateDoctorDto.crm?.trim() || null;
       if (crm) {
-        this.validateStringLength(crm, 1, 50, 'crm');
+        this.validateStringLength(crm, 1, 50, 'CRM');
       }
       updateData.crm = crm;
     }
 
     if (updateDoctorDto.percProfessional !== undefined) {
       if (updateDoctorDto.percProfessional < 0 || updateDoctorDto.percProfessional > 100) {
-        throw new BadRequestException('percProfessional must be between 0.0 and 100.0');
+        throw new BadRequestException('Percentual profissional deve estar entre 0,0 e 100,0');
       }
       updateData.percProfessional = new Decimal(updateDoctorDto.percProfessional);
     }
 
     if (updateDoctorDto.appointmentFee !== undefined) {
       if (updateDoctorDto.appointmentFee < 0) {
-        throw new BadRequestException('appointmentFee must be greater than or equal to 0');
+        throw new BadRequestException('Preço da consulta deve ser maior ou igual a 0');
       }
       updateData.appointmentFee = new Decimal(updateDoctorDto.appointmentFee);
     }
@@ -234,7 +234,7 @@ export class DoctorsService {
 
   async delete(id: string): Promise<{ message: string }> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('Doctor id is required');
+      throw new BadRequestException('ID do médico é obrigatório');
     }
 
     const doctor = await this.prisma.doctor.findFirst({
@@ -242,11 +242,11 @@ export class DoctorsService {
     });
 
     if (!doctor) {
-      throw new NotFoundException('Doctor not found');
+      throw new NotFoundException('Médico não encontrado');
     }
 
     if (doctor.deletedAt) {
-      throw new BadRequestException('Doctor is already deleted');
+      throw new BadRequestException('Médico já está excluído');
     }
 
     await this.prisma.doctor.update({
@@ -254,12 +254,12 @@ export class DoctorsService {
       data: { deletedAt: new Date() },
     });
 
-    return { message: 'Doctor deleted successfully' };
+    return { message: 'Médico excluído com sucesso' };
   }
 
   async restore(id: string): Promise<DoctorResponse> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('Doctor id is required');
+      throw new BadRequestException('ID do médico é obrigatório');
     }
 
     const doctor = await this.prisma.doctor.findFirst({
@@ -267,11 +267,11 @@ export class DoctorsService {
     });
 
     if (!doctor) {
-      throw new NotFoundException('Doctor not found');
+      throw new NotFoundException('Médico não encontrado');
     }
 
     if (!doctor.deletedAt) {
-      throw new BadRequestException('Doctor is not deleted');
+      throw new BadRequestException('Médico não está excluído');
     }
 
     const restoredDoctor = await this.prisma.doctor.update({

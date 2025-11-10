@@ -36,7 +36,7 @@
             v-if="options.length === 0"
             class="px-2 py-1.5 text-sm text-muted-foreground"
           >
-            No options available
+            Nenhuma opção disponível
           </div>
         </div>
       </DropdownMenuContent>
@@ -70,7 +70,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => [],
-  placeholder: 'Select options...',
+  placeholder: 'Selecione as opções...',
 });
 
 const emits = defineEmits<{

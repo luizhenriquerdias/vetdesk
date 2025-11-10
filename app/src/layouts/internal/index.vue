@@ -42,7 +42,7 @@
               @click="handleLogout"
             >
               <Icon name="logout" />
-              <span>Logout</span>
+              <span>Sair</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -92,17 +92,17 @@ const pageTitle = computed(() => {
 
   switch (routeName) {
     case ROUTE_HOME:
-      return 'Home';
+      return 'Início';
     case ROUTE_USERS:
-      return usersStore.showDeleted ? 'Deleted Users' : 'Users';
+      return usersStore.showDeleted ? 'Usuários Excluídos' : 'Usuários';
     case ROUTE_DOCTORS:
-      return doctorsStore.showDeleted ? 'Deleted Doctors' : 'Doctors';
+      return doctorsStore.showDeleted ? 'Médicos Excluídos' : 'Médicos';
     case ROUTE_SPECIALTIES:
-      return specialtiesStore.showDeleted ? 'Deleted Specialties' : 'Specialties';
+      return specialtiesStore.showDeleted ? 'Especialidades Excluídas' : 'Especialidades';
     case ROUTE_TRANSACTIONS:
-      return transactionsStore.showDeleted ? 'Deleted Transactions' : 'Transactions';
+      return transactionsStore.showDeleted ? 'Transações Excluídas' : 'Transações';
     case ROUTE_APPOINTMENTS:
-      return appointmentsStore.showDeleted ? 'Deleted Appointments' : 'Appointments';
+      return appointmentsStore.showDeleted ? 'Consultas Excluídas' : 'Consultas';
     default:
       return '';
   }

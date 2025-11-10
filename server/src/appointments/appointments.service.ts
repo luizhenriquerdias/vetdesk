@@ -29,7 +29,7 @@ export class AppointmentsService {
     if (month) {
       const [year, monthNum] = month.split('-').map(Number);
       if (isNaN(year) || isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
-        throw new BadRequestException('Invalid month format. Expected YYYY-MM');
+        throw new BadRequestException('Formato de mês inválido. Esperado AAAA-MM');
       }
 
       const startOfMonth = new Date(year, monthNum - 1, 1, 0, 0, 0, 0);
@@ -64,23 +64,23 @@ export class AppointmentsService {
     const datetime = new Date(createAppointmentDto.datetime);
 
     if (!doctorId) {
-      throw new BadRequestException('doctorId is required');
+      throw new BadRequestException('ID do médico é obrigatório');
     }
 
     if (fee === undefined || fee === null) {
-      throw new BadRequestException('fee is required');
+      throw new BadRequestException('Preço é obrigatório');
     }
 
     if (fee < 0) {
-      throw new BadRequestException('fee must be greater than or equal to 0');
+      throw new BadRequestException('Preço deve ser maior ou igual a 0');
     }
 
     if (percProfessional < 0 || percProfessional > 100) {
-      throw new BadRequestException('percProfessional must be between 0.0 and 100.0');
+      throw new BadRequestException('Percentual profissional deve estar entre 0,0 e 100,0');
     }
 
     if (isNaN(datetime.getTime())) {
-      throw new BadRequestException('datetime must be a valid date');
+      throw new BadRequestException('Data e hora devem ser uma data válida');
     }
 
     const existingDoctor = await this.prisma.doctor.findFirst({
@@ -91,7 +91,7 @@ export class AppointmentsService {
     });
 
     if (!existingDoctor) {
-      throw new BadRequestException('Doctor not found');
+      throw new BadRequestException('Médico não encontrado');
     }
 
     const appointment = await this.prisma.appointment.create({
@@ -115,7 +115,7 @@ export class AppointmentsService {
 
   async update(id: string, updateAppointmentDto: UpdateAppointmentDto, userId: string): Promise<AppointmentResponse> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('Appointment id is required');
+      throw new BadRequestException('ID da consulta é obrigatório');
     }
 
     const appointment = await this.prisma.appointment.findFirst({
@@ -123,11 +123,11 @@ export class AppointmentsService {
     });
 
     if (!appointment) {
-      throw new NotFoundException('Appointment not found');
+      throw new NotFoundException('Consulta não encontrada');
     }
 
     if (appointment.deletedAt) {
-      throw new BadRequestException('Cannot update a deleted appointment');
+      throw new BadRequestException('Não é possível atualizar uma consulta excluída');
     }
 
     const updateData: {
@@ -139,13 +139,13 @@ export class AppointmentsService {
     } = {};
 
     if (Object.keys(updateAppointmentDto).length === 0) {
-      throw new BadRequestException('At least one field must be provided for update');
+      throw new BadRequestException('Pelo menos um campo deve ser fornecido para atualização');
     }
 
     if (updateAppointmentDto.doctorId !== undefined) {
       const doctorId = updateAppointmentDto.doctorId.trim();
       if (!doctorId) {
-        throw new BadRequestException('doctorId cannot be empty');
+        throw new BadRequestException('ID do médico não pode estar vazio');
       }
 
       const existingDoctor = await this.prisma.doctor.findFirst({
@@ -156,7 +156,7 @@ export class AppointmentsService {
       });
 
       if (!existingDoctor) {
-        throw new BadRequestException('Doctor not found');
+        throw new BadRequestException('Médico não encontrado');
       }
 
       updateData.doctorId = doctorId;
@@ -164,14 +164,14 @@ export class AppointmentsService {
 
     if (updateAppointmentDto.fee !== undefined) {
       if (updateAppointmentDto.fee < 0) {
-        throw new BadRequestException('fee must be greater than or equal to 0');
+        throw new BadRequestException('Preço deve ser maior ou igual a 0');
       }
       updateData.fee = new Decimal(updateAppointmentDto.fee);
     }
 
     if (updateAppointmentDto.percProfessional !== undefined) {
       if (updateAppointmentDto.percProfessional < 0 || updateAppointmentDto.percProfessional > 100) {
-        throw new BadRequestException('percProfessional must be between 0.0 and 100.0');
+        throw new BadRequestException('Percentual profissional deve estar entre 0,0 e 100,0');
       }
       updateData.percProfessional = new Decimal(updateAppointmentDto.percProfessional);
     }
@@ -179,7 +179,7 @@ export class AppointmentsService {
     if (updateAppointmentDto.datetime !== undefined) {
       const datetime = new Date(updateAppointmentDto.datetime);
       if (isNaN(datetime.getTime())) {
-        throw new BadRequestException('datetime must be a valid date');
+        throw new BadRequestException('Data e hora devem ser uma data válida');
       }
       updateData.datetime = datetime;
     }
@@ -202,7 +202,7 @@ export class AppointmentsService {
 
   async delete(id: string, userId: string): Promise<{ message: string }> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('Appointment id is required');
+      throw new BadRequestException('ID da consulta é obrigatório');
     }
 
     const appointment = await this.prisma.appointment.findFirst({
@@ -210,11 +210,11 @@ export class AppointmentsService {
     });
 
     if (!appointment) {
-      throw new NotFoundException('Appointment not found');
+      throw new NotFoundException('Consulta não encontrada');
     }
 
     if (appointment.deletedAt) {
-      throw new BadRequestException('Appointment is already deleted');
+      throw new BadRequestException('Consulta já está excluída');
     }
 
     await this.prisma.appointment.update({
@@ -225,12 +225,12 @@ export class AppointmentsService {
       },
     });
 
-    return { message: 'Appointment deleted successfully' };
+    return { message: 'Consulta excluída com sucesso' };
   }
 
   async restore(id: string): Promise<AppointmentResponse> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('Appointment id is required');
+      throw new BadRequestException('ID da consulta é obrigatório');
     }
 
     const appointment = await this.prisma.appointment.findFirst({
@@ -238,11 +238,11 @@ export class AppointmentsService {
     });
 
     if (!appointment) {
-      throw new NotFoundException('Appointment not found');
+      throw new NotFoundException('Consulta não encontrada');
     }
 
     if (!appointment.deletedAt) {
-      throw new BadRequestException('Appointment is not deleted');
+      throw new BadRequestException('Consulta não está excluída');
     }
 
     const restoredAppointment = await this.prisma.appointment.update({

@@ -27,10 +27,10 @@
           @update:model-value="handleToggleViewValue"
         >
           <ToggleGroupItem value="active">
-            Active
+            Ativo
           </ToggleGroupItem>
           <ToggleGroupItem value="deleted">
-            Deleted
+            Excluído
           </ToggleGroupItem>
         </ToggleGroup>
         <Button
@@ -38,7 +38,7 @@
           @click="handleAddAppointment"
         >
           <Icon name="plus" />
-          <span>Add Appointment</span>
+          <span>Adicionar Consulta</span>
         </Button>
       </div>
     </div>
@@ -48,11 +48,11 @@
         <Table v-if="viewMode === VIEW_MODE_TABLE">
           <TableHeader>
             <TableRow>
-              <TableHead>Doctor</TableHead>
-              <TableHead>Fee</TableHead>
-              <TableHead>Professional %</TableHead>
-              <TableHead>Date/Time</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Médico</TableHead>
+              <TableHead>Preço</TableHead>
+              <TableHead>% Profissional</TableHead>
+              <TableHead>Data/Hora</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -101,7 +101,7 @@
                       @click="handleEditAppointment(appointment)"
                     >
                       <Icon name="edit" />
-                      <span>Edit</span>
+                      <span>Editar</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       v-if="!appointmentsStore.showDeleted"
@@ -109,7 +109,7 @@
                       @click="handleDeleteAppointment(appointment)"
                     >
                       <Icon name="trash" />
-                      <span>Delete</span>
+                      <span>Excluir</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       v-if="appointmentsStore.showDeleted"
@@ -117,7 +117,7 @@
                       @click="handleRestoreAppointment(appointment)"
                     >
                       <Icon name="rotate-ccw" />
-                      <span>Restore</span>
+                      <span>Restaurar</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -128,7 +128,7 @@
                 colspan="5"
                 class="text-center text-muted-foreground"
               >
-                No appointments found
+                Nenhuma consulta encontrada
               </TableCell>
             </TableRow>
           </TableBody>
@@ -136,11 +136,11 @@
         <Table v-else>
           <TableHeader>
             <TableRow>
-              <TableHead>Doctor</TableHead>
-              <TableHead>Total Appointments</TableHead>
-              <TableHead>Total Income</TableHead>
-              <TableHead>Doctor Income</TableHead>
-              <TableHead>Clinic Income</TableHead>
+              <TableHead>Médico</TableHead>
+              <TableHead>Total de Consultas</TableHead>
+              <TableHead>Receita Total</TableHead>
+              <TableHead>Receita do Médico</TableHead>
+              <TableHead>Receita da Clínica</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -169,7 +169,7 @@
                 colspan="5"
                 class="text-center text-muted-foreground"
               >
-                No appointments found
+                Nenhuma consulta encontrada
               </TableCell>
             </TableRow>
           </TableBody>

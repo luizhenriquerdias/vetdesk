@@ -8,7 +8,7 @@
             :size="4"
           />
         </div>
-        Acme Inc.
+        VetDesk
       </div>
 
       <Card>
@@ -16,17 +16,17 @@
           <form @submit.prevent="login">
             <div class="grid gap-6">
               <div class="grid gap-3">
-                <Label for="email">Email</Label>
+                <Label for="email">E-mail</Label>
                 <Input
                   id="email"
                   v-model="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="exemplo@email.com"
                   required
                 />
               </div>
               <div class="grid gap-3">
-                <Label for="password">Password</Label>
+                <Label for="password">Senha</Label>
                 <Input
                   id="password"
                   v-model="password"
@@ -39,7 +39,7 @@
                 class="w-full"
                 :disabled="loading"
               >
-                {{ loading ? 'Logging in...' : 'Login' }}
+                {{ loading ? 'Entrando...' : 'Entrar' }}
               </Button>
               <div
                 v-if="error"
@@ -85,7 +85,7 @@ const login = async () => {
     await authStore.login(email.value, password.value);
     router.push({ name: ROUTE_HOME });
   } catch (err) {
-    error.value = err instanceof Error ? err.message : 'An error occurred';
+    error.value = err instanceof Error ? err.message : 'Ocorreu um erro';
   } finally {
     loading.value = false;
   }

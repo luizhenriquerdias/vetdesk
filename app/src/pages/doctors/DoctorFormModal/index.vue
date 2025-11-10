@@ -6,10 +6,10 @@
     <DialogContent>
       <DialogHeader>
         <DialogTitle>
-          {{ doctor ? 'Edit Doctor' : 'Create Doctor' }}
+          {{ doctor ? 'Editar Médico' : 'Criar Médico' }}
         </DialogTitle>
         <DialogDescription>
-          {{ doctor ? 'Update doctor information' : 'Add a new doctor to the system' }}
+          {{ doctor ? 'Atualizar informações do médico' : 'Adicionar um novo médico ao sistema' }}
         </DialogDescription>
       </DialogHeader>
 
@@ -19,7 +19,7 @@
       >
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-2">
-            <Label for="firstName">First Name</Label>
+            <Label for="firstName">Nome</Label>
             <Input
               id="firstName"
               v-model="formData.firstName"
@@ -28,7 +28,7 @@
           </div>
 
           <div class="space-y-2">
-            <Label for="lastName">Last Name</Label>
+            <Label for="lastName">Sobrenome</Label>
             <Input
               id="lastName"
               v-model="formData.lastName"
@@ -39,13 +39,13 @@
 
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-2">
-            <Label for="specialty">Specialty</Label>
+            <Label for="specialty">Especialidade</Label>
             <Select
               id="specialty"
               v-model="formData.specialtyId"
             >
               <SelectTrigger class="w-full">
-                <SelectValue placeholder="Select specialty..." />
+                <SelectValue placeholder="Selecione a especialidade..." />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem
@@ -53,7 +53,7 @@
                   value="__empty__"
                   disabled
                 >
-                  No specialties available
+                  Nenhuma especialidade disponível
                 </SelectItem>
                 <SelectItem
                   v-for="option in specialtyOptions"
@@ -76,7 +76,7 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="appointmentFee">Appointment Fee</Label>
+          <Label for="appointmentFee">Preço da Consulta</Label>
           <CurrencyInput
             id="appointmentFee"
             v-model="formData.appointmentFee"
@@ -84,7 +84,7 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="percProfessional">Payment Percentage</Label>
+          <Label for="percProfessional">Percentual de Pagamento</Label>
           <div class="space-y-2">
             <Slider
               id="percProfessional"
@@ -95,9 +95,9 @@
               required
             />
             <div class="flex justify-between text-sm text-muted-foreground">
-              <span>Professional ({{ (percProfessionalValue[0] ?? 0).toFixed(0) }}%)</span>
+              <span>Médico ({{ (percProfessionalValue[0] ?? 0).toFixed(0) }}%)</span>
               <span class="flex-1" />
-              <span>Clinic ({{ (100 - (percProfessionalValue[0] ?? 0)).toFixed(0) }}%)</span>
+              <span>Clínica ({{ (100 - (percProfessionalValue[0] ?? 0)).toFixed(0) }}%)</span>
             </div>
           </div>
         </div>
@@ -108,13 +108,13 @@
             variant="outline"
             @click="handleCancel"
           >
-            Cancel
+            Cancelar
           </Button>
           <Button
             type="submit"
             :disabled="saving"
           >
-            {{ saving ? 'Saving...' : 'Save' }}
+            {{ saving ? 'Salvando...' : 'Salvar' }}
           </Button>
         </DialogFooter>
       </form>

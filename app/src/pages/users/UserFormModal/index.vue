@@ -6,10 +6,10 @@
     <DialogContent>
       <DialogHeader>
         <DialogTitle>
-          {{ user ? 'Edit User' : 'Create User' }}
+          {{ user ? 'Editar Usuário' : 'Criar Usuário' }}
         </DialogTitle>
         <DialogDescription>
-          {{ user ? 'Update user information' : 'Add a new user to the system' }}
+          {{ user ? 'Atualizar informações do usuário' : 'Adicionar um novo usuário ao sistema' }}
         </DialogDescription>
       </DialogHeader>
 
@@ -18,7 +18,7 @@
         @submit.prevent="handleSubmit"
       >
         <div class="space-y-2">
-          <Label for="firstName">First Name</Label>
+          <Label for="firstName">Nome</Label>
           <Input
             id="firstName"
             v-model="formData.firstName"
@@ -27,7 +27,7 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="lastName">Last Name</Label>
+          <Label for="lastName">Sobrenome</Label>
           <Input
             id="lastName"
             v-model="formData.lastName"
@@ -36,7 +36,7 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="email">Email</Label>
+          <Label for="email">E-mail</Label>
           <Input
             id="email"
             v-model="formData.email"
@@ -49,7 +49,7 @@
           v-if="!user"
           class="space-y-2"
         >
-          <Label for="password">Password</Label>
+          <Label for="password">Senha</Label>
           <Input
             id="password"
             v-model="formData.password"
@@ -62,7 +62,7 @@
           v-if="!user"
           class="space-y-2"
         >
-          <Label for="passwordConfirmation">Confirm Password</Label>
+          <Label for="passwordConfirmation">Confirmar Senha</Label>
           <Input
             id="passwordConfirmation"
             v-model="formData.passwordConfirmation"
@@ -76,7 +76,7 @@
             v-if="isChangingPassword"
             class="space-y-2"
           >
-            <Label for="oldPassword">Old Password</Label>
+            <Label for="oldPassword">Senha Antiga</Label>
             <Input
               id="oldPassword"
               v-model="formData.oldPassword"
@@ -89,7 +89,7 @@
             v-if="isChangingPassword"
             class="space-y-2"
           >
-            <Label for="password">New Password</Label>
+            <Label for="password">Nova Senha</Label>
             <Input
               id="password"
               v-model="formData.password"
@@ -102,7 +102,7 @@
             v-if="isChangingPassword"
             class="space-y-2"
           >
-            <Label for="passwordConfirmation">Confirm New Password</Label>
+            <Label for="passwordConfirmation">Confirmar Nova Senha</Label>
             <Input
               id="passwordConfirmation"
               v-model="formData.passwordConfirmation"
@@ -120,7 +120,7 @@
               variant="outline"
               @click="isChangingPassword = true"
             >
-              Change Password
+              Alterar Senha
             </Button>
           </div>
         </template>
@@ -131,13 +131,13 @@
             variant="outline"
             @click="handleCancel"
           >
-            Cancel
+            Cancelar
           </Button>
           <Button
             type="submit"
             :disabled="saving"
           >
-            {{ saving ? 'Saving...' : 'Save' }}
+            {{ saving ? 'Salvando...' : 'Salvar' }}
           </Button>
         </DialogFooter>
       </form>
@@ -230,16 +230,16 @@ watch(() => props.open, (open) => {
 const handleSubmit = async () => {
   if (!props.user) {
     if (formData.value.password !== formData.value.passwordConfirmation) {
-      alert('Password and confirmation do not match');
+      alert('A senha e a confirmação não coincidem');
       return;
     }
   } else if (isChangingPassword.value) {
     if (!formData.value.oldPassword || !formData.value.password || !formData.value.passwordConfirmation) {
-      alert('All password fields are required when changing password');
+      alert('Todos os campos de senha são obrigatórios ao alterar a senha');
       return;
     }
     if (formData.value.password !== formData.value.passwordConfirmation) {
-      alert('New password and confirmation do not match');
+      alert('A nova senha e a confirmação não coincidem');
       return;
     }
   }

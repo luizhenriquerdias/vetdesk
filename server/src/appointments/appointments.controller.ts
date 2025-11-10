@@ -23,7 +23,7 @@ export class AppointmentsController {
   async findAll(@Req() req: Request, @Res() res: Response) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const includeDeleted = req.query.includeDeleted === 'true';
@@ -34,7 +34,7 @@ export class AppointmentsController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 
@@ -46,7 +46,7 @@ export class AppointmentsController {
   ) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const appointment = await this.appointmentsService.create(createAppointmentDto, req.session.userId);
@@ -55,7 +55,7 @@ export class AppointmentsController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 
@@ -68,7 +68,7 @@ export class AppointmentsController {
   ) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const appointment = await this.appointmentsService.update(id, updateAppointmentDto, req.session.userId);
@@ -77,7 +77,7 @@ export class AppointmentsController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 
@@ -85,7 +85,7 @@ export class AppointmentsController {
   async delete(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const result = await this.appointmentsService.delete(id, req.session.userId);
@@ -94,7 +94,7 @@ export class AppointmentsController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 
@@ -102,7 +102,7 @@ export class AppointmentsController {
   async restore(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
       if (!req.session.userId) {
-        throw new UnauthorizedException('Not authenticated');
+        throw new UnauthorizedException('Não autenticado');
       }
 
       const appointment = await this.appointmentsService.restore(id);
@@ -111,7 +111,7 @@ export class AppointmentsController {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });
       }
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Erro interno do servidor' });
     }
   }
 }

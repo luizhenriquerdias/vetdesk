@@ -28,10 +28,10 @@
             @update:model-value="handleToggleViewValue"
           >
             <ToggleGroupItem value="active">
-              Active
+              Ativo
             </ToggleGroupItem>
             <ToggleGroupItem value="deleted">
-              Deleted
+              Excluído
             </ToggleGroupItem>
           </ToggleGroup>
           <Button
@@ -39,7 +39,7 @@
             @click="handleAddTransaction"
           >
             <Icon name="plus" />
-            <span>Add Transaction</span>
+            <span>Adicionar Transação</span>
           </Button>
         </div>
       </div>
@@ -49,10 +49,10 @@
           <Table v-if="viewMode === 'table'">
             <TableHeader>
               <TableRow>
-                <TableHead>Description</TableHead>
-                <TableHead>Date/Time</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>Descrição</TableHead>
+                <TableHead>Data/Hora</TableHead>
+                <TableHead>Valor</TableHead>
+                <TableHead>Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -101,7 +101,7 @@
                         @click="handleEditTransaction(transaction)"
                       >
                         <Icon name="edit" />
-                        <span>Edit</span>
+                        <span>Editar</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         v-if="!transactionsStore.showDeleted"
@@ -109,7 +109,7 @@
                         @click="handleDeleteTransaction(transaction)"
                       >
                         <Icon name="trash" />
-                        <span>Delete</span>
+                        <span>Excluir</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         v-if="transactionsStore.showDeleted"
@@ -117,7 +117,7 @@
                         @click="handleRestoreTransaction(transaction)"
                       >
                         <Icon name="rotate-ccw" />
-                        <span>Restore</span>
+                        <span>Restaurar</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -128,7 +128,7 @@
                   colspan="4"
                   class="text-center text-muted-foreground"
                 >
-                  No transactions found
+                  Nenhuma transação encontrada
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -136,9 +136,9 @@
           <Table v-else>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Incomes</TableHead>
-                <TableHead>Expenses</TableHead>
+                <TableHead>Data</TableHead>
+                <TableHead>Receitas</TableHead>
+                <TableHead>Despesas</TableHead>
                 <TableHead>Total</TableHead>
               </TableRow>
             </TableHeader>
@@ -236,7 +236,7 @@
                   colspan="4"
                   class="text-center text-muted-foreground"
                 >
-                  No transactions found
+                  Nenhuma transação encontrada
                 </TableCell>
               </TableRow>
             </TableBody>

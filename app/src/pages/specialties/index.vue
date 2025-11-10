@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between">
       <div>
         <p class="text-muted-foreground">
-          {{ specialtiesStore.showDeleted ? 'View and restore deleted specialties' : 'Manage specialties' }}
+          {{ specialtiesStore.showDeleted ? 'Visualizar e restaurar especialidades excluídas' : 'Gerenciar especialidades' }}
         </p>
       </div>
       <div class="flex items-center gap-4">
@@ -12,10 +12,10 @@
           @update:model-value="handleToggleViewValue"
         >
           <ToggleGroupItem value="active">
-            Active
+            Ativo
           </ToggleGroupItem>
           <ToggleGroupItem value="deleted">
-            Deleted
+            Excluído
           </ToggleGroupItem>
         </ToggleGroup>
         <Button
@@ -23,7 +23,7 @@
           @click="handleAddSpecialty"
         >
           <Icon name="plus" />
-          <span>Add Specialty</span>
+          <span>Adicionar Especialidade</span>
         </Button>
       </div>
     </div>
@@ -33,8 +33,8 @@
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -68,7 +68,7 @@
                       @click="handleEditSpecialty(specialty)"
                     >
                       <Icon name="edit" />
-                      <span>Edit</span>
+                      <span>Editar</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       v-if="!specialtiesStore.showDeleted"
@@ -76,7 +76,7 @@
                       @click="handleDeleteSpecialty(specialty)"
                     >
                       <Icon name="trash" />
-                      <span>Delete</span>
+                      <span>Excluir</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       v-if="specialtiesStore.showDeleted"
@@ -84,7 +84,7 @@
                       @click="handleRestoreSpecialty(specialty)"
                     >
                       <Icon name="rotate-ccw" />
-                      <span>Restore</span>
+                      <span>Restaurar</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -95,7 +95,7 @@
                 colspan="2"
                 class="text-center text-muted-foreground"
               >
-                No specialties found
+                Nenhuma especialidade encontrada
               </TableCell>
             </TableRow>
           </TableBody>

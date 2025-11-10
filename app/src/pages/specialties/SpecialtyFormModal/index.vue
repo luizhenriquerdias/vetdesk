@@ -6,10 +6,10 @@
     <DialogContent>
       <DialogHeader>
         <DialogTitle>
-          {{ specialty ? 'Edit Specialty' : 'Create Specialty' }}
+          {{ specialty ? 'Editar Especialidade' : 'Criar Especialidade' }}
         </DialogTitle>
         <DialogDescription>
-          {{ specialty ? 'Update specialty information' : 'Add a new specialty to the system' }}
+          {{ specialty ? 'Atualizar informações da especialidade' : 'Adicionar uma nova especialidade ao sistema' }}
         </DialogDescription>
       </DialogHeader>
 
@@ -18,7 +18,7 @@
         @submit.prevent="handleSubmit"
       >
         <div class="space-y-2">
-          <Label for="name">Name</Label>
+          <Label for="name">Nome</Label>
           <Input
             id="name"
             v-model="formData.name"
@@ -33,13 +33,13 @@
             variant="outline"
             @click="handleCancel"
           >
-            Cancel
+            Cancelar
           </Button>
           <Button
             type="submit"
             :disabled="saving"
           >
-            {{ saving ? 'Saving...' : 'Save' }}
+            {{ saving ? 'Salvando...' : 'Salvar' }}
           </Button>
         </DialogFooter>
       </form>

@@ -5,9 +5,9 @@
   >
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Delete Appointment</DialogTitle>
+        <DialogTitle>Excluir Consulta</DialogTitle>
         <DialogDescription>
-          Are you sure you want to delete this appointment? The appointment will be soft deleted and can be restored later.
+          Tem certeza que deseja excluir esta consulta? A consulta será excluída de forma suave e poderá ser restaurada posteriormente.
         </DialogDescription>
       </DialogHeader>
 
@@ -17,7 +17,7 @@
           variant="outline"
           @click="handleCancel"
         >
-          Cancel
+          Cancelar
         </Button>
         <Button
           type="button"
@@ -25,7 +25,7 @@
           :disabled="loading"
           @click="handleConfirm"
         >
-          {{ loading ? 'Deleting...' : 'Delete' }}
+          {{ loading ? 'Excluindo...' : 'Excluir' }}
         </Button>
       </DialogFooter>
     </DialogContent>

@@ -28,7 +28,7 @@ export class TransactionsService {
     if (month) {
       const [year, monthNum] = month.split('-').map(Number);
       if (isNaN(year) || isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
-        throw new BadRequestException('Invalid month format. Expected YYYY-MM');
+        throw new BadRequestException('Formato de mês inválido. Esperado AAAA-MM');
       }
 
       const startOfMonth = new Date(year, monthNum - 1, 1, 0, 0, 0, 0);
@@ -65,7 +65,7 @@ export class TransactionsService {
   private validateStringLength(value: string, min: number, max: number, fieldName: string): void {
     if (value.length < min || value.length > max) {
       throw new BadRequestException(
-        `${fieldName} must be between ${min} and ${max} characters`,
+        `${fieldName} deve ter entre ${min} e ${max} caracteres`,
       );
     }
   }
@@ -76,38 +76,38 @@ export class TransactionsService {
     const datetime = new Date(createTransactionDto.datetime);
 
     if (!description) {
-      throw new BadRequestException('description is required');
+      throw new BadRequestException('Descrição é obrigatória');
     }
 
     if (!type) {
-      throw new BadRequestException('type is required');
+      throw new BadRequestException('Tipo é obrigatório');
     }
 
     if (type !== TRANSACTION_TYPE_INCOME && type !== TRANSACTION_TYPE_EXPENSE) {
-      throw new BadRequestException('type must be INCOME or EXPENSE');
+      throw new BadRequestException('Tipo deve ser RECEITA ou DESPESA');
     }
 
     if (!createTransactionDto.datetime) {
-      throw new BadRequestException('datetime is required');
+      throw new BadRequestException('Data e hora são obrigatórias');
     }
 
     if (isNaN(datetime.getTime())) {
-      throw new BadRequestException('Invalid datetime format');
+      throw new BadRequestException('Formato de data e hora inválido');
     }
 
     if (createTransactionDto.amount === undefined || createTransactionDto.amount === null) {
-      throw new BadRequestException('amount is required');
+      throw new BadRequestException('Valor é obrigatório');
     }
 
     if (typeof createTransactionDto.amount !== 'number' || isNaN(createTransactionDto.amount)) {
-      throw new BadRequestException('amount must be a valid number');
+      throw new BadRequestException('Valor deve ser um número válido');
     }
 
     if (createTransactionDto.amount < 0) {
-      throw new BadRequestException('amount must be greater than or equal to 0');
+      throw new BadRequestException('Valor deve ser maior ou igual a 0');
     }
 
-    this.validateStringLength(description, 1, 500, 'description');
+    this.validateStringLength(description, 1, 500, 'Descrição');
 
     const transaction = await this.prisma.transaction.create({
       data: {
@@ -136,7 +136,7 @@ export class TransactionsService {
 
   async update(id: string, updateTransactionDto: UpdateTransactionDto, userId: string): Promise<TransactionResponse> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('Transaction id is required');
+      throw new BadRequestException('ID da transação é obrigatório');
     }
 
     const transaction = await this.prisma.transaction.findFirst({
@@ -144,11 +144,11 @@ export class TransactionsService {
     });
 
     if (!transaction) {
-      throw new NotFoundException('Transaction not found');
+      throw new NotFoundException('Transação não encontrada');
     }
 
     if (transaction.deletedAt) {
-      throw new BadRequestException('Cannot update a deleted transaction');
+      throw new BadRequestException('Não é possível atualizar uma transação excluída');
     }
 
     const updateData: {
@@ -160,21 +160,21 @@ export class TransactionsService {
     } = {};
 
     if (Object.keys(updateTransactionDto).length === 0) {
-      throw new BadRequestException('At least one field must be provided for update');
+      throw new BadRequestException('Pelo menos um campo deve ser fornecido para atualização');
     }
 
     if (updateTransactionDto.description !== undefined) {
       const description = updateTransactionDto.description.trim();
       if (!description) {
-        throw new BadRequestException('description cannot be empty');
+        throw new BadRequestException('Descrição não pode estar vazia');
       }
-      this.validateStringLength(description, 1, 500, 'description');
+      this.validateStringLength(description, 1, 500, 'Descrição');
       updateData.description = description;
     }
 
     if (updateTransactionDto.type !== undefined) {
       if (updateTransactionDto.type !== TRANSACTION_TYPE_INCOME && updateTransactionDto.type !== TRANSACTION_TYPE_EXPENSE) {
-        throw new BadRequestException('type must be INCOME or EXPENSE');
+        throw new BadRequestException('Tipo deve ser RECEITA ou DESPESA');
       }
       updateData.type = updateTransactionDto.type;
     }
@@ -182,17 +182,17 @@ export class TransactionsService {
     if (updateTransactionDto.datetime !== undefined) {
       const datetime = new Date(updateTransactionDto.datetime);
       if (isNaN(datetime.getTime())) {
-        throw new BadRequestException('Invalid datetime format');
+        throw new BadRequestException('Formato de data e hora inválido');
       }
       updateData.datetime = datetime;
     }
 
     if (updateTransactionDto.amount !== undefined) {
       if (typeof updateTransactionDto.amount !== 'number' || isNaN(updateTransactionDto.amount)) {
-        throw new BadRequestException('amount must be a valid number');
+        throw new BadRequestException('Valor deve ser um número válido');
       }
       if (updateTransactionDto.amount < 0) {
-        throw new BadRequestException('amount must be greater than or equal to 0');
+        throw new BadRequestException('Valor deve ser maior ou igual a 0');
       }
       updateData.amount = updateTransactionDto.amount;
     }
@@ -221,7 +221,7 @@ export class TransactionsService {
 
   async delete(id: string, userId: string): Promise<{ message: string }> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('Transaction id is required');
+      throw new BadRequestException('ID da transação é obrigatório');
     }
 
     const transaction = await this.prisma.transaction.findFirst({
@@ -229,11 +229,11 @@ export class TransactionsService {
     });
 
     if (!transaction) {
-      throw new NotFoundException('Transaction not found');
+      throw new NotFoundException('Transação não encontrada');
     }
 
     if (transaction.deletedAt) {
-      throw new BadRequestException('Transaction is already deleted');
+      throw new BadRequestException('Transação já está excluída');
     }
 
     await this.prisma.transaction.update({
@@ -244,12 +244,12 @@ export class TransactionsService {
       },
     });
 
-    return { message: 'Transaction deleted successfully' };
+    return { message: 'Transação excluída com sucesso' };
   }
 
   async restore(id: string): Promise<TransactionResponse> {
     if (!id || !id.trim()) {
-      throw new BadRequestException('Transaction id is required');
+      throw new BadRequestException('ID da transação é obrigatório');
     }
 
     const transaction = await this.prisma.transaction.findFirst({
@@ -257,11 +257,11 @@ export class TransactionsService {
     });
 
     if (!transaction) {
-      throw new NotFoundException('Transaction not found');
+      throw new NotFoundException('Transação não encontrada');
     }
 
     if (!transaction.deletedAt) {
-      throw new BadRequestException('Transaction is not deleted');
+      throw new BadRequestException('Transação não está excluída');
     }
 
     const restoredTransaction = await this.prisma.transaction.update({
