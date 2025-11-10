@@ -2,7 +2,13 @@
   <div class="flex flex-col gap-6">
     <Card>
       <CardHeader>
-        <CardTitle>Receitas e Despesas do Mês</CardTitle>
+        <div class="flex items-center justify-between">
+          <CardTitle>Receitas e Despesas</CardTitle>
+          <MonthPicker
+            id="month-picker"
+            v-model="selectedMonth"
+          />
+        </div>
       </CardHeader>
       <CardContent>
         <div
@@ -19,6 +25,14 @@
         >
           <p class="text-destructive">
             {{ error }}
+          </p>
+        </div>
+        <div
+          v-else-if="chartData && chartData.income === 0 && chartData.outcome === 0"
+          class="flex items-center justify-center h-64"
+        >
+          <p class="text-muted-foreground">
+            Nenhuma receita ou despesa encontrada para este mês
           </p>
         </div>
         <div
@@ -39,7 +53,17 @@
 import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import { Chart, CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip, Legend } from 'chart.js';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MonthPicker } from '@/components/ui/month-picker';
 import { getMonthlyIncomeOutcome } from '@/api/reports';
+
+const getCurrentMonth = (): string => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}`;
+};
+
+const selectedMonth = ref<string>(getCurrentMonth());
 
 Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip, Legend);
 
@@ -53,7 +77,7 @@ const fetchData = async () => {
   loading.value = true;
   error.value = null;
   try {
-    const data = await getMonthlyIncomeOutcome();
+    const data = await getMonthlyIncomeOutcome(selectedMonth.value);
     chartData.value = data;
   } catch (err) {
     error.value = 'Erro ao carregar dados';
@@ -105,7 +129,7 @@ const updateChart = async (data: { income: number; outcome: number }) => {
         tooltip: {
           callbacks: {
             label: (context) => {
-              return `R$ ${context.parsed.y.toFixed(2)}`;
+              return `R$ ${context.parsed?.y?.toFixed(2) ?? '0,00'}`;
             },
           },
         },
@@ -125,9 +149,13 @@ const updateChart = async (data: { income: number; outcome: number }) => {
 };
 
 watch([chartCanvas, chartData, loading, error], async ([canvas, data, isLoading, hasError]) => {
-  if (canvas && data && !isLoading && !hasError) {
+  if (canvas && data && !isLoading && !hasError && (data.income > 0 || data.outcome > 0)) {
     await updateChart(data);
   }
+});
+
+watch(selectedMonth, () => {
+  fetchData();
 });
 
 onMounted(() => {
