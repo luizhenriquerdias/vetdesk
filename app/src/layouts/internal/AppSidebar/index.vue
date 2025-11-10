@@ -32,6 +32,19 @@
       </SidebarGroup>
 
       <SidebarGroup>
+        <SidebarGroupLabel>Relatórios</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarItem
+              :to="ROUTE_REPORTS_DOCTORS"
+              icon="bar-chart"
+              label="Médicos"
+            />
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <SidebarGroup>
         <SidebarGroupLabel>Cadastros</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
@@ -79,7 +92,7 @@ import {
   SidebarHeader,
   SidebarMenu,
 } from '@/components/ui/sidebar';
-import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS } from '@/router/routes';
+import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS, ROUTE_REPORTS_DOCTORS } from '@/router/routes';
 import SidebarItem from './SidebarItem.vue';
 import logoFull from '@/assets/logo-full.png';
 </script>

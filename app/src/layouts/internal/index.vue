@@ -89,7 +89,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Icon } from '@/components/ui/icon';
-import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS } from '@/router/routes';
+import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS, ROUTE_REPORTS_DOCTORS } from '@/router/routes';
 import { useUsersStore } from '@/stores/users';
 import { useDoctorsStore } from '@/stores/doctors';
 import { useSpecialtiesStore } from '@/stores/specialties';
@@ -122,6 +122,8 @@ const pageTitle = computed(() => {
       return transactionsStore.showDeleted ? 'Transações Excluídas' : 'Transações';
     case ROUTE_APPOINTMENTS:
       return appointmentsStore.showDeleted ? 'Consultas Excluídas' : 'Consultas';
+    case ROUTE_REPORTS_DOCTORS:
+      return 'Relatório de Médicos';
     default:
       return '';
   }

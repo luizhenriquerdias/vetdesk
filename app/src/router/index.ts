@@ -8,7 +8,8 @@ import DoctorsPage from '@/pages/doctors/index.vue';
 import SpecialtiesPage from '@/pages/specialties/index.vue';
 import TransactionsPage from '@/pages/transactions/index.vue';
 import AppointmentsPage from '@/pages/appointments/index.vue';
-import { ROUTE_LOGIN, ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS } from './routes';
+import ReportsDoctorsPage from '@/pages/reports/doctors/index.vue';
+import { ROUTE_LOGIN, ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS, ROUTE_REPORTS_DOCTORS } from './routes';
 import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
@@ -50,6 +51,11 @@ const router = createRouter({
           name: ROUTE_APPOINTMENTS,
           path: 'appointments',
           component: AppointmentsPage,
+        },
+        {
+          name: ROUTE_REPORTS_DOCTORS,
+          path: 'reports/doctors',
+          component: ReportsDoctorsPage,
         },
       ],
     },
