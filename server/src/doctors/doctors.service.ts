@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { CreateDoctorDto, UpdateDoctorDto, DoctorResponse } from '@vetdesk/shared/types/doctor';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class DoctorsService {
@@ -29,6 +30,7 @@ export class DoctorsService {
       lastName: doctor.lastName,
       specialties: doctor.specialties.map((s) => s.name),
       crm: doctor.crm,
+      percProfessional: Number(doctor.percProfessional),
     }));
   }
 
@@ -45,6 +47,7 @@ export class DoctorsService {
     const lastName = createDoctorDto.lastName.trim();
     const specialtyIds = createDoctorDto.specialtyIds || [];
     const crm = createDoctorDto.crm?.trim() || null;
+    const percProfessional = createDoctorDto.percProfessional ?? 0;
 
     if (!firstName) {
       throw new BadRequestException('firstName is required');
@@ -61,15 +64,21 @@ export class DoctorsService {
       this.validateStringLength(crm, 1, 50, 'crm');
     }
 
+    if (percProfessional < 0 || percProfessional > 100) {
+      throw new BadRequestException('percProfessional must be between 0.0 and 100.0');
+    }
+
     const createData: {
       firstName: string;
       lastName: string;
       crm: string | null;
+      percProfessional: Decimal;
       specialties?: { connect: { id: string }[] };
     } = {
       firstName,
       lastName,
       crm,
+      percProfessional: new Decimal(percProfessional),
     };
 
     if (Array.isArray(specialtyIds) && specialtyIds.length > 0) {
@@ -102,6 +111,7 @@ export class DoctorsService {
       lastName: doctor.lastName,
       specialties: doctor.specialties.map((s) => s.name),
       crm: doctor.crm,
+      percProfessional: Number(doctor.percProfessional),
     };
   }
 
@@ -126,6 +136,7 @@ export class DoctorsService {
       firstName?: string;
       lastName?: string;
       crm?: string | null;
+      percProfessional?: Decimal;
       specialties?: { set: { id: string }[] };
     } = {};
 
@@ -186,6 +197,13 @@ export class DoctorsService {
       updateData.crm = crm;
     }
 
+    if (updateDoctorDto.percProfessional !== undefined) {
+      if (updateDoctorDto.percProfessional < 0 || updateDoctorDto.percProfessional > 100) {
+        throw new BadRequestException('percProfessional must be between 0.0 and 100.0');
+      }
+      updateData.percProfessional = new Decimal(updateDoctorDto.percProfessional);
+    }
+
     const updatedDoctor = await this.prisma.doctor.update({
       where: { id },
       data: updateData,
@@ -200,6 +218,7 @@ export class DoctorsService {
       lastName: updatedDoctor.lastName,
       specialties: updatedDoctor.specialties.map((s) => s.name),
       crm: updatedDoctor.crm,
+      percProfessional: Number(updatedDoctor.percProfessional),
     };
   }
 
@@ -259,6 +278,7 @@ export class DoctorsService {
       lastName: restoredDoctor.lastName,
       specialties: restoredDoctor.specialties.map((s) => s.name),
       crm: restoredDoctor.crm,
+      percProfessional: Number(restoredDoctor.percProfessional),
     };
   }
 }

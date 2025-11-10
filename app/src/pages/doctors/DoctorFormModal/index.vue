@@ -53,6 +53,25 @@
           />
         </div>
 
+        <div class="space-y-2">
+          <Label for="percProfessional">Payment Percentage</Label>
+          <div class="space-y-2">
+            <Slider
+              id="percProfessional"
+              v-model="percProfessionalValue"
+              :min="0"
+              :max="100"
+              :step="1"
+              required
+            />
+            <div class="flex justify-between text-sm text-muted-foreground">
+              <span>Professional ({{ (percProfessionalValue[0] ?? 0).toFixed(0) }}%)</span>
+              <span class="flex-1" />
+              <span>Clinic ({{ (100 - (percProfessionalValue[0] ?? 0)).toFixed(0) }}%)</span>
+            </div>
+          </div>
+        </div>
+
         <DialogFooter>
           <Button
             type="button"
@@ -87,6 +106,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MultiSelect } from '@/components/ui/multiselect';
+import { Slider } from '@/components/ui/slider';
 import { useDoctorsStore } from '@/stores/doctors';
 import { useSpecialtiesStore } from '@/stores/specialties';
 import type { CreateDoctorDto, UpdateDoctorDto, DoctorResponse } from '@shared/types/doctor';
@@ -115,7 +135,10 @@ const formData = ref({
   lastName: '',
   specialtyIds: [] as string[],
   crm: '',
+  percProfessional: 80,
 });
+
+const percProfessionalValue = ref([80]);
 
 const specialtyOptions = computed(() => {
   return specialtiesStore.specialties.map((s) => ({
@@ -140,16 +163,24 @@ watch(() => props.doctor, (doctor) => {
       lastName: doctor.lastName,
       specialtyIds,
       crm: doctor.crm || '',
+      percProfessional: doctor.percProfessional ?? 80,
     };
+    percProfessionalValue.value = [doctor.percProfessional ?? 80];
   } else {
     formData.value = {
       firstName: '',
       lastName: '',
       specialtyIds: [],
       crm: '',
+      percProfessional: 80,
     };
+    percProfessionalValue.value = [80];
   }
 }, { immediate: true });
+
+watch(percProfessionalValue, (value) => {
+  formData.value.percProfessional = value[0] || 80;
+});
 
 watch(() => props.open, (open) => {
   if (!open) {
@@ -158,7 +189,9 @@ watch(() => props.open, (open) => {
       lastName: '',
       specialtyIds: [],
       crm: '',
+      percProfessional: 80,
     };
+    percProfessionalValue.value = [80];
   }
 });
 
@@ -171,6 +204,7 @@ const handleSubmit = async () => {
         lastName: formData.value.lastName,
         specialtyIds: formData.value.specialtyIds,
         crm: formData.value.crm || null,
+        percProfessional: formData.value.percProfessional,
       };
       await doctorsStore.createDoctor(data);
       emits('save');
@@ -182,6 +216,7 @@ const handleSubmit = async () => {
       lastName: formData.value.lastName,
       specialtyIds: formData.value.specialtyIds,
       crm: formData.value.crm || null,
+      percProfessional: formData.value.percProfessional,
     };
     await doctorsStore.updateDoctor(props.doctor.id, data);
 

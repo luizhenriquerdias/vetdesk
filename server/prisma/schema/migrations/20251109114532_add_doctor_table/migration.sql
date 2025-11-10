@@ -4,6 +4,7 @@ CREATE TABLE "Doctor" (
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "crm" TEXT,
+    "percProfessional" DECIMAL(4,1) NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
