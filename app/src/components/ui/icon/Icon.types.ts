@@ -16,6 +16,7 @@ import {
   Table,
   BarChart,
   ChevronDown,
+  Calendar,
 } from 'lucide-vue-next';
 
 export const ICON_MAP = {
@@ -36,6 +37,7 @@ export const ICON_MAP = {
   table: Table,
   'bar-chart': BarChart,
   'chevron-down': ChevronDown,
+  calendar: Calendar,
 } as const;
 
 export type IconName = keyof typeof ICON_MAP;

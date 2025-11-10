@@ -16,6 +16,11 @@
               icon="receipt"
               label="Transactions"
             />
+            <SidebarItem
+              :to="ROUTE_APPOINTMENTS"
+              icon="calendar"
+              label="Appointments"
+            />
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -68,7 +73,7 @@ import {
   SidebarHeader,
   SidebarMenu,
 } from '@/components/ui/sidebar';
-import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS } from '@/router/routes';
+import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS } from '@/router/routes';
 import SidebarItem from './SidebarItem.vue';
 </script>
 

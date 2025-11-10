@@ -70,11 +70,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Icon } from '@/components/ui/icon';
-import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS } from '@/router/routes';
+import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS } from '@/router/routes';
 import { useUsersStore } from '@/stores/users';
 import { useDoctorsStore } from '@/stores/doctors';
 import { useSpecialtiesStore } from '@/stores/specialties';
 import { useTransactionsStore } from '@/stores/transactions';
+import { useAppointmentsStore } from '@/stores/appointments';
 import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
@@ -84,6 +85,7 @@ const usersStore = useUsersStore();
 const doctorsStore = useDoctorsStore();
 const specialtiesStore = useSpecialtiesStore();
 const transactionsStore = useTransactionsStore();
+const appointmentsStore = useAppointmentsStore();
 
 const pageTitle = computed(() => {
   const routeName = route.name;
@@ -99,6 +101,8 @@ const pageTitle = computed(() => {
       return specialtiesStore.showDeleted ? 'Deleted Specialties' : 'Specialties';
     case ROUTE_TRANSACTIONS:
       return transactionsStore.showDeleted ? 'Deleted Transactions' : 'Transactions';
+    case ROUTE_APPOINTMENTS:
+      return appointmentsStore.showDeleted ? 'Deleted Appointments' : 'Appointments';
     default:
       return '';
   }
