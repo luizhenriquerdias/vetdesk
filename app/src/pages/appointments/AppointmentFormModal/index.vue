@@ -55,24 +55,11 @@
           />
         </div>
 
-        <div class="space-y-2">
-          <Label for="percProfessional">Percentual de Pagamento</Label>
-          <div class="space-y-2">
-            <Slider
-              id="percProfessional"
-              v-model="percProfessionalValue"
-              :min="0"
-              :max="100"
-              :step="1"
-              required
-            />
-            <div class="flex justify-between text-sm text-muted-foreground">
-              <span>Médico ({{ (percProfessionalValue[0] ?? 0).toFixed(0) }}%)</span>
-              <span class="flex-1" />
-              <span>Clínica ({{ (100 - (percProfessionalValue[0] ?? 0)).toFixed(0) }}%)</span>
-            </div>
-          </div>
-        </div>
+        <PercProfessionalSlider
+          id="percProfessional"
+          v-model="formData.percProfessional"
+          required
+        />
 
         <div class="grid grid-cols-2 gap-4">
           <DatePicker
@@ -131,7 +118,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
+import { PercProfessionalSlider } from '@/components/perc-professional-slider';
 import { useAppointmentsStore } from '@/stores/appointments';
 import { useDoctorsStore } from '@/stores/doctors';
 import type { CreateAppointmentDto, UpdateAppointmentDto, AppointmentResponse } from '@shared/types/appointment';
@@ -175,8 +162,6 @@ const formData = ref({
   time: getDefaultTime(),
 });
 
-const percProfessionalValue = ref([0]);
-
 const doctorOptions = computed(() => {
   return doctorsStore.doctors.map((d) => ({
     label: `${d.firstName} ${d.lastName}`,
@@ -209,7 +194,6 @@ watch(() => props.appointment, (appointment) => {
       date: date!,
       time,
     };
-    percProfessionalValue.value = [appointment.percProfessional];
   } else {
     formData.value = {
       doctorId: null,
@@ -218,13 +202,8 @@ watch(() => props.appointment, (appointment) => {
       date: getDefaultDate(),
       time: getDefaultTime(),
     };
-    percProfessionalValue.value = [0];
   }
 }, { immediate: true });
-
-watch(percProfessionalValue, (value) => {
-  formData.value.percProfessional = value[0] || 0;
-});
 
 watch(() => formData.value.doctorId, (value) => {
   if (value === '__empty__') {
@@ -236,7 +215,6 @@ watch(() => formData.value.doctorId, (value) => {
     const selectedDoctor = doctorsStore.doctors.find((d) => d.id === value);
     if (selectedDoctor) {
       formData.value.percProfessional = selectedDoctor.percProfessional;
-      percProfessionalValue.value = [selectedDoctor.percProfessional];
       formData.value.fee = selectedDoctor.appointmentFee;
     }
   }
@@ -251,7 +229,6 @@ watch(() => props.open, (open) => {
       date: getDefaultDate(),
       time: getDefaultTime(),
     };
-    percProfessionalValue.value = [0];
   }
 });
 

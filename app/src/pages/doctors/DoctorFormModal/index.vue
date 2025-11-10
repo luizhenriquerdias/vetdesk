@@ -83,24 +83,11 @@
           />
         </div>
 
-        <div class="space-y-2">
-          <Label for="percProfessional">Percentual de Pagamento</Label>
-          <div class="space-y-2">
-            <Slider
-              id="percProfessional"
-              v-model="percProfessionalValue"
-              :min="0"
-              :max="100"
-              :step="1"
-              required
-            />
-            <div class="flex justify-between text-sm text-muted-foreground">
-              <span>Médico ({{ (percProfessionalValue[0] ?? 0).toFixed(0) }}%)</span>
-              <span class="flex-1" />
-              <span>Clínica ({{ (100 - (percProfessionalValue[0] ?? 0)).toFixed(0) }}%)</span>
-            </div>
-          </div>
-        </div>
+        <PercProfessionalSlider
+          id="percProfessional"
+          v-model="formData.percProfessional"
+          required
+        />
 
         <DialogFooter>
           <Button
@@ -142,7 +129,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
+import { PercProfessionalSlider } from '@/components/perc-professional-slider';
 import CurrencyInput from '@/components/ui/currency-input/CurrencyInput.vue';
 import { useDoctorsStore } from '@/stores/doctors';
 import { useSpecialtiesStore } from '@/stores/specialties';
@@ -176,8 +163,6 @@ const formData = ref({
   percProfessional: 80,
 });
 
-const percProfessionalValue = ref([80]);
-
 const specialtyOptions = computed(() => {
   return specialtiesStore.specialties.map((s) => ({
     label: s.name,
@@ -203,7 +188,6 @@ watch(() => props.doctor, (doctor) => {
       appointmentFee: doctor.appointmentFee ?? 0,
       percProfessional: doctor.percProfessional ?? 80,
     };
-    percProfessionalValue.value = [doctor.percProfessional ?? 80];
   } else {
     formData.value = {
       firstName: '',
@@ -213,13 +197,8 @@ watch(() => props.doctor, (doctor) => {
       appointmentFee: 0,
       percProfessional: 80,
     };
-    percProfessionalValue.value = [80];
   }
 }, { immediate: true });
-
-watch(percProfessionalValue, (value) => {
-  formData.value.percProfessional = value[0] || 80;
-});
 
 watch(() => formData.value.specialtyId, (value) => {
   if (value === '__empty__') {
@@ -237,7 +216,6 @@ watch(() => props.open, (open) => {
       appointmentFee: 0,
       percProfessional: 80,
     };
-    percProfessionalValue.value = [80];
   }
 });
 
