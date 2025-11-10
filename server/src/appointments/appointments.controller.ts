@@ -27,7 +27,8 @@ export class AppointmentsController {
       }
 
       const includeDeleted = req.query.includeDeleted === 'true';
-      const appointments = await this.appointmentsService.findAll(includeDeleted);
+      const month = req.query.month as string | undefined;
+      const appointments = await this.appointmentsService.findAll(includeDeleted, month);
       return res.json(appointments);
     } catch (error) {
       if (error instanceof HttpException) {

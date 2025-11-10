@@ -2,9 +2,13 @@
   <div class="flex flex-col gap-6">
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-muted-foreground">
-          {{ appointmentsStore.showDeleted ? 'View and restore deleted appointments' : 'Manage appointments' }}
-        </p>
+        <Input
+          v-model="appointmentsStore.selectedMonth"
+          type="month"
+          class="w-auto bg-background cursor-pointer select-none"
+          @update:model-value="handleMonthChange"
+          @click="handleMonthInputClick"
+        />
       </div>
       <div class="flex items-center gap-4">
         <ToggleGroup
@@ -140,6 +144,7 @@ import { onMounted, ref, computed } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -229,6 +234,17 @@ const handleToggleView = async (showDeleted: boolean) => {
 
 const handleToggleViewValue = async (value: string) => {
   await handleToggleView(value === 'deleted');
+};
+
+const handleMonthChange = async () => {
+  await appointmentsStore.fetchAppointments();
+};
+
+const handleMonthInputClick = (event: MouseEvent) => {
+  const input = event.target as HTMLInputElement;
+  if (input && 'showPicker' in input && typeof input.showPicker === 'function') {
+    input.showPicker();
+  }
 };
 
 const handleRestoreAppointment = async (appointment: AppointmentResponse) => {

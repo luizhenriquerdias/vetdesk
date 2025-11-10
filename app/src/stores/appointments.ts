@@ -3,20 +3,35 @@ import { reactive, toRefs } from 'vue';
 import * as appointmentsApi from '@/api/appointments';
 import type { CreateAppointmentDto, UpdateAppointmentDto, AppointmentResponse } from '@shared/types/appointment';
 
+const getCurrentMonth = (): string => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}`;
+};
+
 export const useAppointmentsStore = defineStore('appointments', () => {
   const state = reactive({
     appointments: [] as AppointmentResponse[],
     loading: false,
     showDeleted: false,
+    selectedMonth: getCurrentMonth(),
   });
 
   const fetchAppointments = async () => {
     state.loading = true;
     try {
-      state.appointments = await appointmentsApi.list(state.showDeleted);
+      state.appointments = await appointmentsApi.list({
+        includeDeleted: state.showDeleted,
+        month: state.selectedMonth,
+      });
     } finally {
       state.loading = false;
     }
+  };
+
+  const setSelectedMonth = (month: string) => {
+    state.selectedMonth = month;
   };
 
   const createAppointment = async (data: CreateAppointmentDto) => {
@@ -51,6 +66,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     updateAppointment,
     deleteAppointment,
     restoreAppointment,
+    setSelectedMonth,
   };
 });
 

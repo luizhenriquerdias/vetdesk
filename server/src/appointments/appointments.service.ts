@@ -11,13 +11,40 @@ import { Decimal } from '@prisma/client/runtime/library';
 export class AppointmentsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(includeDeleted?: boolean): Promise<AppointmentResponse[]> {
+  async findAll(includeDeleted?: boolean, month?: string): Promise<AppointmentResponse[]> {
+    const whereClause: {
+      deletedAt?: { not: null } | null;
+      datetime?: {
+        gte: Date;
+        lte: Date;
+      };
+    } = {};
+
+    if (includeDeleted) {
+      whereClause.deletedAt = { not: null };
+    } else {
+      whereClause.deletedAt = null;
+    }
+
+    if (month) {
+      const [year, monthNum] = month.split('-').map(Number);
+      if (isNaN(year) || isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+        throw new BadRequestException('Invalid month format. Expected YYYY-MM');
+      }
+
+      const startOfMonth = new Date(year, monthNum - 1, 1, 0, 0, 0, 0);
+      const endOfMonth = new Date(year, monthNum, 0, 23, 59, 59, 999);
+
+      whereClause.datetime = {
+        gte: startOfMonth,
+        lte: endOfMonth,
+      };
+    }
+
     const appointments = await this.prisma.appointment.findMany({
-      where: includeDeleted
-        ? { deletedAt: { not: null } }
-        : { deletedAt: null },
+      where: whereClause,
       orderBy: {
-        createdAt: 'desc',
+        datetime: 'desc',
       },
     });
 

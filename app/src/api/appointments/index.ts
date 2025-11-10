@@ -1,8 +1,14 @@
 import { api } from '@/api';
 import type { CreateAppointmentDto, UpdateAppointmentDto, AppointmentResponse } from '@shared/types/appointment';
 
-export const list = async (includeDeleted?: boolean): Promise<AppointmentResponse[]> => {
-  const params = includeDeleted ? { includeDeleted: 'true' } : {};
+export const list = async (options?: { includeDeleted?: boolean; month?: string }): Promise<AppointmentResponse[]> => {
+  const params: Record<string, string> = {};
+  if (options?.includeDeleted) {
+    params.includeDeleted = 'true';
+  }
+  if (options?.month) {
+    params.month = options.month;
+  }
   const response = await api.get<AppointmentResponse[]>('/appointments', { params });
   return response.data;
 };
