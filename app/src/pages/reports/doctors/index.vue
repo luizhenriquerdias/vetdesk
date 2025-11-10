@@ -31,17 +31,12 @@
             </SelectContent>
           </Select>
         </div>
-        <div class="space-y-2">
-          <Label for="month">Mês</Label>
-          <Input
-            id="month"
-            v-model="selectedMonth"
-            type="month"
-            class="w-auto bg-background cursor-pointer select-none"
-            @update:model-value="handleMonthChange"
-            @click="handleMonthInputClick"
-          />
-        </div>
+        <MonthPicker
+          id="month"
+          v-model="selectedMonth"
+          label="Mês"
+          @update:model-value="handleMonthChange"
+        />
       </div>
     </div>
 
@@ -104,8 +99,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { MonthPicker } from '@/components/ui/month-picker';
 import {
   Select,
   SelectContent,
@@ -121,6 +115,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Label } from '@/components/ui/label';
 import { useDoctorsStore } from '@/stores/doctors';
 import { getDoctorsReport, type DoctorsReportResponse } from '@/api/reports';
 
@@ -203,13 +198,6 @@ const handleDoctorChange = async () => {
 
 const handleMonthChange = async () => {
   await fetchReport();
-};
-
-const handleMonthInputClick = (event: MouseEvent) => {
-  const input = event.target as HTMLInputElement;
-  if (input && 'showPicker' in input && typeof input.showPicker === 'function') {
-    input.showPicker();
-  }
 };
 
 onMounted(async () => {

@@ -2,12 +2,9 @@
   <div class="flex flex-col gap-6">
     <div class="flex items-center justify-between">
       <div>
-        <Input
+        <MonthPicker
           v-model="appointmentsStore.selectedMonth"
-          type="month"
-          class="w-auto bg-background cursor-pointer select-none"
           @update:model-value="handleMonthChange"
-          @click="handleMonthInputClick"
         />
       </div>
       <div class="flex items-center gap-4">
@@ -196,7 +193,7 @@ import { onMounted, ref, computed } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
-import { Input } from '@/components/ui/input';
+import { MonthPicker } from '@/components/ui/month-picker';
 import {
   Table,
   TableBody,
@@ -334,13 +331,6 @@ const handleToggleViewValue = async (value: string) => {
 
 const handleMonthChange = async () => {
   await appointmentsStore.fetchAppointments();
-};
-
-const handleMonthInputClick = (event: MouseEvent) => {
-  const input = event.target as HTMLInputElement;
-  if (input && 'showPicker' in input && typeof input.showPicker === 'function') {
-    input.showPicker();
-  }
 };
 
 const handleRestoreAppointment = async (appointment: AppointmentResponse) => {

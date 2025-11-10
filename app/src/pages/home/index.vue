@@ -5,14 +5,30 @@
         <CardTitle>Receitas e Despesas do Mês</CardTitle>
       </CardHeader>
       <CardContent>
-        <div v-if="loading" class="flex items-center justify-center h-64">
-          <p class="text-muted-foreground">Carregando...</p>
+        <div
+          v-if="loading"
+          class="flex items-center justify-center h-64"
+        >
+          <p class="text-muted-foreground">
+            Carregando...
+          </p>
         </div>
-        <div v-else-if="error" class="flex items-center justify-center h-64">
-          <p class="text-destructive">{{ error }}</p>
+        <div
+          v-else-if="error"
+          class="flex items-center justify-center h-64"
+        >
+          <p class="text-destructive">
+            {{ error }}
+          </p>
         </div>
-        <div v-else class="h-64 relative">
-          <canvas ref="chartCanvas" class="w-full h-full" />
+        <div
+          v-else
+          class="h-64 relative"
+        >
+          <canvas
+            ref="chartCanvas"
+            class="w-full h-full"
+          />
         </div>
       </CardContent>
     </Card>
@@ -49,7 +65,7 @@ const fetchData = async () => {
 
 const updateChart = async (data: { income: number; outcome: number }) => {
   await nextTick();
-  
+
   if (!chartCanvas.value) {
     console.error('Canvas element not found');
     return;
