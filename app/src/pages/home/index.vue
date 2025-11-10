@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
+import { ref, nextTick, watch } from 'vue';
 import { Chart, CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip, Legend } from 'chart.js';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MonthPicker } from '@/components/ui/month-picker';
@@ -156,15 +156,5 @@ watch([chartCanvas, chartData, loading, error], async ([canvas, data, isLoading,
 
 watch(selectedMonth, () => {
   fetchData();
-});
-
-onMounted(() => {
-  fetchData();
-});
-
-onBeforeUnmount(() => {
-  if (chartInstance.value) {
-    chartInstance.value.destroy();
-  }
-});
+}, { immediate: true });
 </script>
