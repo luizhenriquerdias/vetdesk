@@ -17,57 +17,69 @@
         class="space-y-4"
         @submit.prevent="handleSubmit"
       >
-        <div class="space-y-2">
-          <Label for="firstName">First Name</Label>
-          <Input
-            id="firstName"
-            v-model="formData.firstName"
-            required
-          />
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <Label for="firstName">First Name</Label>
+            <Input
+              id="firstName"
+              v-model="formData.firstName"
+              required
+            />
+          </div>
+
+          <div class="space-y-2">
+            <Label for="lastName">Last Name</Label>
+            <Input
+              id="lastName"
+              v-model="formData.lastName"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <Label for="specialty">Specialty</Label>
+            <Select
+              id="specialty"
+              v-model="formData.specialtyId"
+            >
+              <SelectTrigger class="w-full">
+                <SelectValue placeholder="Select specialty..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  v-if="specialtyOptions.length === 0"
+                  value="__empty__"
+                  disabled
+                >
+                  No specialties available
+                </SelectItem>
+                <SelectItem
+                  v-for="option in specialtyOptions"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  {{ option.label }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div class="space-y-2">
+            <Label for="crm">CRM</Label>
+            <Input
+              id="crm"
+              v-model="formData.crm"
+            />
+          </div>
         </div>
 
         <div class="space-y-2">
-          <Label for="lastName">Last Name</Label>
-          <Input
-            id="lastName"
-            v-model="formData.lastName"
-            required
-          />
-        </div>
-
-        <div class="space-y-2">
-          <Label for="specialty">Specialty</Label>
-          <Select
-            id="specialty"
-            v-model="formData.specialtyId"
-          >
-            <SelectTrigger class="w-full">
-              <SelectValue placeholder="Select specialty..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem
-                v-if="specialtyOptions.length === 0"
-                value="__empty__"
-                disabled
-              >
-                No specialties available
-              </SelectItem>
-              <SelectItem
-                v-for="option in specialtyOptions"
-                :key="option.value"
-                :value="option.value"
-              >
-                {{ option.label }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div class="space-y-2">
-          <Label for="crm">CRM</Label>
-          <Input
-            id="crm"
-            v-model="formData.crm"
+          <Label for="appointmentFee">Appointment Fee</Label>
+          <CurrencyInput
+            id="appointmentFee"
+            v-model="formData.appointmentFee"
           />
         </div>
 
@@ -131,6 +143,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import CurrencyInput from '@/components/ui/currency-input/CurrencyInput.vue';
 import { useDoctorsStore } from '@/stores/doctors';
 import { useSpecialtiesStore } from '@/stores/specialties';
 import type { CreateDoctorDto, UpdateDoctorDto, DoctorResponse } from '@shared/types/doctor';
@@ -159,6 +172,7 @@ const formData = ref({
   lastName: '',
   specialtyId: null as string | null,
   crm: '',
+  appointmentFee: 0,
   percProfessional: 80,
 });
 
@@ -186,6 +200,7 @@ watch(() => props.doctor, (doctor) => {
       lastName: doctor.lastName,
       specialtyId,
       crm: doctor.crm || '',
+      appointmentFee: doctor.appointmentFee ?? 0,
       percProfessional: doctor.percProfessional ?? 80,
     };
     percProfessionalValue.value = [doctor.percProfessional ?? 80];
@@ -195,6 +210,7 @@ watch(() => props.doctor, (doctor) => {
       lastName: '',
       specialtyId: null,
       crm: '',
+      appointmentFee: 0,
       percProfessional: 80,
     };
     percProfessionalValue.value = [80];
@@ -218,6 +234,7 @@ watch(() => props.open, (open) => {
       lastName: '',
       specialtyId: null,
       crm: '',
+      appointmentFee: 0,
       percProfessional: 80,
     };
     percProfessionalValue.value = [80];
@@ -233,6 +250,7 @@ const handleSubmit = async () => {
         lastName: formData.value.lastName,
         specialtyId: formData.value.specialtyId,
         crm: formData.value.crm || null,
+        appointmentFee: formData.value.appointmentFee,
         percProfessional: formData.value.percProfessional,
       };
       await doctorsStore.createDoctor(data);
@@ -245,6 +263,7 @@ const handleSubmit = async () => {
       lastName: formData.value.lastName,
       specialtyId: formData.value.specialtyId,
       crm: formData.value.crm || null,
+      appointmentFee: formData.value.appointmentFee,
       percProfessional: formData.value.percProfessional,
     };
     await doctorsStore.updateDoctor(props.doctor.id, data);

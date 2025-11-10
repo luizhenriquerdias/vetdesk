@@ -12,33 +12,16 @@ export async function seedDoctors(prisma: PrismaClient) {
     throw new Error('Specialty "Oftalmologia" not found. Please seed specialties first.');
   }
 
-  const existingDoctor = await prisma.doctor.findFirst({
-    where: {
+  const doctor: Doctor = await prisma.doctor.create({
+    data: {
       firstName: 'Raphael',
       lastName: 'Silveira',
-      deletedAt: null,
+      crm: 'MS-123456',
+      appointmentFee: new Decimal(100),
+      specialtyId: specialty.id,
+      percProfessional: new Decimal(80),
     },
   });
-
-  let doctor: Doctor;
-  if (existingDoctor) {
-    doctor = await prisma.doctor.update({
-      where: { id: existingDoctor.id },
-      data: {
-        specialtyId: specialty.id,
-        percProfessional: new Decimal(80),
-      },
-    });
-  } else {
-    doctor = await prisma.doctor.create({
-      data: {
-        firstName: 'Raphael',
-        lastName: 'Silveira',
-        specialtyId: specialty.id,
-        percProfessional: new Decimal(80),
-      },
-    });
-  }
 
   seededDoctors.push(doctor);
   console.log(`Seeded ${seededDoctors.length} doctors`);

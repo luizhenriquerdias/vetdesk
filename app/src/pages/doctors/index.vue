@@ -36,6 +36,7 @@
               <TableHead>Name</TableHead>
               <TableHead>Specialties</TableHead>
               <TableHead>CRM</TableHead>
+              <TableHead>Appointment Fee</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -61,6 +62,11 @@
               <TableCell>
                 <span :class="doctorsStore.showDeleted ? 'line-through' : ''">
                   {{ doctor.crm || '-' }}
+                </span>
+              </TableCell>
+              <TableCell>
+                <span :class="doctorsStore.showDeleted ? 'line-through' : ''">
+                  {{ formatCurrency(doctor.appointmentFee) }}
                 </span>
               </TableCell>
               <TableCell @click.stop>
@@ -104,7 +110,7 @@
             </TableRow>
             <TableRow v-if="doctorsStore.doctors.length === 0">
               <TableCell
-                colspan="4"
+                colspan="5"
                 class="text-center text-muted-foreground"
               >
                 No doctors found
@@ -204,6 +210,15 @@ const handleConfirmDelete = async () => {
     doctorToDelete.value = null;
   }
   isDeleteDialogOpen.value = false;
+};
+
+const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
 };
 </script>
 

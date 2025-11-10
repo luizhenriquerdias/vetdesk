@@ -242,6 +242,7 @@ watch(() => formData.value.doctorId, (value) => {
     if (selectedDoctor) {
       formData.value.percProfessional = selectedDoctor.percProfessional;
       percProfessionalValue.value = [selectedDoctor.percProfessional];
+      formData.value.fee = selectedDoctor.appointmentFee;
     }
   }
 });
