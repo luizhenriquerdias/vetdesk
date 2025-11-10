@@ -61,7 +61,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const tenants = await getTenantsApi();
       state.availableTenants = tenants;
-    } catch (error) {
+    } catch (_error) {
       state.availableTenants = [];
     }
   };

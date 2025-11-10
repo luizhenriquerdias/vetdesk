@@ -16,7 +16,7 @@ export class DoctorsService {
       where: {
         tenantId,
         ...(includeDeleted
-        ? { deletedAt: { not: null } }
+          ? { deletedAt: { not: null } }
           : { deletedAt: null }),
       },
       include: {

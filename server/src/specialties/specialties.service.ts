@@ -16,7 +16,7 @@ export class SpecialtiesService {
       where: {
         tenantId,
         ...(includeDeleted
-        ? { deletedAt: { not: null } }
+          ? { deletedAt: { not: null } }
           : { deletedAt: null }),
       },
       orderBy: {
@@ -89,7 +89,7 @@ export class SpecialtiesService {
       throw new BadRequestException('Não é possível atualizar uma especialidade excluída');
     }
 
-    const updateData: {} = {};
+    const updateData: Partial<{ name: string }> = {};
 
     if (Object.keys(updateSpecialtyDto).length === 0) {
       throw new BadRequestException('Pelo menos um campo deve ser fornecido para atualização');
