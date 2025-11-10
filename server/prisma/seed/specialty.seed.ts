@@ -13,15 +13,21 @@ const specialties = [
   'Cardiologia',
 ];
 
-export async function seedSpecialties(prisma: PrismaClient) {
+export async function seedSpecialties(prisma: PrismaClient, tenantId: string) {
   const seededSpecialties: Specialty[] = [];
 
   for (const name of specialties) {
     const specialty = await prisma.specialty.upsert({
-      where: { name },
+      where: {
+        name_tenantId: {
+          name,
+          tenantId,
+        },
+      },
       update: {},
       create: {
         name,
+        tenantId,
       },
     });
 

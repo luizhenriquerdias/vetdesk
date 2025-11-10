@@ -22,12 +22,12 @@ export class DoctorsController {
   @Get()
   async findAll(@Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
       const includeDeleted = req.query.includeDeleted === 'true';
-      const doctors = await this.doctorsService.findAll(includeDeleted);
+      const doctors = await this.doctorsService.findAll(req.session.tenantId, includeDeleted);
       return res.json(doctors);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -44,11 +44,11 @@ export class DoctorsController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const doctor = await this.doctorsService.create(createDoctorDto);
+      const doctor = await this.doctorsService.create(createDoctorDto, req.session.tenantId);
       return res.status(201).json(doctor);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -66,11 +66,11 @@ export class DoctorsController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const doctor = await this.doctorsService.update(id, updateDoctorDto);
+      const doctor = await this.doctorsService.update(id, updateDoctorDto, req.session.tenantId);
       return res.json(doctor);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -83,11 +83,11 @@ export class DoctorsController {
   @Delete(':id')
   async delete(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const result = await this.doctorsService.delete(id);
+      const result = await this.doctorsService.delete(id, req.session.tenantId);
       return res.json(result);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -100,11 +100,11 @@ export class DoctorsController {
   @Patch(':id/restore')
   async restore(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const doctor = await this.doctorsService.restore(id);
+      const doctor = await this.doctorsService.restore(id, req.session.tenantId);
       return res.json(doctor);
     } catch (error) {
       if (error instanceof HttpException) {

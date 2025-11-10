@@ -22,13 +22,13 @@ export class AppointmentsController {
   @Get()
   async findAll(@Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
       const includeDeleted = req.query.includeDeleted === 'true';
       const month = req.query.month as string | undefined;
-      const appointments = await this.appointmentsService.findAll(includeDeleted, month);
+      const appointments = await this.appointmentsService.findAll(req.session.tenantId, includeDeleted, month);
       return res.json(appointments);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -45,11 +45,11 @@ export class AppointmentsController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const appointment = await this.appointmentsService.create(createAppointmentDto, req.session.userId);
+      const appointment = await this.appointmentsService.create(createAppointmentDto, req.session.userId, req.session.tenantId);
       return res.status(201).json(appointment);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -67,11 +67,11 @@ export class AppointmentsController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const appointment = await this.appointmentsService.update(id, updateAppointmentDto, req.session.userId);
+      const appointment = await this.appointmentsService.update(id, updateAppointmentDto, req.session.userId, req.session.tenantId);
       return res.json(appointment);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -84,11 +84,11 @@ export class AppointmentsController {
   @Delete(':id')
   async delete(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const result = await this.appointmentsService.delete(id, req.session.userId);
+      const result = await this.appointmentsService.delete(id, req.session.userId, req.session.tenantId);
       return res.json(result);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -101,11 +101,11 @@ export class AppointmentsController {
   @Patch(':id/restore')
   async restore(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const appointment = await this.appointmentsService.restore(id);
+      const appointment = await this.appointmentsService.restore(id, req.session.tenantId);
       return res.json(appointment);
     } catch (error) {
       if (error instanceof HttpException) {

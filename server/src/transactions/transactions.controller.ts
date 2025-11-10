@@ -22,13 +22,13 @@ export class TransactionsController {
   @Get()
   async findAll(@Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
       const includeDeleted = req.query.includeDeleted === 'true';
       const month = req.query.month as string | undefined;
-      const transactions = await this.transactionsService.findAll(includeDeleted, month);
+      const transactions = await this.transactionsService.findAll(req.session.tenantId, includeDeleted, month);
       return res.json(transactions);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -45,11 +45,11 @@ export class TransactionsController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const transaction = await this.transactionsService.create(createTransactionDto, req.session.userId);
+      const transaction = await this.transactionsService.create(createTransactionDto, req.session.userId, req.session.tenantId);
       return res.status(201).json(transaction);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -67,11 +67,11 @@ export class TransactionsController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const transaction = await this.transactionsService.update(id, updateTransactionDto, req.session.userId);
+      const transaction = await this.transactionsService.update(id, updateTransactionDto, req.session.userId, req.session.tenantId);
       return res.json(transaction);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -84,11 +84,11 @@ export class TransactionsController {
   @Delete(':id')
   async delete(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const result = await this.transactionsService.delete(id, req.session.userId);
+      const result = await this.transactionsService.delete(id, req.session.userId, req.session.tenantId);
       return res.json(result);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -101,11 +101,11 @@ export class TransactionsController {
   @Patch(':id/restore')
   async restore(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const transaction = await this.transactionsService.restore(id);
+      const transaction = await this.transactionsService.restore(id, req.session.tenantId);
       return res.json(transaction);
     } catch (error) {
       if (error instanceof HttpException) {

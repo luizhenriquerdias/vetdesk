@@ -6,7 +6,9 @@ model Doctor {
   percProfessional Decimal    @default(0) @db.Decimal(4, 1)
   appointmentFee   Decimal    @default(0) @db.Decimal(10, 2)
   specialtyId      String?
+  tenantId         String
   specialty        Specialty? @relation(fields: [specialtyId], references: [id])
+  tenant           Tenant     @relation(fields: [tenantId], references: [id])
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
   deletedAt        DateTime?

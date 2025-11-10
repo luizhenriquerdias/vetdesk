@@ -1,8 +1,12 @@
 model Specialty {
   id        String    @id @default(uuid())
-  name      String    @unique
+  name      String
+  tenantId  String
   doctors   Doctor[]
+  tenant    Tenant    @relation(fields: [tenantId], references: [id])
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+
+  @@unique([name, tenantId])
 }

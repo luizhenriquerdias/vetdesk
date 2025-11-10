@@ -11,11 +11,14 @@ import { Decimal } from '@prisma/client/runtime/library';
 export class DoctorsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(includeDeleted?: boolean): Promise<DoctorResponse[]> {
+  async findAll(tenantId: string, includeDeleted?: boolean): Promise<DoctorResponse[]> {
     const doctors = await this.prisma.doctor.findMany({
-      where: includeDeleted
+      where: {
+        tenantId,
+        ...(includeDeleted
         ? { deletedAt: { not: null } }
-        : { deletedAt: null },
+          : { deletedAt: null }),
+      },
       include: {
         specialty: true,
       },
@@ -43,7 +46,7 @@ export class DoctorsService {
     }
   }
 
-  async create(createDoctorDto: CreateDoctorDto): Promise<DoctorResponse> {
+  async create(createDoctorDto: CreateDoctorDto, tenantId: string): Promise<DoctorResponse> {
     const firstName = createDoctorDto.firstName.trim();
     const lastName = createDoctorDto.lastName.trim();
     const specialtyId = createDoctorDto.specialtyId || null;
@@ -70,25 +73,11 @@ export class DoctorsService {
       throw new BadRequestException('Percentual profissional deve estar entre 0,0 e 100,0');
     }
 
-    const createData: {
-      firstName: string;
-      lastName: string;
-      crm: string | null;
-      percProfessional: Decimal;
-      appointmentFee: Decimal;
-      specialty?: { connect: { id: string } };
-    } = {
-      firstName,
-      lastName,
-      crm,
-      percProfessional: new Decimal(percProfessional),
-      appointmentFee: new Decimal(appointmentFee),
-    };
-
     if (specialtyId) {
       const existingSpecialty = await this.prisma.specialty.findFirst({
         where: {
           id: specialtyId,
+          tenantId,
           deletedAt: null,
         },
       });
@@ -96,14 +85,18 @@ export class DoctorsService {
       if (!existingSpecialty) {
         throw new BadRequestException('Especialidade não encontrada');
       }
-
-      createData.specialty = {
-        connect: { id: specialtyId },
-      };
     }
 
     const doctor = await this.prisma.doctor.create({
-      data: createData,
+      data: {
+        firstName,
+        lastName,
+        crm,
+        percProfessional: new Decimal(percProfessional),
+        appointmentFee: new Decimal(appointmentFee),
+        tenantId,
+        specialtyId: specialtyId || null,
+      },
       include: {
         specialty: true,
       },
@@ -120,13 +113,16 @@ export class DoctorsService {
     };
   }
 
-  async update(id: string, updateDoctorDto: UpdateDoctorDto): Promise<DoctorResponse> {
+  async update(id: string, updateDoctorDto: UpdateDoctorDto, tenantId: string): Promise<DoctorResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID do médico é obrigatório');
     }
 
     const doctor = await this.prisma.doctor.findFirst({
-      where: { id },
+      where: { id, tenantId },
+      include: {
+        specialty: true,
+      },
     });
 
     if (!doctor) {
@@ -173,6 +169,7 @@ export class DoctorsService {
         const existingSpecialty = await this.prisma.specialty.findFirst({
           where: {
             id: updateDoctorDto.specialtyId,
+            tenantId,
             deletedAt: null,
           },
         });
@@ -232,13 +229,16 @@ export class DoctorsService {
     };
   }
 
-  async delete(id: string): Promise<{ message: string }> {
+  async delete(id: string, tenantId: string): Promise<{ message: string }> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID do médico é obrigatório');
     }
 
     const doctor = await this.prisma.doctor.findFirst({
-      where: { id },
+      where: { id, tenantId },
+      include: {
+        specialty: true,
+      },
     });
 
     if (!doctor) {
@@ -257,13 +257,16 @@ export class DoctorsService {
     return { message: 'Médico excluído com sucesso' };
   }
 
-  async restore(id: string): Promise<DoctorResponse> {
+  async restore(id: string, tenantId: string): Promise<DoctorResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID do médico é obrigatório');
     }
 
     const doctor = await this.prisma.doctor.findFirst({
-      where: { id },
+      where: { id, tenantId },
+      include: {
+        specialty: true,
+      },
     });
 
     if (!doctor) {

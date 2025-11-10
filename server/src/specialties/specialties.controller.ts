@@ -22,12 +22,12 @@ export class SpecialtiesController {
   @Get()
   async findAll(@Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
       const includeDeleted = req.query.includeDeleted === 'true';
-      const specialties = await this.specialtiesService.findAll(includeDeleted);
+      const specialties = await this.specialtiesService.findAll(req.session.tenantId, includeDeleted);
       return res.json(specialties);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -44,11 +44,11 @@ export class SpecialtiesController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const specialty = await this.specialtiesService.create(createSpecialtyDto);
+      const specialty = await this.specialtiesService.create(createSpecialtyDto, req.session.tenantId);
       return res.status(201).json(specialty);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -66,11 +66,11 @@ export class SpecialtiesController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const specialty = await this.specialtiesService.update(id, updateSpecialtyDto);
+      const specialty = await this.specialtiesService.update(id, updateSpecialtyDto, req.session.tenantId);
       return res.json(specialty);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -83,11 +83,11 @@ export class SpecialtiesController {
   @Delete(':id')
   async delete(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const result = await this.specialtiesService.delete(id);
+      const result = await this.specialtiesService.delete(id, req.session.tenantId);
       return res.json(result);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -100,11 +100,11 @@ export class SpecialtiesController {
   @Patch(':id/restore')
   async restore(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
+      if (!req.session.userId || !req.session.tenantId) {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const specialty = await this.specialtiesService.restore(id);
+      const specialty = await this.specialtiesService.restore(id, req.session.tenantId);
       return res.json(specialty);
     } catch (error) {
       if (error instanceof HttpException) {

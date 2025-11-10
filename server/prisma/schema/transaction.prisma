@@ -9,6 +9,7 @@ model Transaction {
   type        TransactionType
   datetime    DateTime
   amount      Decimal         @default(0) @db.Decimal(10, 2)
+  tenantId    String
   createdAt   DateTime        @default(now())
   createdBy   String
   updatedAt   DateTime        @updatedAt
@@ -16,6 +17,7 @@ model Transaction {
   deletedAt   DateTime?
   deletedBy   String?
 
+  tenant       Tenant  @relation(fields: [tenantId], references: [id])
   createdByUser User  @relation("TransactionCreatedBy", fields: [createdBy], references: [id])
   updatedByUser User? @relation("TransactionUpdatedBy", fields: [updatedBy], references: [id])
   deletedByUser User? @relation("TransactionDeletedBy", fields: [deletedBy], references: [id])

@@ -4,6 +4,7 @@ model Appointment {
   fee              Decimal   @db.Decimal(10, 2)
   percProfessional Decimal   @db.Decimal(4, 1)
   datetime         DateTime
+  tenantId         String
   createdAt        DateTime  @default(now())
   createdBy        String
   updatedAt        DateTime  @updatedAt
@@ -12,6 +13,7 @@ model Appointment {
   deletedBy        String?
 
   doctor Doctor @relation(fields: [doctorId], references: [id])
+  tenant Tenant @relation(fields: [tenantId], references: [id])
   createdByUser User  @relation("AppointmentCreatedBy", fields: [createdBy], references: [id])
   updatedByUser User? @relation("AppointmentUpdatedBy", fields: [updatedBy], references: [id])
   deletedByUser User? @relation("AppointmentDeletedBy", fields: [deletedBy], references: [id])

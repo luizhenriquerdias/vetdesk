@@ -11,14 +11,17 @@ import { Decimal } from '@prisma/client/runtime/library';
 export class AppointmentsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(includeDeleted?: boolean, month?: string): Promise<AppointmentResponse[]> {
+  async findAll(tenantId: string, includeDeleted?: boolean, month?: string): Promise<AppointmentResponse[]> {
     const whereClause: {
+      tenantId: string;
       deletedAt?: { not: null } | null;
       datetime?: {
         gte: Date;
         lte: Date;
       };
-    } = {};
+    } = {
+      tenantId,
+    };
 
     if (includeDeleted) {
       whereClause.deletedAt = { not: null };
@@ -57,7 +60,7 @@ export class AppointmentsService {
     }));
   }
 
-  async create(createAppointmentDto: CreateAppointmentDto, userId: string): Promise<AppointmentResponse> {
+  async create(createAppointmentDto: CreateAppointmentDto, userId: string, tenantId: string): Promise<AppointmentResponse> {
     const doctorId = createAppointmentDto.doctorId.trim();
     const fee = createAppointmentDto.fee;
     const percProfessional = createAppointmentDto.percProfessional ?? 0;
@@ -86,6 +89,7 @@ export class AppointmentsService {
     const existingDoctor = await this.prisma.doctor.findFirst({
       where: {
         id: doctorId,
+        tenantId,
         deletedAt: null,
       },
     });
@@ -100,6 +104,7 @@ export class AppointmentsService {
         fee: new Decimal(fee),
         percProfessional: new Decimal(percProfessional),
         datetime,
+        tenantId,
         createdBy: userId,
       },
     });
@@ -113,13 +118,13 @@ export class AppointmentsService {
     };
   }
 
-  async update(id: string, updateAppointmentDto: UpdateAppointmentDto, userId: string): Promise<AppointmentResponse> {
+  async update(id: string, updateAppointmentDto: UpdateAppointmentDto, userId: string, tenantId: string): Promise<AppointmentResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID da consulta é obrigatório');
     }
 
     const appointment = await this.prisma.appointment.findFirst({
-      where: { id },
+      where: { id, tenantId },
     });
 
     if (!appointment) {
@@ -151,6 +156,7 @@ export class AppointmentsService {
       const existingDoctor = await this.prisma.doctor.findFirst({
         where: {
           id: doctorId,
+          tenantId,
           deletedAt: null,
         },
       });
@@ -200,13 +206,13 @@ export class AppointmentsService {
     };
   }
 
-  async delete(id: string, userId: string): Promise<{ message: string }> {
+  async delete(id: string, userId: string, tenantId: string): Promise<{ message: string }> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID da consulta é obrigatório');
     }
 
     const appointment = await this.prisma.appointment.findFirst({
-      where: { id },
+      where: { id, tenantId },
     });
 
     if (!appointment) {
@@ -228,13 +234,13 @@ export class AppointmentsService {
     return { message: 'Consulta excluída com sucesso' };
   }
 
-  async restore(id: string): Promise<AppointmentResponse> {
+  async restore(id: string, tenantId: string): Promise<AppointmentResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID da consulta é obrigatório');
     }
 
     const appointment = await this.prisma.appointment.findFirst({
-      where: { id },
+      where: { id, tenantId },
     });
 
     if (!appointment) {

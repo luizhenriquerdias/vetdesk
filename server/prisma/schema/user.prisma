@@ -15,4 +15,5 @@ model User {
   appointmentsCreated Appointment[] @relation("AppointmentCreatedBy")
   appointmentsUpdated Appointment[] @relation("AppointmentUpdatedBy")
   appointmentsDeleted Appointment[] @relation("AppointmentDeletedBy")
+  userTenants UserTenant[]
 }

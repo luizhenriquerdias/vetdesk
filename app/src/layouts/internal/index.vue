@@ -30,13 +30,32 @@
                 <span class="text-sm font-medium">
                   {{ authStore.user.firstName }} {{ authStore.user.lastName }}
                 </span>
-                <span class="text-xs text-muted-foreground">
-                  {{ authStore.user.email }}
+                <span
+                  v-if="authStore.currentTenant"
+                  class="text-xs text-muted-foreground"
+                >
+                  {{ authStore.currentTenant.name }}
                 </span>
               </div>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <template v-if="authStore.availableTenants.length > 1">
+              <div class="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                Trocar Clínica
+              </div>
+              <DropdownMenuItem
+                v-for="tenant in authStore.availableTenants"
+                :key="tenant.id"
+                class="flex items-center gap-2 cursor-pointer"
+                :class="{ 'bg-accent': tenant.id === authStore.currentTenant?.id }"
+                @click="handleSwitchTenant(tenant.id)"
+              >
+                <Icon name="building" />
+                <span>{{ tenant.name }}</span>
+              </DropdownMenuItem>
+              <div class="border-t my-1" />
+            </template>
             <DropdownMenuItem
               class="flex items-center gap-2 cursor-pointer"
               @click="handleLogout"
@@ -119,6 +138,14 @@ const userInitials = computed(() => {
 
 const handleLogout = async () => {
   await authStore.logout();
+};
+
+const handleSwitchTenant = async (tenantId: string) => {
+  if (tenantId === authStore.currentTenant?.id) {
+    return;
+  }
+  await authStore.switchTenant(tenantId);
+  window.location.reload();
 };
 </script>
 

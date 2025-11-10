@@ -23,8 +23,7 @@ export class AppController {
         throw new UnauthorizedException('Não autenticado');
       }
 
-      const user = await this.authService.getCurrentUser(req.session.userId);
-      const response: AuthResponse = { user };
+      const response = await this.authService.getCurrentUser(req.session.userId, req.session.tenantId);
       return res.json(response);
     } catch (error) {
       if (error instanceof HttpException) {

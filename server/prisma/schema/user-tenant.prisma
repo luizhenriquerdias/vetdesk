@@ -1,0 +1,13 @@
+model UserTenant {
+  userId   String
+  tenantId String
+  admin    Boolean @default(false)
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@id([userId, tenantId])
+  @@index([userId])
+  @@index([tenantId])
+}
+

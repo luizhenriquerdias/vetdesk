@@ -1,11 +1,14 @@
 import { PrismaClient, Doctor } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
-export async function seedDoctors(prisma: PrismaClient) {
+export async function seedDoctors(prisma: PrismaClient, tenantId: string) {
   const seededDoctors: Doctor[] = [];
 
   const specialty = await prisma.specialty.findFirst({
-    where: { name: 'Oftalmologia' },
+    where: {
+      name: 'Oftalmologia',
+      tenantId,
+    },
   });
 
   if (!specialty) {
@@ -19,6 +22,7 @@ export async function seedDoctors(prisma: PrismaClient) {
       crm: 'MS-123456',
       appointmentFee: new Decimal(100),
       specialtyId: specialty.id,
+      tenantId,
       percProfessional: new Decimal(80),
     },
   });

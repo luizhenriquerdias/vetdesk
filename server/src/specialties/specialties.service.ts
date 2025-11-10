@@ -11,11 +11,14 @@ import { CreateSpecialtyDto, UpdateSpecialtyDto, SpecialtyResponse } from '@vetd
 export class SpecialtiesService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(includeDeleted?: boolean): Promise<SpecialtyResponse[]> {
+  async findAll(tenantId: string, includeDeleted?: boolean): Promise<SpecialtyResponse[]> {
     const specialties = await this.prisma.specialty.findMany({
-      where: includeDeleted
+      where: {
+        tenantId,
+        ...(includeDeleted
         ? { deletedAt: { not: null } }
-        : { deletedAt: null },
+          : { deletedAt: null }),
+      },
       orderBy: {
         createdAt: 'desc',
       },
@@ -35,7 +38,7 @@ export class SpecialtiesService {
     }
   }
 
-  async create(createSpecialtyDto: CreateSpecialtyDto): Promise<SpecialtyResponse> {
+  async create(createSpecialtyDto: CreateSpecialtyDto, tenantId: string): Promise<SpecialtyResponse> {
     const name = createSpecialtyDto.name.trim();
 
     if (!name) {
@@ -47,6 +50,7 @@ export class SpecialtiesService {
     const existingSpecialty = await this.prisma.specialty.findFirst({
       where: {
         name,
+        tenantId,
         deletedAt: null,
       },
     });
@@ -58,6 +62,7 @@ export class SpecialtiesService {
     const specialty = await this.prisma.specialty.create({
       data: {
         name,
+        tenantId,
       },
     });
 
@@ -67,13 +72,13 @@ export class SpecialtiesService {
     };
   }
 
-  async update(id: string, updateSpecialtyDto: UpdateSpecialtyDto): Promise<SpecialtyResponse> {
+  async update(id: string, updateSpecialtyDto: UpdateSpecialtyDto, tenantId: string): Promise<SpecialtyResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID da especialidade é obrigatório');
     }
 
     const specialty = await this.prisma.specialty.findFirst({
-      where: { id },
+      where: { id, tenantId },
     });
 
     if (!specialty) {
@@ -101,13 +106,13 @@ export class SpecialtiesService {
     };
   }
 
-  async delete(id: string): Promise<{ message: string }> {
+  async delete(id: string, tenantId: string): Promise<{ message: string }> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID da especialidade é obrigatório');
     }
 
     const specialty = await this.prisma.specialty.findFirst({
-      where: { id },
+      where: { id, tenantId },
     });
 
     if (!specialty) {
@@ -126,13 +131,13 @@ export class SpecialtiesService {
     return { message: 'Especialidade excluída com sucesso' };
   }
 
-  async restore(id: string): Promise<SpecialtyResponse> {
+  async restore(id: string, tenantId: string): Promise<SpecialtyResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID da especialidade é obrigatório');
     }
 
     const specialty = await this.prisma.specialty.findFirst({
-      where: { id },
+      where: { id, tenantId },
     });
 
     if (!specialty) {

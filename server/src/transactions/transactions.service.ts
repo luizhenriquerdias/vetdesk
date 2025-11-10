@@ -10,14 +10,17 @@ import { CreateTransactionDto, UpdateTransactionDto, TransactionResponse, TRANSA
 export class TransactionsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(includeDeleted?: boolean, month?: string): Promise<TransactionResponse[]> {
+  async findAll(tenantId: string, includeDeleted?: boolean, month?: string): Promise<TransactionResponse[]> {
     const whereClause: {
+      tenantId: string;
       deletedAt?: { not: null } | null;
       datetime?: {
         gte: Date;
         lte: Date;
       };
-    } = {};
+    } = {
+      tenantId,
+    };
 
     if (includeDeleted) {
       whereClause.deletedAt = { not: null };
@@ -70,7 +73,7 @@ export class TransactionsService {
     }
   }
 
-  async create(createTransactionDto: CreateTransactionDto, userId: string): Promise<TransactionResponse> {
+  async create(createTransactionDto: CreateTransactionDto, userId: string, tenantId: string): Promise<TransactionResponse> {
     const description = createTransactionDto.description.trim();
     const type = createTransactionDto.type;
     const datetime = new Date(createTransactionDto.datetime);
@@ -115,6 +118,7 @@ export class TransactionsService {
         type,
         datetime,
         amount: createTransactionDto.amount,
+        tenantId,
         createdBy: userId,
       },
     });
@@ -134,13 +138,13 @@ export class TransactionsService {
     };
   }
 
-  async update(id: string, updateTransactionDto: UpdateTransactionDto, userId: string): Promise<TransactionResponse> {
+  async update(id: string, updateTransactionDto: UpdateTransactionDto, userId: string, tenantId: string): Promise<TransactionResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID da transação é obrigatório');
     }
 
     const transaction = await this.prisma.transaction.findFirst({
-      where: { id },
+      where: { id, tenantId },
     });
 
     if (!transaction) {
@@ -219,13 +223,13 @@ export class TransactionsService {
     };
   }
 
-  async delete(id: string, userId: string): Promise<{ message: string }> {
+  async delete(id: string, userId: string, tenantId: string): Promise<{ message: string }> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID da transação é obrigatório');
     }
 
     const transaction = await this.prisma.transaction.findFirst({
-      where: { id },
+      where: { id, tenantId },
     });
 
     if (!transaction) {
@@ -247,13 +251,13 @@ export class TransactionsService {
     return { message: 'Transação excluída com sucesso' };
   }
 
-  async restore(id: string): Promise<TransactionResponse> {
+  async restore(id: string, tenantId: string): Promise<TransactionResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID da transação é obrigatório');
     }
 
     const transaction = await this.prisma.transaction.findFirst({
-      where: { id },
+      where: { id, tenantId },
     });
 
     if (!transaction) {
