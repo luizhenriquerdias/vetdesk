@@ -31,6 +31,7 @@ export class DoctorsService {
       specialty: doctor.specialty?.name || null,
       crm: doctor.crm,
       percProfessional: Number(doctor.percProfessional),
+      appointmentFee: Number(doctor.appointmentFee),
     }));
   }
 
@@ -48,6 +49,7 @@ export class DoctorsService {
     const specialtyId = createDoctorDto.specialtyId || null;
     const crm = createDoctorDto.crm?.trim() || null;
     const percProfessional = createDoctorDto.percProfessional ?? 0;
+    const appointmentFee = createDoctorDto.appointmentFee ?? 0;
 
     if (!firstName) {
       throw new BadRequestException('firstName is required');
@@ -73,12 +75,14 @@ export class DoctorsService {
       lastName: string;
       crm: string | null;
       percProfessional: Decimal;
+      appointmentFee: Decimal;
       specialty?: { connect: { id: string } };
     } = {
       firstName,
       lastName,
       crm,
       percProfessional: new Decimal(percProfessional),
+      appointmentFee: new Decimal(appointmentFee),
     };
 
     if (specialtyId) {
@@ -112,6 +116,7 @@ export class DoctorsService {
       specialty: doctor.specialty?.name || null,
       crm: doctor.crm,
       percProfessional: Number(doctor.percProfessional),
+      appointmentFee: Number(doctor.appointmentFee),
     };
   }
 
@@ -137,6 +142,7 @@ export class DoctorsService {
       lastName?: string;
       crm?: string | null;
       percProfessional?: Decimal;
+      appointmentFee?: Decimal;
       specialty?: { connect: { id: string } } | { disconnect: true };
     } = {};
 
@@ -200,6 +206,13 @@ export class DoctorsService {
       updateData.percProfessional = new Decimal(updateDoctorDto.percProfessional);
     }
 
+    if (updateDoctorDto.appointmentFee !== undefined) {
+      if (updateDoctorDto.appointmentFee < 0) {
+        throw new BadRequestException('appointmentFee must be greater than or equal to 0');
+      }
+      updateData.appointmentFee = new Decimal(updateDoctorDto.appointmentFee);
+    }
+
     const updatedDoctor = await this.prisma.doctor.update({
       where: { id },
       data: updateData,
@@ -215,6 +228,7 @@ export class DoctorsService {
       specialty: updatedDoctor.specialty?.name || null,
       crm: updatedDoctor.crm,
       percProfessional: Number(updatedDoctor.percProfessional),
+      appointmentFee: Number(updatedDoctor.appointmentFee),
     };
   }
 
@@ -275,6 +289,7 @@ export class DoctorsService {
       specialty: restoredDoctor.specialty?.name || null,
       crm: restoredDoctor.crm,
       percProfessional: Number(restoredDoctor.percProfessional),
+      appointmentFee: Number(restoredDoctor.appointmentFee),
     };
   }
 }

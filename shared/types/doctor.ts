@@ -5,6 +5,7 @@ export type Doctor = {
   specialty: string | null;
   crm: string | null;
   percProfessional: number;
+  appointmentFee: number;
 };
 
 export type CreateDoctorDto = {
@@ -13,6 +14,7 @@ export type CreateDoctorDto = {
   specialtyId?: string | null;
   crm?: string | null;
   percProfessional?: number;
+  appointmentFee?: number;
 };
 
 export type UpdateDoctorDto = {
@@ -21,6 +23,7 @@ export type UpdateDoctorDto = {
   specialtyId?: string | null;
   crm?: string | null;
   percProfessional?: number;
+  appointmentFee?: number;
 };
 
 export type DoctorResponse = Doctor;
