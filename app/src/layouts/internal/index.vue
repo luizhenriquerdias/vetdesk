@@ -89,7 +89,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Icon } from '@/components/ui/icon';
-import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS, ROUTE_REPORTS_DOCTORS } from '@/router/routes';
+import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS, ROUTE_REPORTS_DOCTORS, ROUTE_REPORTS_TRANSACTIONS } from '@/router/routes';
 import { useUsersStore } from '@/stores/users';
 import { useDoctorsStore } from '@/stores/doctors';
 import { useSpecialtiesStore } from '@/stores/specialties';
@@ -124,6 +124,8 @@ const pageTitle = computed(() => {
       return appointmentsStore.showDeleted ? 'Consultas Excluídas' : 'Consultas';
     case ROUTE_REPORTS_DOCTORS:
       return 'Relatório de Médicos';
+    case ROUTE_REPORTS_TRANSACTIONS:
+      return 'Transações Consolidadas';
     default:
       return '';
   }

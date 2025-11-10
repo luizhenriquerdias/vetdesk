@@ -6,3 +6,4 @@ export const ROUTE_SPECIALTIES = 'specialties' as const;
 export const ROUTE_TRANSACTIONS = 'transactions' as const;
 export const ROUTE_APPOINTMENTS = 'appointments' as const;
 export const ROUTE_REPORTS_DOCTORS = 'reports-doctors' as const;
+export const ROUTE_REPORTS_TRANSACTIONS = 'reports-transactions' as const;

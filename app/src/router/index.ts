@@ -9,7 +9,8 @@ import SpecialtiesPage from '@/pages/specialties/index.vue';
 import TransactionsPage from '@/pages/transactions/index.vue';
 import AppointmentsPage from '@/pages/appointments/index.vue';
 import ReportsDoctorsPage from '@/pages/reports/doctors/index.vue';
-import { ROUTE_LOGIN, ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS, ROUTE_REPORTS_DOCTORS } from './routes';
+import ReportsTransactionsPage from '@/pages/reports/transactions/index.vue';
+import { ROUTE_LOGIN, ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS, ROUTE_REPORTS_DOCTORS, ROUTE_REPORTS_TRANSACTIONS } from './routes';
 import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
@@ -56,6 +57,11 @@ const router = createRouter({
           name: ROUTE_REPORTS_DOCTORS,
           path: 'reports/doctors',
           component: ReportsDoctorsPage,
+        },
+        {
+          name: ROUTE_REPORTS_TRANSACTIONS,
+          path: 'reports/transactions',
+          component: ReportsTransactionsPage,
         },
       ],
     },

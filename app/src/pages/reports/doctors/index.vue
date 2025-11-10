@@ -2,6 +2,13 @@
   <div class="flex flex-col gap-6">
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-4">
+        <MonthPicker
+          id="month"
+          v-model="selectedMonth"
+          label="Mês"
+          @update:model-value="handleMonthChange"
+        />
+
         <div class="space-y-2">
           <Label for="doctor">Profissional</Label>
           <Select
@@ -31,12 +38,6 @@
             </SelectContent>
           </Select>
         </div>
-        <MonthPicker
-          id="month"
-          v-model="selectedMonth"
-          label="Mês"
-          @update:model-value="handleMonthChange"
-        />
       </div>
     </div>
 

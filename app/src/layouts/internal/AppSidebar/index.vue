@@ -40,6 +40,11 @@
               icon="bar-chart"
               label="Consultas por Médico"
             />
+            <SidebarItem
+              :to="ROUTE_REPORTS_TRANSACTIONS"
+              icon="receipt"
+              label="Transações Consolidadas"
+            />
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -92,7 +97,7 @@ import {
   SidebarHeader,
   SidebarMenu,
 } from '@/components/ui/sidebar';
-import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS, ROUTE_REPORTS_DOCTORS } from '@/router/routes';
+import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS, ROUTE_REPORTS_DOCTORS, ROUTE_REPORTS_TRANSACTIONS } from '@/router/routes';
 import SidebarItem from './SidebarItem.vue';
 import logoFull from '@/assets/logo-full.png';
 </script>
