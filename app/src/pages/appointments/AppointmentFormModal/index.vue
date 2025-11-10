@@ -6,10 +6,10 @@
     <DialogContent>
       <DialogHeader>
         <DialogTitle>
-          {{ appointment ? 'Editar Consulta' : 'Criar Consulta' }}
+          {{ appointment ? 'Editar Consulta' : 'Registrar Consulta' }}
         </DialogTitle>
         <DialogDescription>
-          {{ appointment ? 'Atualizar informações da consulta' : 'Adicionar uma nova consulta ao sistema' }}
+          {{ appointment ? 'Atualizar informações da consulta' : 'Registrar uma nova consulta' }}
         </DialogDescription>
       </DialogHeader>
 

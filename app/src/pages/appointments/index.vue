@@ -38,7 +38,7 @@
           @click="handleAddAppointment"
         >
           <Icon name="plus" />
-          <span>Adicionar Consulta</span>
+          <span>Registrar Consulta</span>
         </Button>
       </div>
     </div>
@@ -279,7 +279,7 @@ const consolidatedData = computed(() => {
     const group = grouped.get(appointment.doctorId)!;
     group.totalAppointments += 1;
     group.totalIncome += appointment.fee;
-    
+
     const doctorIncome = appointment.fee * (appointment.percProfessional / 100);
     group.doctorIncome += doctorIncome;
     group.clinicIncome += appointment.fee - doctorIncome;

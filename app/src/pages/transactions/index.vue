@@ -39,7 +39,7 @@
             @click="handleAddTransaction"
           >
             <Icon name="plus" />
-            <span>Adicionar Transação</span>
+            <span>Registrar Transação</span>
           </Button>
         </div>
       </div>
