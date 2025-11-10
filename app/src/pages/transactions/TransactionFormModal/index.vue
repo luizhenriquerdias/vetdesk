@@ -57,24 +57,18 @@
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-          <div class="space-y-2">
-            <Label for="date">Data</Label>
-            <Input
-              id="date"
-              v-model="formData.date"
-              type="date"
-              required
-            />
-          </div>
-          <div class="space-y-2">
-            <Label for="time">Hora</Label>
-            <Input
-              id="time"
-              v-model="formData.time"
-              type="time"
-              required
-            />
-          </div>
+          <DatePicker
+            id="date"
+            v-model="formData.date"
+            label="Data"
+            required
+          />
+          <TimePicker
+            id="time"
+            v-model="formData.time"
+            label="Hora"
+            required
+          />
         </div>
 
         <DialogFooter>
@@ -111,6 +105,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { Label } from '@/components/ui/label';
+import { DatePicker } from '@/components/ui/date-picker';
+import { TimePicker } from '@/components/ui/time-picker';
 import {
   Select,
   SelectContent,
