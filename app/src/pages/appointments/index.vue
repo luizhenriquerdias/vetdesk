@@ -9,17 +9,6 @@
       </div>
       <div class="flex items-center gap-4">
         <ToggleGroup
-          :model-value="viewMode"
-          @update:model-value="viewMode = $event as 'table' | 'consolidated'"
-        >
-          <ToggleGroupItem :value="VIEW_MODE_TABLE">
-            <Icon name="table" />
-          </ToggleGroupItem>
-          <ToggleGroupItem :value="VIEW_MODE_CONSOLIDATED">
-            <Icon name="bar-chart" />
-          </ToggleGroupItem>
-        </ToggleGroup>
-        <ToggleGroup
           :model-value="appointmentsStore.showDeleted ? 'deleted' : 'active'"
           @update:model-value="handleToggleViewValue"
         >
@@ -42,7 +31,7 @@
 
     <Card class="p-0">
       <CardContent class="p-0">
-        <Table v-if="viewMode === VIEW_MODE_TABLE">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Médico</TableHead>
@@ -130,47 +119,6 @@
             </TableRow>
           </TableBody>
         </Table>
-        <Table v-else>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Médico</TableHead>
-              <TableHead>Total de Consultas</TableHead>
-              <TableHead>Receita Total</TableHead>
-              <TableHead>Receita do Médico</TableHead>
-              <TableHead>Receita da Clínica</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow
-              v-for="item in consolidatedData"
-              :key="item.doctorId"
-            >
-              <TableCell>
-                {{ item.doctorName }}
-              </TableCell>
-              <TableCell>
-                {{ item.totalAppointments }}
-              </TableCell>
-              <TableCell>
-                {{ formatCurrency(item.totalIncome) }}
-              </TableCell>
-              <TableCell>
-                {{ formatCurrency(item.doctorIncome) }}
-              </TableCell>
-              <TableCell>
-                {{ formatCurrency(item.clinicIncome) }}
-              </TableCell>
-            </TableRow>
-            <TableRow v-if="consolidatedData.length === 0">
-              <TableCell
-                colspan="5"
-                class="text-center text-muted-foreground"
-              >
-                Nenhuma consulta encontrada
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
       </CardContent>
     </Card>
 
@@ -189,7 +137,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
@@ -215,13 +163,9 @@ import type { AppointmentResponse } from '@shared/types/appointment';
 import AppointmentFormModal from './AppointmentFormModal/index.vue';
 import DeleteAppointmentDialog from './DeleteAppointmentDialog/index.vue';
 
-const VIEW_MODE_TABLE = 'table';
-const VIEW_MODE_CONSOLIDATED = 'consolidated';
-
 const appointmentsStore = useAppointmentsStore();
 const doctorsStore = useDoctorsStore();
 
-const viewMode = ref<'table' | 'consolidated'>(VIEW_MODE_TABLE);
 const isFormModalOpen = ref(false);
 const isDeleteDialogOpen = ref(false);
 const selectedAppointment = ref<AppointmentResponse | null>(null);
@@ -254,46 +198,6 @@ const getDoctorName = (doctorId: string): string => {
   }
   return `${doctor.firstName} ${doctor.lastName}`;
 };
-
-const consolidatedData = computed(() => {
-  const grouped = new Map<string, {
-    totalAppointments: number;
-    totalIncome: number;
-    doctorIncome: number;
-    clinicIncome: number;
-  }>();
-
-  appointmentsStore.appointments.forEach((appointment) => {
-    if (!grouped.has(appointment.doctorId)) {
-      grouped.set(appointment.doctorId, {
-        totalAppointments: 0,
-        totalIncome: 0,
-        doctorIncome: 0,
-        clinicIncome: 0,
-      });
-    }
-
-    const group = grouped.get(appointment.doctorId)!;
-    group.totalAppointments += 1;
-    group.totalIncome += appointment.fee;
-
-    const doctorIncome = appointment.fee * (appointment.percProfessional / 100);
-    group.doctorIncome += doctorIncome;
-    group.clinicIncome += appointment.fee - doctorIncome;
-  });
-
-  return Array.from(grouped.entries())
-    .map(([doctorId, data]) => ({
-      doctorId,
-      doctorName: getDoctorName(doctorId),
-      totalAppointments: data.totalAppointments,
-      totalIncome: data.totalIncome,
-      doctorIncome: data.doctorIncome,
-      clinicIncome: data.clinicIncome,
-    }))
-    .filter((item) => item.totalAppointments > 0)
-    .sort((a, b) => a.doctorName.localeCompare(b.doctorName));
-});
 
 onMounted(async () => {
   await doctorsStore.fetchDoctors();
@@ -345,4 +249,3 @@ const handleConfirmDelete = async () => {
   isDeleteDialogOpen.value = false;
 };
 </script>
-
