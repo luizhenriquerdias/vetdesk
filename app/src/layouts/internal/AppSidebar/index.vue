@@ -38,7 +38,7 @@
             <SidebarItem
               :to="ROUTE_REPORTS_DOCTORS"
               icon="bar-chart"
-              label="Médicos"
+              label="Consultas por Médico"
             />
           </SidebarMenu>
         </SidebarGroupContent>
