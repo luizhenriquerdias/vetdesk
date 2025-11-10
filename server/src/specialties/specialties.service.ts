@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { CreateSpecialtyDto, UpdateSpecialtyDto, SpecialtyResponse } from '@vetdesk/shared/types/specialty';
-import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class SpecialtiesService {
@@ -25,7 +24,6 @@ export class SpecialtiesService {
     return specialties.map((specialty) => ({
       id: specialty.id,
       name: specialty.name,
-      appointmentFee: Number(specialty.appointmentFee),
     }));
   }
 
@@ -39,18 +37,9 @@ export class SpecialtiesService {
 
   async create(createSpecialtyDto: CreateSpecialtyDto): Promise<SpecialtyResponse> {
     const name = createSpecialtyDto.name.trim();
-    const appointmentFee = createSpecialtyDto.appointmentFee;
 
     if (!name) {
       throw new BadRequestException('name is required');
-    }
-
-    if (appointmentFee === undefined || appointmentFee === null) {
-      throw new BadRequestException('appointmentFee is required');
-    }
-
-    if (appointmentFee < 0) {
-      throw new BadRequestException('appointmentFee cannot be negative');
     }
 
     this.validateStringLength(name, 1, 100, 'name');
@@ -69,14 +58,12 @@ export class SpecialtiesService {
     const specialty = await this.prisma.specialty.create({
       data: {
         name,
-        appointmentFee: new Decimal(appointmentFee),
       },
     });
 
     return {
       id: specialty.id,
       name: specialty.name,
-      appointmentFee: Number(specialty.appointmentFee),
     };
   }
 
@@ -97,19 +84,10 @@ export class SpecialtiesService {
       throw new BadRequestException('Cannot update a deleted specialty');
     }
 
-    const updateData: {
-      appointmentFee?: Decimal;
-    } = {};
+    const updateData: {} = {};
 
     if (Object.keys(updateSpecialtyDto).length === 0) {
       throw new BadRequestException('At least one field must be provided for update');
-    }
-
-    if (updateSpecialtyDto.appointmentFee !== undefined) {
-      if (updateSpecialtyDto.appointmentFee < 0) {
-        throw new BadRequestException('appointmentFee cannot be negative');
-      }
-      updateData.appointmentFee = new Decimal(updateSpecialtyDto.appointmentFee);
     }
 
     const updatedSpecialty = await this.prisma.specialty.update({
@@ -120,7 +98,6 @@ export class SpecialtiesService {
     return {
       id: updatedSpecialty.id,
       name: updatedSpecialty.name,
-      appointmentFee: Number(updatedSpecialty.appointmentFee),
     };
   }
 
@@ -174,7 +151,6 @@ export class SpecialtiesService {
     return {
       id: restoredSpecialty.id,
       name: restoredSpecialty.name,
-      appointmentFee: Number(restoredSpecialty.appointmentFee),
     };
   }
 }

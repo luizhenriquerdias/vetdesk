@@ -27,15 +27,6 @@
           />
         </div>
 
-        <div class="space-y-2">
-          <Label for="appointmentFee">Appointment Fee</Label>
-          <CurrencyInput
-            id="appointmentFee"
-            v-model="formData.appointmentFee"
-            required
-          />
-        </div>
-
         <DialogFooter>
           <Button
             type="button"
@@ -68,7 +59,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { CurrencyInput } from '@/components/ui/currency-input';
 import { Label } from '@/components/ui/label';
 import { useSpecialtiesStore } from '@/stores/specialties';
 import type { CreateSpecialtyDto, UpdateSpecialtyDto, SpecialtyResponse } from '@shared/types/specialty';
@@ -93,19 +83,16 @@ const saving = ref(false);
 
 const formData = ref({
   name: '',
-  appointmentFee: 0,
 });
 
 watch(() => props.specialty, (specialty) => {
   if (specialty) {
     formData.value = {
       name: specialty.name,
-      appointmentFee: specialty.appointmentFee,
     };
   } else {
     formData.value = {
       name: '',
-      appointmentFee: 0,
     };
   }
 }, { immediate: true });
@@ -114,7 +101,6 @@ watch(() => props.open, (open) => {
   if (!open) {
     formData.value = {
       name: '',
-      appointmentFee: 0,
     };
   }
 });
@@ -125,13 +111,10 @@ const handleSubmit = async () => {
     if (!props.specialty) {
       const data: CreateSpecialtyDto = {
         name: formData.value.name.trim(),
-        appointmentFee: formData.value.appointmentFee,
       };
       await specialtiesStore.createSpecialty(data);
     } else {
-      const data: UpdateSpecialtyDto = {
-        appointmentFee: formData.value.appointmentFee,
-      };
+      const data: UpdateSpecialtyDto = {};
       await specialtiesStore.updateSpecialty(props.specialty.id, data);
     }
 

@@ -1,9 +1,8 @@
 model Specialty {
-  id              String    @id @default(uuid())
-  name            String    @unique
-  appointmentFee  Decimal   @db.Decimal(10, 2)
-  doctors         Doctor[]
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
+  id        String    @id @default(uuid())
+  name      String    @unique
+  doctors   Doctor[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }

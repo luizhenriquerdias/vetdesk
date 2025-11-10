@@ -234,6 +234,15 @@ watch(percProfessionalValue, (value) => {
 watch(() => formData.value.doctorId, (value) => {
   if (value === '__empty__') {
     formData.value.doctorId = null;
+    return;
+  }
+
+  if (value) {
+    const selectedDoctor = doctorsStore.doctors.find((d) => d.id === value);
+    if (selectedDoctor) {
+      formData.value.percProfessional = selectedDoctor.percProfessional;
+      percProfessionalValue.value = [selectedDoctor.percProfessional];
+    }
   }
 });
 

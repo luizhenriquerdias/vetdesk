@@ -1,5 +1,4 @@
 import { PrismaClient, Specialty } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
 
 const specialties = [
   'Oftalmologista',
@@ -20,12 +19,9 @@ export async function seedSpecialties(prisma: PrismaClient) {
   for (const name of specialties) {
     const specialty = await prisma.specialty.upsert({
       where: { name },
-      update: {
-        appointmentFee: new Decimal(300),
-      },
+      update: {},
       create: {
         name,
-        appointmentFee: new Decimal(300),
       },
     });
 

@@ -1,14 +1,14 @@
 model Doctor {
-  id              String      @id @default(uuid())
-  firstName       String
-  lastName        String
-  crm             String?
-  percProfessional Decimal   @db.Decimal(4, 1) @default(0)
-  specialtyId     String?
-  specialty       Specialty?  @relation(fields: [specialtyId], references: [id])
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  deletedAt       DateTime?
+  id               String     @id @default(uuid())
+  firstName        String
+  lastName         String
+  crm              String?
+  percProfessional Decimal    @default(0) @db.Decimal(4, 1)
+  specialtyId      String?
+  specialty        Specialty? @relation(fields: [specialtyId], references: [id])
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  deletedAt        DateTime?
 
-  appointments    Appointment[]
+  appointments Appointment[]
 }

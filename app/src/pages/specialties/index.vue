@@ -34,7 +34,6 @@
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Appointment Fee</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -50,11 +49,6 @@
               <TableCell>
                 <span :class="specialtiesStore.showDeleted ? 'line-through' : ''">
                   {{ specialty.name }}
-                </span>
-              </TableCell>
-              <TableCell>
-                <span :class="specialtiesStore.showDeleted ? 'line-through' : ''">
-                  {{ formatCurrency(specialty.appointmentFee) }}
                 </span>
               </TableCell>
               <TableCell @click.stop>
@@ -98,7 +92,7 @@
             </TableRow>
             <TableRow v-if="specialtiesStore.specialties.length === 0">
               <TableCell
-                colspan="3"
+                colspan="2"
                 class="text-center text-muted-foreground"
               >
                 No specialties found
@@ -154,15 +148,6 @@ const isFormModalOpen = ref(false);
 const isDeleteDialogOpen = ref(false);
 const selectedSpecialty = ref<SpecialtyResponse | null>(null);
 const specialtyToDelete = ref<SpecialtyResponse | null>(null);
-
-const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-};
 
 onMounted(() => {
   specialtiesStore.fetchSpecialties();
