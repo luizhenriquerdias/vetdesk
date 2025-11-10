@@ -12,4 +12,7 @@ model User {
   transactionsCreated Transaction[] @relation("TransactionCreatedBy")
   transactionsUpdated Transaction[] @relation("TransactionUpdatedBy")
   transactionsDeleted Transaction[] @relation("TransactionDeletedBy")
+  appointmentsCreated Appointment[] @relation("AppointmentCreatedBy")
+  appointmentsUpdated Appointment[] @relation("AppointmentUpdatedBy")
+  appointmentsDeleted Appointment[] @relation("AppointmentDeletedBy")
 }

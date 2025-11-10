@@ -57,7 +57,7 @@ export class AppointmentsService {
     }));
   }
 
-  async create(createAppointmentDto: CreateAppointmentDto): Promise<AppointmentResponse> {
+  async create(createAppointmentDto: CreateAppointmentDto, userId: string): Promise<AppointmentResponse> {
     const doctorId = createAppointmentDto.doctorId.trim();
     const fee = createAppointmentDto.fee;
     const percProfessional = createAppointmentDto.percProfessional ?? 0;
@@ -100,6 +100,7 @@ export class AppointmentsService {
         fee: new Decimal(fee),
         percProfessional: new Decimal(percProfessional),
         datetime,
+        createdBy: userId,
       },
     });
 
@@ -112,7 +113,7 @@ export class AppointmentsService {
     };
   }
 
-  async update(id: string, updateAppointmentDto: UpdateAppointmentDto): Promise<AppointmentResponse> {
+  async update(id: string, updateAppointmentDto: UpdateAppointmentDto, userId: string): Promise<AppointmentResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('Appointment id is required');
     }
@@ -134,6 +135,7 @@ export class AppointmentsService {
       fee?: Decimal;
       percProfessional?: Decimal;
       datetime?: Date;
+      updatedBy?: string;
     } = {};
 
     if (Object.keys(updateAppointmentDto).length === 0) {
@@ -182,6 +184,8 @@ export class AppointmentsService {
       updateData.datetime = datetime;
     }
 
+    updateData.updatedBy = userId;
+
     const updatedAppointment = await this.prisma.appointment.update({
       where: { id },
       data: updateData,
@@ -196,7 +200,7 @@ export class AppointmentsService {
     };
   }
 
-  async delete(id: string): Promise<{ message: string }> {
+  async delete(id: string, userId: string): Promise<{ message: string }> {
     if (!id || !id.trim()) {
       throw new BadRequestException('Appointment id is required');
     }
@@ -215,7 +219,10 @@ export class AppointmentsService {
 
     await this.prisma.appointment.update({
       where: { id },
-      data: { deletedAt: new Date() },
+      data: {
+        deletedAt: new Date(),
+        deletedBy: userId,
+      },
     });
 
     return { message: 'Appointment deleted successfully' };
@@ -240,7 +247,10 @@ export class AppointmentsService {
 
     const restoredAppointment = await this.prisma.appointment.update({
       where: { id },
-      data: { deletedAt: null },
+      data: {
+        deletedAt: null,
+        deletedBy: null,
+      },
     });
 
     return {

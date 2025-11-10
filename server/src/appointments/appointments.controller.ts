@@ -49,7 +49,7 @@ export class AppointmentsController {
         throw new UnauthorizedException('Not authenticated');
       }
 
-      const appointment = await this.appointmentsService.create(createAppointmentDto);
+      const appointment = await this.appointmentsService.create(createAppointmentDto, req.session.userId);
       return res.status(201).json(appointment);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -71,7 +71,7 @@ export class AppointmentsController {
         throw new UnauthorizedException('Not authenticated');
       }
 
-      const appointment = await this.appointmentsService.update(id, updateAppointmentDto);
+      const appointment = await this.appointmentsService.update(id, updateAppointmentDto, req.session.userId);
       return res.json(appointment);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -88,7 +88,7 @@ export class AppointmentsController {
         throw new UnauthorizedException('Not authenticated');
       }
 
-      const result = await this.appointmentsService.delete(id);
+      const result = await this.appointmentsService.delete(id, req.session.userId);
       return res.json(result);
     } catch (error) {
       if (error instanceof HttpException) {
