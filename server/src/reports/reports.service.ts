@@ -152,7 +152,7 @@ export class ReportsService {
     appointments.forEach((appointment) => {
       const fee = Number(appointment.fee);
       const percProfessional = Number(appointment.percProfessional);
-      const clinicIncome = fee * (1 - percProfessional / 100);
+      const clinicIncome = fee * (1 - (percProfessional / 100));
       income += clinicIncome;
     });
 

@@ -99,7 +99,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
 import { Card, CardContent } from '@/components/ui/card';
-import { MonthPicker } from '@/components/ui/month-picker';
+import { MonthPicker } from '@/components/month-picker';
 import {
   Select,
   SelectContent,

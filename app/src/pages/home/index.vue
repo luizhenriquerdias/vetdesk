@@ -53,7 +53,7 @@
 import { ref, nextTick, watch } from 'vue';
 import { Chart, CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip, Legend } from 'chart.js';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MonthPicker } from '@/components/ui/month-picker';
+import { MonthPicker } from '@/components/month-picker';
 import { getMonthlyIncomeOutcome } from '@/api/reports';
 
 const getCurrentMonth = (): string => {

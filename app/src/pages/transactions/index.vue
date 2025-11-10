@@ -261,7 +261,7 @@ import { computed, onMounted, ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
-import { MonthPicker } from '@/components/ui/month-picker';
+import { MonthPicker } from '@/components/month-picker';
 import {
   Table,
   TableBody,
