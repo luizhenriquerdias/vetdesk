@@ -1,16 +1,16 @@
 import { PrismaClient, Specialty } from '@prisma/client';
 
 const specialties = [
-  'Oftalmologista',
-  'Nutricionista',
-  'Reumatologista',
-  'Psicóloga',
-  'Dermatologista',
-  'Otorrinolaringologista',
-  'Psiquiatra',
-  'Pediatra',
-  'Gastrologista',
-  'Cardiologista',
+  'Oftalmologia',
+  'Nutrição',
+  'Reumatologia',
+  'Psicologia',
+  'Dermatologia',
+  'Otorrinolaringologia',
+  'Psiquiatria',
+  'Pediatria',
+  'Gastroenterologia',
+  'Cardiologia',
 ];
 
 export async function seedSpecialties(prisma: PrismaClient) {
