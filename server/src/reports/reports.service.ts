@@ -110,6 +110,67 @@ export class ReportsService {
     return allDates;
   }
 
+  async getMonthlyIncomeOutcome(
+    tenantId: string,
+    month?: string,
+  ): Promise<{ income: number; outcome: number }> {
+    const monthToUse = month || this.getCurrentMonth();
+    const [year, monthNum] = monthToUse.split('-').map(Number);
+
+    if (isNaN(year) || isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+      throw new BadRequestException('Formato de mês inválido. Esperado AAAA-MM');
+    }
+
+    const startOfMonth = new Date(year, monthNum - 1, 1, 0, 0, 0, 0);
+    const endOfMonth = new Date(year, monthNum, 0, 23, 59, 59, 999);
+
+    const appointments = await this.prisma.appointment.findMany({
+      where: {
+        tenantId,
+        deletedAt: null,
+        datetime: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+      },
+    });
+
+    const transactions = await this.prisma.transaction.findMany({
+      where: {
+        tenantId,
+        deletedAt: null,
+        datetime: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+      },
+    });
+
+    let income = 0;
+    let outcome = 0;
+
+    appointments.forEach((appointment) => {
+      const fee = Number(appointment.fee);
+      const percProfessional = Number(appointment.percProfessional);
+      const clinicIncome = fee * (1 - percProfessional / 100);
+      income += clinicIncome;
+    });
+
+    transactions.forEach((transaction) => {
+      const amount = Number(transaction.amount);
+      if (transaction.type === 'INCOME') {
+        income += amount;
+      } else if (transaction.type === 'EXPENSE') {
+        outcome += amount;
+      }
+    });
+
+    return {
+      income: Number(income.toFixed(2)),
+      outcome: Number(outcome.toFixed(2)),
+    };
+  }
+
   private getCurrentMonth(): string {
     const now = new Date();
     const year = now.getFullYear();

@@ -46,6 +46,30 @@ export class ReportsController {
     }
   }
 
+  @Get('monthly-income-outcome')
+  async getMonthlyIncomeOutcome(
+    @Query('month') month: string | undefined,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    try {
+      if (!req.session.userId || !req.session.tenantId) {
+        throw new UnauthorizedException('Não autenticado');
+      }
+
+      const report = await this.reportsService.getMonthlyIncomeOutcome(
+        req.session.tenantId,
+        month,
+      );
+      return res.json(report);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        return res.status(error.getStatus()).json({ message: error.message });
+      }
+      return res.status(500).json({ message: 'Erro interno do servidor' });
+    }
+  }
+
   private getCurrentMonth(): string {
     const now = new Date();
     const year = now.getFullYear();

@@ -27,6 +27,15 @@
         </div>
 
         <div class="space-y-2">
+          <Label for="amount">Valor</Label>
+          <CurrencyInput
+            id="amount"
+            v-model="formData.amount"
+            required
+          />
+        </div>
+
+        <div class="space-y-2">
           <Label for="type">Tipo</Label>
           <Select
             id="type"
@@ -66,15 +75,6 @@
               required
             />
           </div>
-        </div>
-
-        <div class="space-y-2">
-          <Label for="amount">Valor</Label>
-          <CurrencyInput
-            id="amount"
-            v-model="formData.amount"
-            required
-          />
         </div>
 
         <DialogFooter>
