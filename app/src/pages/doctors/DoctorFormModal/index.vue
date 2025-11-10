@@ -36,13 +36,31 @@
         </div>
 
         <div class="space-y-2">
-          <Label for="specialties">Specialties</Label>
-          <MultiSelect
-            id="specialties"
-            v-model="formData.specialtyIds"
-            :options="specialtyOptions"
-            placeholder="Select specialties..."
-          />
+          <Label for="specialty">Specialty</Label>
+          <Select
+            id="specialty"
+            v-model="formData.specialtyId"
+          >
+            <SelectTrigger class="w-full">
+              <SelectValue placeholder="Select specialty..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-if="specialtyOptions.length === 0"
+                value="__empty__"
+                disabled
+              >
+                No specialties available
+              </SelectItem>
+              <SelectItem
+                v-for="option in specialtyOptions"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.label }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div class="space-y-2">
@@ -105,7 +123,13 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MultiSelect } from '@/components/ui/multiselect';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { useDoctorsStore } from '@/stores/doctors';
 import { useSpecialtiesStore } from '@/stores/specialties';
@@ -133,7 +157,7 @@ const saving = ref(false);
 const formData = ref({
   firstName: '',
   lastName: '',
-  specialtyIds: [] as string[],
+  specialtyId: null as string | null,
   crm: '',
   percProfessional: 80,
 });
@@ -153,15 +177,14 @@ onMounted(async () => {
 
 watch(() => props.doctor, (doctor) => {
   if (doctor) {
-    const specialtyIds = (doctor.specialties || []).map((name: string) => {
-      const specialty = specialtiesStore.specialties.find((s) => s.name === name);
-      return specialty?.id || '';
-    }).filter(Boolean);
+    const specialtyId = doctor.specialty
+      ? specialtiesStore.specialties.find((s) => s.name === doctor.specialty)?.id || null
+      : null;
 
     formData.value = {
       firstName: doctor.firstName,
       lastName: doctor.lastName,
-      specialtyIds,
+      specialtyId,
       crm: doctor.crm || '',
       percProfessional: doctor.percProfessional ?? 80,
     };
@@ -170,7 +193,7 @@ watch(() => props.doctor, (doctor) => {
     formData.value = {
       firstName: '',
       lastName: '',
-      specialtyIds: [],
+      specialtyId: null,
       crm: '',
       percProfessional: 80,
     };
@@ -182,12 +205,18 @@ watch(percProfessionalValue, (value) => {
   formData.value.percProfessional = value[0] || 80;
 });
 
+watch(() => formData.value.specialtyId, (value) => {
+  if (value === '__empty__') {
+    formData.value.specialtyId = null;
+  }
+});
+
 watch(() => props.open, (open) => {
   if (!open) {
     formData.value = {
       firstName: '',
       lastName: '',
-      specialtyIds: [],
+      specialtyId: null,
       crm: '',
       percProfessional: 80,
     };
@@ -202,7 +231,7 @@ const handleSubmit = async () => {
       const data: CreateDoctorDto = {
         firstName: formData.value.firstName,
         lastName: formData.value.lastName,
-        specialtyIds: formData.value.specialtyIds,
+        specialtyId: formData.value.specialtyId,
         crm: formData.value.crm || null,
         percProfessional: formData.value.percProfessional,
       };
@@ -214,7 +243,7 @@ const handleSubmit = async () => {
     const data: UpdateDoctorDto = {
       firstName: formData.value.firstName,
       lastName: formData.value.lastName,
-      specialtyIds: formData.value.specialtyIds,
+      specialtyId: formData.value.specialtyId,
       crm: formData.value.crm || null,
       percProfessional: formData.value.percProfessional,
     };

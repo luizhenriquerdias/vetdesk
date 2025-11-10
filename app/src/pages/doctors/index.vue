@@ -55,7 +55,7 @@
               </TableCell>
               <TableCell>
                 <span :class="doctorsStore.showDeleted ? 'line-through' : ''">
-                  {{ doctor.specialties?.length ? doctor.specialties.join(', ') : '-' }}
+                  {{ doctor.specialty || '-' }}
                 </span>
               </TableCell>
               <TableCell>

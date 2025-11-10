@@ -2,7 +2,7 @@ export type Doctor = {
   id: string;
   firstName: string;
   lastName: string;
-  specialties: string[];
+  specialty: string | null;
   crm: string | null;
   percProfessional: number;
 };
@@ -10,7 +10,7 @@ export type Doctor = {
 export type CreateDoctorDto = {
   firstName: string;
   lastName: string;
-  specialtyIds?: string[];
+  specialtyId?: string | null;
   crm?: string | null;
   percProfessional?: number;
 };
@@ -18,7 +18,7 @@ export type CreateDoctorDto = {
 export type UpdateDoctorDto = {
   firstName?: string;
   lastName?: string;
-  specialtyIds?: string[];
+  specialtyId?: string | null;
   crm?: string | null;
   percProfessional?: number;
 };

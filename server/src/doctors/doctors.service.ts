@@ -17,7 +17,7 @@ export class DoctorsService {
         ? { deletedAt: { not: null } }
         : { deletedAt: null },
       include: {
-        specialties: true,
+        specialty: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -28,7 +28,7 @@ export class DoctorsService {
       id: doctor.id,
       firstName: doctor.firstName,
       lastName: doctor.lastName,
-      specialties: doctor.specialties.map((s) => s.name),
+      specialty: doctor.specialty?.name || null,
       crm: doctor.crm,
       percProfessional: Number(doctor.percProfessional),
     }));
@@ -45,7 +45,7 @@ export class DoctorsService {
   async create(createDoctorDto: CreateDoctorDto): Promise<DoctorResponse> {
     const firstName = createDoctorDto.firstName.trim();
     const lastName = createDoctorDto.lastName.trim();
-    const specialtyIds = createDoctorDto.specialtyIds || [];
+    const specialtyId = createDoctorDto.specialtyId || null;
     const crm = createDoctorDto.crm?.trim() || null;
     const percProfessional = createDoctorDto.percProfessional ?? 0;
 
@@ -73,7 +73,7 @@ export class DoctorsService {
       lastName: string;
       crm: string | null;
       percProfessional: Decimal;
-      specialties?: { connect: { id: string }[] };
+      specialty?: { connect: { id: string } };
     } = {
       firstName,
       lastName,
@@ -81,27 +81,27 @@ export class DoctorsService {
       percProfessional: new Decimal(percProfessional),
     };
 
-    if (Array.isArray(specialtyIds) && specialtyIds.length > 0) {
-      const existingSpecialties = await this.prisma.specialty.findMany({
+    if (specialtyId) {
+      const existingSpecialty = await this.prisma.specialty.findFirst({
         where: {
-          id: { in: specialtyIds },
+          id: specialtyId,
           deletedAt: null,
         },
       });
 
-      if (existingSpecialties.length !== specialtyIds.length) {
-        throw new BadRequestException('One or more specialties not found');
+      if (!existingSpecialty) {
+        throw new BadRequestException('Specialty not found');
       }
 
-      createData.specialties = {
-        connect: specialtyIds.map((id) => ({ id })),
+      createData.specialty = {
+        connect: { id: specialtyId },
       };
     }
 
     const doctor = await this.prisma.doctor.create({
       data: createData,
       include: {
-        specialties: true,
+        specialty: true,
       },
     });
 
@@ -109,7 +109,7 @@ export class DoctorsService {
       id: doctor.id,
       firstName: doctor.firstName,
       lastName: doctor.lastName,
-      specialties: doctor.specialties.map((s) => s.name),
+      specialty: doctor.specialty?.name || null,
       crm: doctor.crm,
       percProfessional: Number(doctor.percProfessional),
     };
@@ -137,7 +137,7 @@ export class DoctorsService {
       lastName?: string;
       crm?: string | null;
       percProfessional?: Decimal;
-      specialties?: { set: { id: string }[] };
+      specialty?: { connect: { id: string } } | { disconnect: true };
     } = {};
 
     if (Object.keys(updateDoctorDto).length === 0) {
@@ -162,29 +162,25 @@ export class DoctorsService {
       updateData.lastName = lastName;
     }
 
-    if (updateDoctorDto.specialtyIds !== undefined) {
-      if (!Array.isArray(updateDoctorDto.specialtyIds)) {
-        throw new BadRequestException('specialtyIds must be an array');
-      }
-
-      if (updateDoctorDto.specialtyIds.length > 0) {
-        const existingSpecialties = await this.prisma.specialty.findMany({
+    if (updateDoctorDto.specialtyId !== undefined) {
+      if (updateDoctorDto.specialtyId !== null) {
+        const existingSpecialty = await this.prisma.specialty.findFirst({
           where: {
-            id: { in: updateDoctorDto.specialtyIds },
+            id: updateDoctorDto.specialtyId,
             deletedAt: null,
           },
         });
 
-        if (existingSpecialties.length !== updateDoctorDto.specialtyIds.length) {
-          throw new BadRequestException('One or more specialties not found');
+        if (!existingSpecialty) {
+          throw new BadRequestException('Specialty not found');
         }
 
-        updateData.specialties = {
-          set: updateDoctorDto.specialtyIds.map((specialtyId) => ({ id: specialtyId })),
+        updateData.specialty = {
+          connect: { id: updateDoctorDto.specialtyId },
         };
       } else {
-        updateData.specialties = {
-          set: [],
+        updateData.specialty = {
+          disconnect: true,
         };
       }
     }
@@ -208,7 +204,7 @@ export class DoctorsService {
       where: { id },
       data: updateData,
       include: {
-        specialties: true,
+        specialty: true,
       },
     });
 
@@ -216,7 +212,7 @@ export class DoctorsService {
       id: updatedDoctor.id,
       firstName: updatedDoctor.firstName,
       lastName: updatedDoctor.lastName,
-      specialties: updatedDoctor.specialties.map((s) => s.name),
+      specialty: updatedDoctor.specialty?.name || null,
       crm: updatedDoctor.crm,
       percProfessional: Number(updatedDoctor.percProfessional),
     };
@@ -268,7 +264,7 @@ export class DoctorsService {
       where: { id },
       data: { deletedAt: null },
       include: {
-        specialties: true,
+        specialty: true,
       },
     });
 
@@ -276,7 +272,7 @@ export class DoctorsService {
       id: restoredDoctor.id,
       firstName: restoredDoctor.firstName,
       lastName: restoredDoctor.lastName,
-      specialties: restoredDoctor.specialties.map((s) => s.name),
+      specialty: restoredDoctor.specialty?.name || null,
       crm: restoredDoctor.crm,
       percProfessional: Number(restoredDoctor.percProfessional),
     };

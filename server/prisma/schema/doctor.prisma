@@ -4,7 +4,8 @@ model Doctor {
   lastName        String
   crm             String?
   percProfessional Decimal   @db.Decimal(4, 1) @default(0)
-  specialties     Specialty[]
+  specialtyId     String?
+  specialty       Specialty?  @relation(fields: [specialtyId], references: [id])
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   deletedAt       DateTime?
