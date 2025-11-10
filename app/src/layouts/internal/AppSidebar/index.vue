@@ -1,6 +1,12 @@
 <template>
   <Sidebar variant="inset">
-    <SidebarHeader />
+    <SidebarHeader>
+      <img
+        :src="logoFull"
+        alt="Logo"
+        class="max-h-8 w-auto object-contain"
+      >
+    </SidebarHeader>
     <SidebarContent>
       <SidebarGroup>
         <SidebarGroupLabel>Aplicação</SidebarGroupLabel>
@@ -75,5 +81,6 @@ import {
 } from '@/components/ui/sidebar';
 import { ROUTE_HOME, ROUTE_USERS, ROUTE_DOCTORS, ROUTE_SPECIALTIES, ROUTE_TRANSACTIONS, ROUTE_APPOINTMENTS } from '@/router/routes';
 import SidebarItem from './SidebarItem.vue';
+import logoFull from '@/assets/logo-full.png';
 </script>
 

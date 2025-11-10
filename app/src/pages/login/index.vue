@@ -1,14 +1,12 @@
 <template>
   <div class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
     <div class="flex w-full max-w-sm flex-col gap-6">
-      <div class="flex items-center gap-2 self-center font-medium">
-        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          <Icon
-            name="galleryVerticalEnd"
-            :size="4"
-          />
-        </div>
-        VetDesk
+      <div class="flex items-center justify-center">
+        <img
+          :src="logoFull"
+          alt="VetDesk"
+          class="max-h-20 w-auto object-contain"
+        >
       </div>
 
       <Card>
@@ -57,7 +55,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -68,6 +65,7 @@ import { Label } from '@/components/ui/label';
 import { ROUTE_HOME } from '@/router/routes';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import logoFull from '@/assets/logo-full.png';
 
 const router = useRouter();
 const authStore = useAuthStore();
