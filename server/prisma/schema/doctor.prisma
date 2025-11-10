@@ -9,4 +9,6 @@ model Doctor {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   deletedAt       DateTime?
+
+  appointments    Appointment[]
 }
