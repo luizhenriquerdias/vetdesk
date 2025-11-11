@@ -66,6 +66,49 @@
                   </span>
                 </TableCell>
               </TableRow>
+              <TableRow
+                v-if="consolidatedData.length > 0"
+                class="bg-muted/50 font-semibold border-t-2"
+              >
+                <TableCell>Total</TableCell>
+                <TableCell>
+                  <span
+                    v-if="totals.incomes > 0"
+                    class="text-green-600 dark:text-green-400"
+                  >
+                    {{ formatCurrency(totals.incomes) }}
+                  </span>
+                  <span
+                    v-else
+                    class="text-muted-foreground"
+                  >
+                    —
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span
+                    v-if="totals.expenses > 0"
+                    class="text-red-600 dark:text-red-400"
+                  >
+                    {{ formatCurrency(totals.expenses) }}
+                  </span>
+                  <span
+                    v-else
+                    class="text-muted-foreground"
+                  >
+                    —
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span
+                    :class="[
+                      totals.total >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400',
+                    ]"
+                  >
+                    {{ formatCurrency(totals.total) }}
+                  </span>
+                </TableCell>
+              </TableRow>
               <TableRow v-if="consolidatedData.length === 0">
                 <TableCell
                   colspan="4"
@@ -213,6 +256,23 @@ const consolidatedData = computed(() => {
       return dateA.getTime() - dateB.getTime();
     })
     .map(({ dateSortKey: _dateSortKey, ...rest }) => rest);
+});
+
+const totals = computed(() => {
+  const result = consolidatedData.value.reduce(
+    (acc, item) => ({
+      incomes: acc.incomes + item.incomes,
+      expenses: acc.expenses + item.expenses,
+    }),
+    {
+      incomes: 0,
+      expenses: 0,
+    },
+  );
+  return {
+    ...result,
+    total: result.incomes - result.expenses,
+  };
 });
 
 onMounted(() => {

@@ -74,6 +74,16 @@
                 {{ formatCurrency(item.clinica) }}
               </TableCell>
             </TableRow>
+            <TableRow
+              v-if="reportData.length > 0"
+              class="bg-muted/50 font-semibold border-t-2"
+            >
+              <TableCell>Total</TableCell>
+              <TableCell>{{ totals.appointmentCount }}</TableCell>
+              <TableCell>{{ formatCurrency(totals.entrada) }}</TableCell>
+              <TableCell>{{ formatCurrency(totals.profissional) }}</TableCell>
+              <TableCell>{{ formatCurrency(totals.clinica) }}</TableCell>
+            </TableRow>
             <TableRow v-if="reportData.length === 0 && !loading">
               <TableCell
                 colspan="5"
@@ -141,6 +151,23 @@ const doctorOptions = computed(() => {
     label: d.specialty ? `${d.firstName} ${d.lastName} - ${d.specialty}` : `${d.firstName} ${d.lastName}`,
     value: d.id,
   }));
+});
+
+const totals = computed(() => {
+  return reportData.value.reduce(
+    (acc, item) => ({
+      appointmentCount: acc.appointmentCount + item.appointmentCount,
+      entrada: acc.entrada + item.entrada,
+      profissional: acc.profissional + item.profissional,
+      clinica: acc.clinica + item.clinica,
+    }),
+    {
+      appointmentCount: 0,
+      entrada: 0,
+      profissional: 0,
+      clinica: 0,
+    },
+  );
 });
 
 const formatCurrency = (value: number): string => {

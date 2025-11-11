@@ -211,7 +211,7 @@ watch(() => formData.value.doctorId, (value) => {
     return;
   }
 
-  if (value) {
+  if (value && !props.appointment) {
     const selectedDoctor = doctorsStore.doctors.find((d) => d.id === value);
     if (selectedDoctor) {
       formData.value.percProfessional = selectedDoctor.percProfessional;
