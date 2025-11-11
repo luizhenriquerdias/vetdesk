@@ -10,10 +10,14 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { ReportsService } from '@/reports/reports.service';
+import { TransactionsService } from '@/transactions/transactions.service';
 
 @Controller('reports')
 export class ReportsController {
-  constructor(private reportsService: ReportsService) {}
+  constructor(
+    private reportsService: ReportsService,
+    private transactionsService: TransactionsService,
+  ) {}
 
   @Get('doctors')
   async getDoctorsReport(
@@ -62,6 +66,28 @@ export class ReportsController {
         month,
       );
       return res.json(report);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        return res.status(error.getStatus()).json({ message: error.message });
+      }
+      return res.status(500).json({ message: 'Erro interno do servidor' });
+    }
+  }
+
+  @Get('transactions')
+  async getTransactions(@Req() req: Request, @Res() res: Response) {
+    try {
+      if (!req.session.userId || !req.session.tenantId) {
+        throw new UnauthorizedException('Não autenticado');
+      }
+
+      const month = req.query.month as string | undefined;
+      const transactions = await this.transactionsService.findAll(
+        req.session.tenantId,
+        false,
+        month,
+      );
+      return res.json(transactions);
     } catch (error) {
       if (error instanceof HttpException) {
         return res.status(error.getStatus()).json({ message: error.message });

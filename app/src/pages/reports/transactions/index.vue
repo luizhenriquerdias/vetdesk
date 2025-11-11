@@ -3,7 +3,7 @@
       <div class="flex items-center justify-between">
         <div>
           <MonthPicker
-            v-model="transactionsStore.selectedMonth"
+            v-model="selectedMonth"
             @update:model-value="handleMonthChange"
           />
         </div>
@@ -125,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { Card, CardContent } from '@/components/ui/card';
 import { MonthPicker } from '@/components/month-picker';
 import {
@@ -136,10 +136,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useTransactionsStore } from '@/stores/transactions';
+import { getTransactions } from '@/api/reports';
+import type { TransactionResponse } from '@shared/types/transaction';
 import { TRANSACTION_TYPE_INCOME, TRANSACTION_TYPE_EXPENSE } from '@shared/types/transaction';
 
-const transactionsStore = useTransactionsStore();
+const getCurrentMonth = (): string => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}`;
+};
+
+const transactions = ref<TransactionResponse[]>([]);
+const selectedMonth = ref(getCurrentMonth());
+const loading = ref(false);
 
 const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('pt-BR', {
@@ -168,7 +178,7 @@ const consolidatedData = computed(() => {
     allDescriptions: string[];
   }>();
 
-  transactionsStore.transactions.forEach((transaction) => {
+  transactions.value.forEach((transaction) => {
     const dateKey = formatDate(transaction.datetime);
 
     if (!grouped.has(dateKey)) {
@@ -193,7 +203,7 @@ const consolidatedData = computed(() => {
     }
   });
 
-  const monthParts = transactionsStore.selectedMonth.split('-').map(Number);
+  const monthParts = selectedMonth.value.split('-').map(Number);
   const year = monthParts[0];
   const month = monthParts[1];
 
@@ -275,12 +285,21 @@ const totals = computed(() => {
   };
 });
 
+const fetchTransactions = async () => {
+  loading.value = true;
+  try {
+    transactions.value = await getTransactions(selectedMonth.value);
+  } finally {
+    loading.value = false;
+  }
+};
+
 onMounted(() => {
-  transactionsStore.fetchTransactions();
+  fetchTransactions();
 });
 
 const handleMonthChange = async () => {
-  await transactionsStore.fetchTransactions();
+  await fetchTransactions();
 };
 </script>
 

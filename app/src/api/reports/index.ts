@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import type { TransactionResponse } from '@shared/types/transaction';
 
 export type DoctorsReportResponse = {
   date: string;
@@ -28,6 +29,15 @@ export const getMonthlyIncomeOutcome = async (month?: string): Promise<MonthlyIn
     params.month = month;
   }
   const response = await api.get<MonthlyIncomeOutcomeResponse>('/reports/monthly-income-outcome', { params });
+  return response.data;
+};
+
+export const getTransactions = async (month?: string): Promise<TransactionResponse[]> => {
+  const params: Record<string, string> = {};
+  if (month) {
+    params.month = month;
+  }
+  const response = await api.get<TransactionResponse[]>('/reports/transactions', { params });
   return response.data;
 };
 
