@@ -1,9 +1,12 @@
+import { UserTenantRole } from './user-tenant';
+
 export type User = {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
   avatarUrl: string | null;
+  role?: UserTenantRole | null;
 };
 
 export type CreateUserDto = {
@@ -13,6 +16,7 @@ export type CreateUserDto = {
   password: string;
   passwordConfirmation?: string;
   avatarUrl?: string | null;
+  role?: string;
 };
 
 export type UpdateUserDto = {
@@ -23,6 +27,7 @@ export type UpdateUserDto = {
   oldPassword?: string;
   passwordConfirmation?: string;
   avatarUrl?: string | null;
+  role?: string;
 };
 
 export type UserResponse = User;

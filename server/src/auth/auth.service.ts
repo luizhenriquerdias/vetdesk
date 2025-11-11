@@ -2,8 +2,8 @@ import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/
 import { PrismaService } from '../prisma/prisma.service';
 import { verifyPassword } from '../utils/password';
 import { type AuthResponse } from '@vetdesk/shared/types/auth';
-import { Tenant } from '@vetdesk/shared/types/tenant';
-import { UserTenantRole } from '@vetdesk/shared/types/user-tenant';
+import { type Tenant } from '@vetdesk/shared/types/tenant';
+import { type UserTenantRole } from '@vetdesk/shared/types/user-tenant';
 
 @Injectable()
 export class AuthService {

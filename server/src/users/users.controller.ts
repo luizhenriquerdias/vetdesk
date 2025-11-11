@@ -14,20 +14,23 @@ import {
 import type { Request, Response } from 'express';
 import { UsersService } from '@/users/users.service';
 import type { CreateUserDto, UpdateUserDto } from '@vetdesk/shared/types/user';
+import { PrismaService } from '@/prisma/prisma.service';
+import { requireAdminOrDev } from '@/utils/role';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private prisma: PrismaService,
+  ) {}
 
   @Get()
   async findAll(@Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
-        throw new UnauthorizedException('Não autenticado');
-      }
+      await requireAdminOrDev(req, this.prisma);
 
       const includeDeleted = req.query.includeDeleted === 'true';
-      const users = await this.usersService.findAll(includeDeleted);
+      const users = await this.usersService.findAll(includeDeleted, req.session.tenantId);
       return res.json(users);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -44,11 +47,13 @@ export class UsersController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId) {
-        throw new UnauthorizedException('Não autenticado');
+      await requireAdminOrDev(req, this.prisma);
+
+      if (!req.session.tenantId) {
+        throw new UnauthorizedException('Tenant não encontrado na sessão');
       }
 
-      const user = await this.usersService.create(createUserDto);
+      const user = await this.usersService.create(createUserDto, req.session.tenantId);
       return res.status(201).json(user);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -66,11 +71,13 @@ export class UsersController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId) {
-        throw new UnauthorizedException('Não autenticado');
+      await requireAdminOrDev(req, this.prisma);
+
+      if (!req.session.tenantId) {
+        throw new UnauthorizedException('Tenant não encontrado na sessão');
       }
 
-      const user = await this.usersService.update(id, updateUserDto);
+      const user = await this.usersService.update(id, updateUserDto, req.session.tenantId);
       return res.json(user);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -83,11 +90,9 @@ export class UsersController {
   @Delete(':id')
   async delete(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
-        throw new UnauthorizedException('Não autenticado');
-      }
+      await requireAdminOrDev(req, this.prisma);
 
-      const result = await this.usersService.delete(id, req.session.userId);
+      const result = await this.usersService.delete(id, req.session.userId!);
       return res.json(result);
     } catch (error) {
       if (error instanceof HttpException) {
@@ -100,9 +105,7 @@ export class UsersController {
   @Patch(':id/restore')
   async restore(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId) {
-        throw new UnauthorizedException('Não autenticado');
-      }
+      await requireAdminOrDev(req, this.prisma);
 
       const user = await this.usersService.restore(id);
       return res.json(user);

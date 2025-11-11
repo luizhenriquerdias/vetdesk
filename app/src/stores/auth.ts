@@ -9,6 +9,7 @@ import type { AuthResponse } from '@shared/types/auth';
 import type { Tenant } from '@shared/types/tenant';
 import { useRouter } from 'vue-router';
 import { ROUTE_LOGIN } from '@/router/routes';
+import { isAdminOrDev as checkIsAdminOrDev } from '@shared/utils/role';
 
 export const useAuthStore = defineStore('auth', () => {
   const state = reactive({
@@ -22,6 +23,7 @@ export const useAuthStore = defineStore('auth', () => {
   const user = computed(() => state.authResponse?.user);
   const currentTenant = computed(() => state.authResponse?.tenant ?? null);
   const isAuthenticated = computed(() => user.value !== null);
+  const isAdminOrDev = computed(() => checkIsAdminOrDev(state.authResponse?.role ?? null));
 
   const login = async (email: string, password: string) => {
     const authResponse = await loginApi({ email, password });
@@ -72,6 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     currentTenant,
     isAuthenticated,
+    isAdminOrDev,
     login,
     init,
     logout,

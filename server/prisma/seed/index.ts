@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   const { vitaCenter } = await seedTenants(prisma);
-  const user = await seedUser(prisma, vitaCenter.id);
+  const user = await seedUser(prisma);
   await seedSpecialties(prisma, vitaCenter.id);
   await seedDoctors(prisma, vitaCenter.id);
 }

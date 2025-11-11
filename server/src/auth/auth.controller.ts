@@ -29,6 +29,9 @@ export class AuthController {
       if (result.tenant) {
         req.session.tenantId = result.tenant.id;
       }
+      if (result.role) {
+        req.session.role = result.role;
+      }
       req.session.save((err) => {
         if (err) {
           return res.status(500).json({ message: 'Falha ao criar sessão' });
@@ -78,6 +81,9 @@ export class AuthController {
 
       const result = await this.authService.switchTenant(req.session.userId, switchTenantDto.tenantId);
       req.session.tenantId = result.tenant?.id;
+      if (result.role) {
+        req.session.role = result.role;
+      }
       req.session.save((err) => {
         if (err) {
           return res.status(500).json({ message: 'Falha ao atualizar sessão' });

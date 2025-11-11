@@ -17,22 +17,48 @@
         class="space-y-4"
         @submit.prevent="handleSubmit"
       >
-        <div class="space-y-2">
-          <Label for="firstName">Nome</Label>
-          <Input
-            id="firstName"
-            v-model="formData.firstName"
-            required
-          />
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <Label for="firstName">Nome</Label>
+            <Input
+              id="firstName"
+              v-model="formData.firstName"
+              required
+            />
+          </div>
+
+          <div class="space-y-2">
+            <Label for="lastName">Sobrenome</Label>
+            <Input
+              id="lastName"
+              v-model="formData.lastName"
+              required
+            />
+          </div>
         </div>
 
         <div class="space-y-2">
-          <Label for="lastName">Sobrenome</Label>
-          <Input
-            id="lastName"
-            v-model="formData.lastName"
+          <Label for="role">Função</Label>
+          <Select
+            id="role"
+            v-model="formData.role"
             required
-          />
+          >
+            <SelectTrigger class="w-full">
+              <SelectValue placeholder="Selecione a função..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem :value="USER_TENANT_ROLE_USER">
+                Usuário
+              </SelectItem>
+              <SelectItem :value="USER_TENANT_ROLE_ADMIN">
+                Administrador
+              </SelectItem>
+              <SelectItem :value="USER_TENANT_ROLE_DEV">
+                Desenvolvedor
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div class="space-y-2">
@@ -47,28 +73,27 @@
 
         <div
           v-if="!user"
-          class="space-y-2"
+          class="grid grid-cols-2 gap-4"
         >
-          <Label for="password">Senha</Label>
-          <Input
-            id="password"
-            v-model="formData.password"
-            type="password"
-            required
-          />
-        </div>
+          <div class="space-y-2">
+            <Label for="password">Senha</Label>
+            <Input
+              id="password"
+              v-model="formData.password"
+              type="password"
+              required
+            />
+          </div>
 
-        <div
-          v-if="!user"
-          class="space-y-2"
-        >
-          <Label for="passwordConfirmation">Confirmar Senha</Label>
-          <Input
-            id="passwordConfirmation"
-            v-model="formData.passwordConfirmation"
-            type="password"
-            required
-          />
+          <div class="space-y-2">
+            <Label for="passwordConfirmation">Confirmar Senha</Label>
+            <Input
+              id="passwordConfirmation"
+              v-model="formData.passwordConfirmation"
+              type="password"
+              required
+            />
+          </div>
         </div>
 
         <template v-if="user">
@@ -158,8 +183,16 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useUsersStore } from '@/stores/users';
 import type { CreateUserDto, UpdateUserDto, UserResponse } from '@shared/types/user';
+import { USER_TENANT_ROLE_ADMIN, USER_TENANT_ROLE_USER, USER_TENANT_ROLE_DEV, type UserTenantRole } from '@shared/types/user-tenant';
 
 interface Props {
   open: boolean
@@ -180,13 +213,22 @@ const usersStore = useUsersStore();
 const saving = ref(false);
 const isChangingPassword = ref(false);
 
-const formData = ref({
+const formData = ref<{
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+  oldPassword: string;
+  role: UserTenantRole;
+}>({
   firstName: '',
   lastName: '',
   email: '',
   password: '',
   passwordConfirmation: '',
   oldPassword: '',
+  role: USER_TENANT_ROLE_USER,
 });
 
 watch(() => props.user, (user) => {
@@ -198,6 +240,7 @@ watch(() => props.user, (user) => {
       password: '',
       passwordConfirmation: '',
       oldPassword: '',
+      role: user.role ?? USER_TENANT_ROLE_USER,
     };
     isChangingPassword.value = false;
   } else {
@@ -208,6 +251,7 @@ watch(() => props.user, (user) => {
       password: '',
       passwordConfirmation: '',
       oldPassword: '',
+      role: USER_TENANT_ROLE_USER,
     };
     isChangingPassword.value = false;
   }
@@ -222,6 +266,7 @@ watch(() => props.open, (open) => {
       password: '',
       passwordConfirmation: '',
       oldPassword: '',
+      role: USER_TENANT_ROLE_USER,
     };
     isChangingPassword.value = false;
   }
@@ -253,6 +298,7 @@ const handleSubmit = async () => {
         email: formData.value.email,
         password: formData.value.password,
         passwordConfirmation: formData.value.passwordConfirmation,
+        role: formData.value.role,
       };
       await usersStore.createUser(data);
       return;
@@ -262,6 +308,7 @@ const handleSubmit = async () => {
       firstName: formData.value.firstName,
       lastName: formData.value.lastName,
       email: formData.value.email,
+      role: formData.value.role,
     };
     if (isChangingPassword.value) {
       data.password = formData.value.password;

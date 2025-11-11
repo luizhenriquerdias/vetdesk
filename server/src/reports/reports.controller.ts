@@ -5,18 +5,20 @@ import {
   Query,
   Req,
   Res,
-  UnauthorizedException,
   BadRequestException,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { ReportsService } from '@/reports/reports.service';
 import { TransactionsService } from '@/transactions/transactions.service';
+import { PrismaService } from '@/prisma/prisma.service';
+import { requireAdminOrDev } from '@/utils/role';
 
 @Controller('reports')
 export class ReportsController {
   constructor(
     private reportsService: ReportsService,
     private transactionsService: TransactionsService,
+    private prisma: PrismaService,
   ) {}
 
   @Get('doctors')
@@ -27,9 +29,7 @@ export class ReportsController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId || !req.session.tenantId) {
-        throw new UnauthorizedException('Não autenticado');
-      }
+      await requireAdminOrDev(req, this.prisma);
 
       if (!doctorId) {
         throw new BadRequestException('ID do médico é obrigatório');
@@ -37,7 +37,7 @@ export class ReportsController {
 
       const monthToUse = month || this.getCurrentMonth();
       const report = await this.reportsService.getDoctorsReport(
-        req.session.tenantId,
+        req.session.tenantId!,
         doctorId,
         monthToUse,
       );
@@ -57,12 +57,10 @@ export class ReportsController {
     @Res() res: Response,
   ) {
     try {
-      if (!req.session.userId || !req.session.tenantId) {
-        throw new UnauthorizedException('Não autenticado');
-      }
+      await requireAdminOrDev(req, this.prisma);
 
       const report = await this.reportsService.getMonthlyIncomeOutcome(
-        req.session.tenantId,
+        req.session.tenantId!,
         month,
       );
       return res.json(report);
@@ -77,13 +75,11 @@ export class ReportsController {
   @Get('transactions')
   async getTransactions(@Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.session.userId || !req.session.tenantId) {
-        throw new UnauthorizedException('Não autenticado');
-      }
+      await requireAdminOrDev(req, this.prisma);
 
       const month = req.query.month as string | undefined;
       const transactions = await this.transactionsService.findAll(
-        req.session.tenantId,
+        req.session.tenantId!,
         false,
         month,
       );

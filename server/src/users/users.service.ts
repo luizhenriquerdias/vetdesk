@@ -7,12 +7,13 @@ import {
 import { PrismaService } from '@/prisma/prisma.service';
 import { hashPassword, verifyPassword } from '@/utils/password';
 import { CreateUserDto, UpdateUserDto, UserResponse } from '@vetdesk/shared/types/user';
+import { USER_TENANT_ROLE_ADMIN, USER_TENANT_ROLE_USER, USER_TENANT_ROLE_DEV } from '@vetdesk/shared/types/user-tenant';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(includeDeleted?: boolean): Promise<UserResponse[]> {
+  async findAll(includeDeleted?: boolean, tenantId?: string): Promise<UserResponse[]> {
     const users = await this.prisma.user.findMany({
       where: includeDeleted
         ? { deletedAt: { not: null } }
@@ -22,12 +23,34 @@ export class UsersService {
       },
     });
 
+    if (!tenantId) {
+      return users.map((user) => ({
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatarUrl: user.avatarUrl,
+        role: null,
+      }));
+    }
+
+    const userIds = users.map((u) => u.id);
+    const userTenants = await this.prisma.userTenant.findMany({
+      where: {
+        userId: { in: userIds },
+        tenantId,
+      },
+    });
+
+    const roleMap = new Map(userTenants.map((ut) => [ut.userId, ut.role]));
+
     return users.map((user) => ({
       id: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
       avatarUrl: user.avatarUrl,
+      role: roleMap.get(user.id) ?? null,
     }));
   }
 
@@ -44,7 +67,7 @@ export class UsersService {
     }
   }
 
-  async create(createUserDto: CreateUserDto): Promise<UserResponse> {
+  async create(createUserDto: CreateUserDto, tenantId: string): Promise<UserResponse> {
     const firstName = createUserDto.firstName.trim();
     const lastName = createUserDto.lastName.trim();
     const email = createUserDto.email.trim().toLowerCase();
@@ -95,6 +118,10 @@ export class UsersService {
 
     const hashedPassword = await hashPassword(createUserDto.password);
 
+    const role = createUserDto.role && [USER_TENANT_ROLE_ADMIN, USER_TENANT_ROLE_USER, USER_TENANT_ROLE_DEV].includes(createUserDto.role as any)
+      ? createUserDto.role
+      : USER_TENANT_ROLE_USER;
+
     const user = await this.prisma.user.create({
       data: {
         firstName: createUserDto.firstName.trim(),
@@ -102,6 +129,14 @@ export class UsersService {
         email: createUserDto.email.trim().toLowerCase(),
         password: hashedPassword,
         avatarUrl: createUserDto.avatarUrl || null,
+      },
+    });
+
+    await this.prisma.userTenant.create({
+      data: {
+        userId: user.id,
+        tenantId,
+        role: role as any,
       },
     });
 
@@ -114,7 +149,7 @@ export class UsersService {
     };
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserResponse> {
+  async update(id: string, updateUserDto: UpdateUserDto, tenantId: string): Promise<UserResponse> {
     if (!id || !id.trim()) {
       throw new BadRequestException('ID do usuário é obrigatório');
     }
@@ -219,6 +254,29 @@ export class UsersService {
       where: { id },
       data: updateData,
     });
+
+    if (updateUserDto.role !== undefined) {
+      const role = [USER_TENANT_ROLE_ADMIN, USER_TENANT_ROLE_USER, USER_TENANT_ROLE_DEV].includes(updateUserDto.role as any)
+        ? updateUserDto.role
+        : USER_TENANT_ROLE_USER;
+
+      await this.prisma.userTenant.upsert({
+        where: {
+          userId_tenantId: {
+            userId: id,
+            tenantId,
+          },
+        },
+        update: {
+          role: role as any,
+        },
+        create: {
+          userId: id,
+          tenantId,
+          role: role as any,
+        },
+      });
+    }
 
     return {
       id: updatedUser.id,

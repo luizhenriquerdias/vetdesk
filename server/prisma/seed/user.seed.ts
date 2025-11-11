@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { hashPassword } from '@/utils/password';
-import { USER_TENANT_ROLE_DEV } from '@vetdesk/shared/types/user-tenant';
+import { USER_TENANT_ROLE_DEV, USER_TENANT_ROLE_USER } from '@vetdesk/shared/types/user-tenant';
 
-export async function seedUser(prisma: PrismaClient, defaultTenantId: string) {
+export async function seedUser(prisma: PrismaClient) {
   const hashedPassword = await hashPassword('123123');
 
   const user = await prisma.user.upsert({
@@ -23,6 +23,8 @@ export async function seedUser(prisma: PrismaClient, defaultTenantId: string) {
   });
 
   for (const tenant of allTenants) {
+    const role = tenant.name === 'Vita Center' ? USER_TENANT_ROLE_DEV : USER_TENANT_ROLE_USER;
+
     await prisma.userTenant.upsert({
       where: {
         userId_tenantId: {
@@ -31,12 +33,12 @@ export async function seedUser(prisma: PrismaClient, defaultTenantId: string) {
         },
       },
       update: {
-        role: USER_TENANT_ROLE_DEV,
+        role,
       },
       create: {
         userId: user.id,
         tenantId: tenant.id,
-        role: USER_TENANT_ROLE_DEV,
+        role,
       },
     });
   }

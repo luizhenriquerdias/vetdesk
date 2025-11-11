@@ -32,6 +32,9 @@ const router = createRouter({
           name: ROUTE_USERS,
           path: 'users',
           component: UsersPage,
+          meta: {
+            requiresAdminOrDev: true,
+          },
         },
         {
           name: ROUTE_DOCTORS,
@@ -57,11 +60,17 @@ const router = createRouter({
           name: ROUTE_REPORTS_DOCTORS,
           path: 'reports/doctors',
           component: ReportsDoctorsPage,
+          meta: {
+            requiresAdminOrDev: true,
+          },
         },
         {
           name: ROUTE_REPORTS_TRANSACTIONS,
           path: 'reports/transactions',
           component: ReportsTransactionsPage,
+          meta: {
+            requiresAdminOrDev: true,
+          },
         },
       ],
     },
@@ -89,6 +98,13 @@ router.beforeEach(async (to, _, next) => {
   if (to.meta.requiresAuth) {
     if (!authStore.isAuthenticated) {
       next({ name: ROUTE_LOGIN });
+      return;
+    }
+  }
+
+  if (to.meta.requiresAdminOrDev) {
+    if (!authStore.isAdminOrDev) {
+      next({ name: ROUTE_HOME });
       return;
     }
   }
