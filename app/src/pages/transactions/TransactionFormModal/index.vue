@@ -137,7 +137,7 @@ const saving = ref(false);
 
 const getDefaultDate = () => {
   const now = new Date();
-  return now.toISOString().split('T')[0];
+  return now.toISOString().split('T')[0]!;
 };
 
 const getDefaultTime = () => {
@@ -172,7 +172,7 @@ watch(() => props.transaction, (transaction) => {
     formData.value = {
       description: transaction.description,
       type: transaction.type,
-      date,
+      date: date!,
       time,
       amount: transaction.amount,
     };
