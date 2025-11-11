@@ -1,15 +1,15 @@
 import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { verifyPassword } from '../utils/password';
-import { User } from '@vetdesk/shared/types/user';
-import { AuthResponse } from '@vetdesk/shared/types/auth';
+import { type AuthResponse } from '@vetdesk/shared/types/auth';
 import { Tenant } from '@vetdesk/shared/types/tenant';
+import { UserTenantRole } from '@vetdesk/shared/types/user-tenant';
 
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService) {}
 
-  async login(email: string, password: string): Promise<{ user: User; tenant: { id: string; name: string } | null }> {
+  async login(email: string, password: string): Promise<AuthResponse> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -42,9 +42,10 @@ export class AuthService {
       return aCreated - bCreated;
     });
 
-    const firstTenant = userTenants.length > 0 && userTenants[0].tenant ? {
-      id: userTenants[0].tenant.id,
-      name: userTenants[0].tenant.name,
+    const firstUserTenant = userTenants.length > 0 ? userTenants[0] : null;
+    const firstTenant = firstUserTenant && firstUserTenant.tenant ? {
+      id: firstUserTenant.tenant.id,
+      name: firstUserTenant.tenant.name,
     } : null;
 
     return {
@@ -56,6 +57,7 @@ export class AuthService {
         avatarUrl: user.avatarUrl,
       },
       tenant: firstTenant,
+      role: firstUserTenant?.role ?? null,
     };
   }
 
@@ -69,6 +71,7 @@ export class AuthService {
     }
 
     let tenant: Tenant | null = null;
+    let role: UserTenantRole | null = null;
 
     if (tenantId) {
       const userTenant = await this.prisma.userTenant.findUnique({
@@ -88,6 +91,7 @@ export class AuthService {
           id: userTenant.tenant.id,
           name: userTenant.tenant.name,
         };
+        role = userTenant.role;
       }
     }
 
@@ -100,6 +104,7 @@ export class AuthService {
         avatarUrl: user.avatarUrl,
       },
       tenant,
+      role,
     };
   }
 
@@ -160,6 +165,7 @@ export class AuthService {
         id: userTenant.tenant.id,
         name: userTenant.tenant.name,
       },
+      role: userTenant.role,
     };
   }
 }

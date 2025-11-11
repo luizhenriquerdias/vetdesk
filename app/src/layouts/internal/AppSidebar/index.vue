@@ -32,24 +32,6 @@
       </SidebarGroup>
 
       <SidebarGroup>
-        <SidebarGroupLabel>Relatórios</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            <SidebarItem
-              :to="ROUTE_REPORTS_DOCTORS"
-              icon="bar-chart"
-              label="Consultas por Médico"
-            />
-            <SidebarItem
-              :to="ROUTE_REPORTS_TRANSACTIONS"
-              icon="receipt"
-              label="Transações Consolidadas"
-            />
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-
-      <SidebarGroup>
         <SidebarGroupLabel>Cadastros</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
@@ -62,6 +44,24 @@
               :to="ROUTE_SPECIALTIES"
               icon="tag"
               label="Especialidades"
+            />
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <SidebarGroup>
+        <SidebarGroupLabel>Relatórios</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarItem
+              :to="ROUTE_REPORTS_DOCTORS"
+              icon="bar-chart"
+              label="Consultas por Médico"
+            />
+            <SidebarItem
+              :to="ROUTE_REPORTS_TRANSACTIONS"
+              icon="receipt"
+              label="Transações Consolidadas"
             />
           </SidebarMenu>
         </SidebarGroupContent>

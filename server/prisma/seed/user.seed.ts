@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { hashPassword } from '@/utils/password';
+import { USER_TENANT_ROLE_DEV } from '@vetdesk/shared/types/user-tenant';
 
 export async function seedUser(prisma: PrismaClient, defaultTenantId: string) {
   const hashedPassword = await hashPassword('123123');
@@ -30,12 +31,12 @@ export async function seedUser(prisma: PrismaClient, defaultTenantId: string) {
         },
       },
       update: {
-        admin: tenant.id === defaultTenantId,
+        role: USER_TENANT_ROLE_DEV,
       },
       create: {
         userId: user.id,
         tenantId: tenant.id,
-        admin: tenant.id === defaultTenantId,
+        role: USER_TENANT_ROLE_DEV,
       },
     });
   }

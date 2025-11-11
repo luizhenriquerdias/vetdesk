@@ -30,11 +30,14 @@ CREATE TABLE "Tenant" (
 -- CreateIndex
 CREATE INDEX "Tenant_deletedAt_idx" ON "Tenant"("deletedAt");
 
+-- CreateEnum
+CREATE TYPE "UserTenantRole" AS ENUM ('admin', 'user', 'dev');
+
 -- CreateTable
 CREATE TABLE "UserTenant" (
     "userId" TEXT NOT NULL,
     "tenantId" TEXT NOT NULL,
-    "admin" BOOLEAN NOT NULL DEFAULT false,
+    "role" "UserTenantRole" NOT NULL DEFAULT 'user',
 
     CONSTRAINT "UserTenant_pkey" PRIMARY KEY ("userId","tenantId")
 );

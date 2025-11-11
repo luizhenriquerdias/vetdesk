@@ -1,7 +1,13 @@
+enum UserTenantRole {
+  admin
+  user
+  dev
+}
+
 model UserTenant {
   userId   String
   tenantId String
-  admin    Boolean @default(false)
+  role     UserTenantRole @default(user)
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)

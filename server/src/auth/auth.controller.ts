@@ -36,6 +36,7 @@ export class AuthController {
         const response: AuthResponse = {
           user: result.user,
           tenant: result.tenant,
+          role: result.role,
         };
         return res.json(response);
       });
